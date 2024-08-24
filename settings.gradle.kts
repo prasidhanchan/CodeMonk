@@ -21,3 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Code Monk"
 include(":app")
+include(":core:util")
+include(":core:ui")
+include(":feature:auth")
+include(":feature:splash")
+include(":data:repository")

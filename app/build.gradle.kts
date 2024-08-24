@@ -1,3 +1,6 @@
+import AndroidConfig.COMPILE_SDK
+import AndroidConfig.JAVA_VERSION
+import AndroidConfig.JVM_TARGET
 import AndroidConfig.MIN_SDK
 import AndroidConfig.TARGET_SDK
 
@@ -5,18 +8,21 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.google.services)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.mca.codemonk"
-    compileSdk = 34
+    compileSdk = COMPILE_SDK
 
     defaultConfig {
         applicationId = "com.mca.codemonk"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -34,11 +40,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JAVA_VERSION
+        targetCompatibility = JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = JVM_TARGET
     }
     buildFeatures {
         compose = true
@@ -51,6 +57,20 @@ android {
 }
 
 dependencies {
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+
+    // Navigation Compose
+    implementation(libs.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,4 +87,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(project(":core:ui"))
+    implementation(project(":core:util"))
+    implementation(project(":data:repository"))
+    implementation(project(":feature:splash"))
+    implementation(project(":feature:auth"))
 }
