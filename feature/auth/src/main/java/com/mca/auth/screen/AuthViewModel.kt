@@ -26,7 +26,12 @@ class AuthViewModel @Inject constructor(
         email: String,
         password: String
     ) {
-        uiState.update { it.copy(loading = true) }
+        uiState.update {
+            it.copy(
+                loading = true,
+                response = null
+            )
+        }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.login(
                 email = email,
@@ -52,7 +57,12 @@ class AuthViewModel @Inject constructor(
     }
 
     fun forgotPassword(email: String) {
-        uiState.update { it.copy(loading = true) }
+        uiState.update {
+            it.copy(
+                loading = true,
+                response = null
+            )
+        }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.forgotPassword(
                 email = email,

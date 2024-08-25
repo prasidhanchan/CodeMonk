@@ -19,7 +19,7 @@
       <SelectionState runConfigName="ForgotPasswordScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="textBox_and_findAccount_button_areVisible()">
+      <SelectionState runConfigName="AuthScreenEndToEndTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
