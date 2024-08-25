@@ -1,4 +1,4 @@
-package com.mca.auth
+package com.mca.auth.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mca.auth.UiState
 import com.mca.ui.R
 import com.mca.ui.component.CMButton
 import com.mca.ui.component.CMTextBox
@@ -74,7 +75,8 @@ internal fun LoginScreen(
                 Image(
                     painter = painterResource(id = R.drawable.codemonk_logo),
                     contentDescription = stringResource(id = R.string.app_name),
-                    modifier = Modifier.padding(vertical = 10.dp)
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
                         .size(80.dp)
                 )
             }
@@ -160,7 +162,10 @@ internal fun LoginScreen(
                     modifier = Modifier.padding(vertical = 20.dp),
                     enabled = !uiState.loading,
                     loading = uiState.loading,
-                    onClick = onLoginClick
+                    onClick = {
+                        localKeyboard?.hide()
+                        onLoginClick()
+                    }
                 )
             }
         }

@@ -57,9 +57,15 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // JVM Test
+    testImplementation(libs.google.truth)
+    testImplementation(libs.mockito)
+    testImplementation(libs.core.test)
+    testImplementation(libs.androidx.core.ktx)
+    testImplementation(libs.junit)
 
     implementation(project(":core:util"))
 }

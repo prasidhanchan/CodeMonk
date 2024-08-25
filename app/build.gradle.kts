@@ -24,7 +24,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mca.codemonk.HiltRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -81,6 +81,14 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
+
+    // Instrumentation Test
+    androidTestImplementation(libs.google.truth)
+    androidTestImplementation(libs.hilt.test)
+    kspAndroidTest(libs.hilt.compiler)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.core.test)
+    androidTestImplementation(libs.androidx.core.ktx)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

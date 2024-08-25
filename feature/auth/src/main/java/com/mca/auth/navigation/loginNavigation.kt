@@ -1,10 +1,12 @@
-package com.mca.auth
+package com.mca.auth.navigation
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mca.auth.screen.AuthViewModel
+import com.mca.auth.screen.LoginScreen
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.loginNavigation(
@@ -22,11 +24,10 @@ fun NavGraphBuilder.loginNavigation(
             onLoginClick = {
                 viewModel.login(
                     email = uiState.email,
-                    password = uiState.password,
-                    onSuccess = { }
+                    password = uiState.password
                 )
             },
-            onForgotPasswordClick = { }
+            onForgotPasswordClick = { navController.navigate(Route.ForgotPassword) }
         )
     }
 }

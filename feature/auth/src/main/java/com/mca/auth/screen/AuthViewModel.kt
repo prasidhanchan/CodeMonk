@@ -1,7 +1,8 @@
-package com.mca.auth
+package com.mca.auth.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mca.auth.UiState
 import com.mca.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,22 +24,50 @@ class AuthViewModel @Inject constructor(
      */
     fun login(
         email: String,
-        password: String,
-        onSuccess: () -> Unit
+        password: String
     ) {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.login(
                 email = email,
                 password = password,
-                onSuccess = {
-                    onSuccess()
-                    uiState.update { it.copy(loading = false) }
+                onSuccess = { response ->
+                    uiState.update {
+                        it.copy(
+                            response = response,
+                            loading = false
+                        )
+                    }
+                },
+                onError = { response ->
+                    uiState.update {
+                        it.copy(
+                            response = response,
+                            loading = false
+                        )
+                    }
+                }
+            )
+        }
+    }
+
+    fun forgotPassword(email: String) {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            authRepository.forgotPassword(
+                email = email,
+                onSuccess = { success ->
+                    uiState.update {
+                        it.copy(
+                            response = success,
+                            loading = false
+                        )
+                    }
                 },
                 onError = { error ->
                     uiState.update {
                         it.copy(
-                            error = error,
+                            response = error,
                             loading = false
                         )
                     }
@@ -51,7 +80,7 @@ class AuthViewModel @Inject constructor(
 
     fun setPassword(value: String) = uiState.update { it.copy(password = value) }
 
-    fun clearError() = uiState.update { it.copy(error = "") }
+    fun clearMessage() = uiState.update { it.copy(response = null) }
 
     private fun clearUiState() = uiState.update { UiState() }
 

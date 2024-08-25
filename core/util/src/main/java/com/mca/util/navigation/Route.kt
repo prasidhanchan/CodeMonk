@@ -10,4 +10,7 @@ sealed class Route(val icon: Int = 0) {
 
     @Serializable
     data object  Login: Route()
+
+    @Serializable
+    data object ForgotPassword: Route()
 }

@@ -3,14 +3,17 @@ package com.mca.repository.impl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.mca.repository.AuthRepository
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
+import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl : AuthRepository {
 
     override suspend fun login(
         email: String,
         password: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
+        onSuccess: (Response) -> Unit,
+        onError: (Response) -> Unit
     ) {
         try {
             if (email.isEmpty()) throw Exception("Please enter your email.")
@@ -18,30 +21,96 @@ class AuthRepositoryImpl : AuthRepository {
 
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    onSuccess()
+                    onSuccess(
+                        Response(
+                            message = "Login Success",
+                            responseType = ResponseType.SUCCESS
+                        )
+                    )
                 }
                 .addOnFailureListener { error ->
                     if (error is FirebaseAuthException) {
-                        when(error.errorCode) {
-                            "ERROR_INVALID_EMAIL" -> onError("Enter a valid email.")
-                            "ERROR_INVALID_CREDENTIAL" -> onError("Invalid credentials.")
-                            "ERROR_TOO_MANY_REQUESTS" -> onError("Too many attempts, try after some time.")
-                            "ERROR_NETWORK_REQUEST_FAILED" -> onError("Please check your network connection.")
-                            else -> onError("An unknown error has occurred!")
+                        when (error.errorCode) {
+                            "ERROR_INVALID_EMAIL" -> onError(Response(message = "Enter a valid email."))
+
+                            "ERROR_INVALID_CREDENTIAL" -> onError(Response(message = "Invalid credentials."))
+
+                            "ERROR_TOO_MANY_REQUESTS" -> onError(Response(message = "Too many attempts, try after some time."))
+
+                            "ERROR_NETWORK_REQUEST_FAILED" -> onError(Response(message = "Please check your network connection."))
+
+                            else -> onError(Response(message = "An unknown error has occurred!"))
                         }
                     }
                 }
+                .await()
         } catch (e: Exception) {
             if (e is FirebaseAuthException) {
-                when(e.errorCode) {
-                    "ERROR_INVALID_EMAIL" -> onError("Enter a valid email.")
-                    "ERROR_INVALID_CREDENTIAL" -> onError("Invalid credentials.")
-                    "ERROR_TOO_MANY_REQUESTS" -> onError("Too many attempts, try after some time.")
-                    "ERROR_NETWORK_REQUEST_FAILED" -> onError("Please check your network connection.")
-                    else -> onError("An unknown error has occurred!")
+                when (e.errorCode) {
+                    "ERROR_INVALID_EMAIL" -> onError(Response(message = "Enter a valid email."))
+
+                    "ERROR_INVALID_CREDENTIAL" -> onError(Response(message = "Invalid credentials."))
+
+                    "ERROR_TOO_MANY_REQUESTS" -> onError(Response(message = "Too many attempts, try after some time."))
+
+                    "ERROR_NETWORK_REQUEST_FAILED" -> onError(Response(message = "Please check your network connection."))
+
+                    else -> onError(Response(message = "An unknown error has occurred!"))
                 }
             } else {
-                e.localizedMessage?.let(onError)
+                e.localizedMessage?.let { error ->
+                    onError(Response(message = error))
+                }
+            }
+        }
+    }
+
+    override suspend fun forgotPassword(
+        email: String,
+        onSuccess: (Response) -> Unit,
+        onError: (Response) -> Unit
+    ) {
+        try {
+            if (email.isEmpty()) throw Exception("Please enter your email.")
+
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+                    onSuccess(
+                        Response(
+                            message = "Password reset link sent to your email.",
+                            responseType = ResponseType.SUCCESS
+                        )
+                    )
+                }
+                .addOnFailureListener { error ->
+                    if (error is FirebaseAuthException) {
+                        when (error.errorCode) {
+                            "ERROR_INVALID_EMAIL" -> onError(Response(message = "Enter a valid email."))
+
+                            "ERROR_TOO_MANY_REQUESTS" -> onError(Response(message = "Too many attempts, try after some time."))
+
+                            "ERROR_NETWORK_REQUEST_FAILED" -> onError(Response(message = "Please check your network connection."))
+
+                            else -> onError(Response(message = "An unknown error has occurred!"))
+                        }
+                    }
+                }
+                .await()
+        } catch (e: Exception) {
+            if (e is FirebaseAuthException) {
+                when (e.errorCode) {
+                    "ERROR_INVALID_EMAIL" -> onError(Response(message = "Enter a valid email."))
+
+                    "ERROR_TOO_MANY_REQUESTS" -> onError(Response(message = "Too many attempts, try after some time."))
+
+                    "ERROR_NETWORK_REQUEST_FAILED" -> onError(Response(message = "Please check your network connection."))
+
+                    else -> onError(Response(message = "An unknown error has occurred!"))
+                }
+            } else {
+                e.localizedMessage?.let { error ->
+                    onError(Response(message = error))
+                }
             }
         }
     }

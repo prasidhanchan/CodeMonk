@@ -6,4 +6,8 @@
     <string name="show_hide_password">Show/Hide Password</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password_heading">Forgot Password</string>
+    <string name="login_success">Login Success</string>
+    <string name="back">Back</string>
+    <string name="find_account">Find account</string>
 </resources>
