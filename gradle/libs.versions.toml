@@ -16,6 +16,7 @@ hiltCompiler = "1.2.0"
 firebaseBom = "33.2.0"
 firebaseMessaging = "24.0.1"
 googleServices = "4.4.2"
+coil = "2.6.0"
 navigationCompose = "2.8.0-rc01"
 kotlinxSerializationVersion = "1.6.3"
 truth = "1.4.2"
@@ -23,6 +24,7 @@ coreTest = "2.2.0"
 hiltTest = "2.44"
 testRunner = "1.6.2"
 mockito = "1.10.5"
+material = "1.12.0"
 
 [libraries]
 # Hilt
@@ -37,6 +39,8 @@ firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+# Coil
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 # Navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 # Serialization
@@ -66,6 +70,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

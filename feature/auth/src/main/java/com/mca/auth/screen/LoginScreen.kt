@@ -84,7 +84,7 @@ internal fun LoginScreen(
             Text(
                 text = stringResource(id = R.string.app_name),
                 style = TextStyle(
-                    fontSize = 24.sp,
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = dosis,
                     color = fontColor

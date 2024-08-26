@@ -1,8 +1,9 @@
-package com.mca.splash
+package com.mca.splash.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mca.splash.screen.SplashScreen
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.splashNavigation(
@@ -13,7 +14,7 @@ fun NavGraphBuilder.splashNavigation(
         SplashScreen(
             isLoggedIn = isLoggedIn,
             navigateToLogin = { navController.navigate(Route.Login) },
-            navigateToHome = { }
+            navigateToHome = { navController.navigate(Route.InnerScreen) }
         )
     }
 }

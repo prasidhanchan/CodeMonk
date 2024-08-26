@@ -10,4 +10,16 @@
     <string name="login_success">Login Success</string>
     <string name="back">Back</string>
     <string name="find_account">Find account</string>
+    <string name="blue_tick">Blue Tick</string>
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="currently_working_on">"Currently working on "</string>
+    <string name="team_members">Team members:</string>
+    <string name="project_progress">Project progress:</string>
+    <string name="progress_percentage">%1$s%%</string>
+    <string name="deadline">"Deadline: "</string>
+    <string name="username">\@%1$s</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="delete">Delete Post</string>
 </resources>

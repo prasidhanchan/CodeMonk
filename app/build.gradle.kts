@@ -101,4 +101,5 @@ dependencies {
     implementation(project(":data:repository"))
     implementation(project(":feature:splash"))
     implementation(project(":feature:auth"))
+    implementation(project(":feature:home"))
 }

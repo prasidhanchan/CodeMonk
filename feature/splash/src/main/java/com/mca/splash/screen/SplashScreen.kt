@@ -1,4 +1,4 @@
-package com.mca.splash
+package com.mca.splash.screen
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mca.ui.R
 import com.mca.ui.theme.Black
-import com.mca.ui.theme.Yellow
+import com.mca.ui.theme.BrandColor
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import kotlinx.coroutines.delay
@@ -92,7 +92,7 @@ internal fun SplashScreen(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = dosis,
-                            color = Yellow
+                            color = BrandColor
                         )
                     ) {
                         append(stringResource(id = R.string.dept_of_mca))

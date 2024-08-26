@@ -24,7 +24,8 @@ class AuthViewModel @Inject constructor(
      */
     fun login(
         email: String,
-        password: String
+        password: String,
+        onSuccess: () -> Unit,
     ) {
         uiState.update {
             it.copy(
@@ -43,6 +44,7 @@ class AuthViewModel @Inject constructor(
                             loading = false
                         )
                     }
+                    onSuccess()
                 },
                 onError = { response ->
                     uiState.update {

@@ -1,7 +1,7 @@
 package com.mca.codemonk.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,9 +12,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.auth.navigation.forgotPasswordNavigation
-import com.mca.auth.screen.AuthViewModel
 import com.mca.auth.navigation.loginNavigation
-import com.mca.splash.splashNavigation
+import com.mca.auth.screen.AuthViewModel
+import com.mca.splash.navigation.splashNavigation
 import com.mca.ui.component.CMSnackBar
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.Green
@@ -22,6 +22,7 @@ import com.mca.ui.theme.Red
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.ResponseType
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainNavigation(
     viewModelAuth: AuthViewModel = hiltViewModel()
@@ -41,11 +42,10 @@ fun MainNavigation(
             )
         },
         containerColor = Black
-    ) { innerPadding ->
+    ) {
         NavHost(
             navController = navController,
-            startDestination = Route.Splash,
-            modifier = Modifier.padding(innerPadding)
+            startDestination = Route.Splash
         ) {
             splashNavigation(
                 isLoggedIn = currentUser != null,
@@ -59,6 +59,7 @@ fun MainNavigation(
                 viewModel = viewModelAuth,
                 navController = navController
             )
+            innerScreen()
         }
     }
 }
