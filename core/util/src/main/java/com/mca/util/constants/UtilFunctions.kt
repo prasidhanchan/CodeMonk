@@ -1,5 +1,7 @@
 package com.mca.util.constants
 
+import androidx.navigation.NavBackStackEntry
+import com.mca.util.navigation.Route
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,4 +28,34 @@ fun Long.toTimeStamp(): String {
         "hh:mm a EEE, d MMM yyyy",
         Locale.getDefault()
     ).format(Date(this))
+}
+
+/**
+ * Function to get the currently selected route.
+ * @return Returns [Route] of the selected type.
+ */
+fun NavBackStackEntry.getCurrentRoute(): Route {
+    var screen: Route = Route.Home
+
+    this.destination.route
+        ?.substringBefore("?")
+        ?.substringBefore("/")
+        ?.substringAfterLast(".")
+        ?.let { route ->
+            screen = when (route) {
+                Route.Home::class.java.simpleName -> Route.Home
+                Route.LeaderBoard::class.java.simpleName -> Route.LeaderBoard
+                Route.Notification::class.java.simpleName -> Route.Notification
+                else -> Route.Profile
+            }
+        }
+    return screen
+}
+
+/**
+ * Function to convert an likes to a string of like or likes.
+ * Ex: 1 like, 2 likes
+ */
+fun Int.toLikes(): String {
+    return if (this == 1) "$this like" else "$this likes"
 }

@@ -44,5 +44,6 @@ dependencies {
     implementation(libs.kotlinx.serialization)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.navigation.compose)
     implementation(libs.androidx.appcompat)
 }

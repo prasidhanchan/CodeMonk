@@ -20,4 +20,22 @@ sealed class Route(val icon: Int = 0) {
 
     @Serializable
     data object Home: Route(icon = R.drawable.ic_home)
+
+    @Serializable
+    data object LeaderBoard: Route(icon = R.drawable.ic_leaderboard)
+
+    @Serializable
+    data object Notification: Route(icon = R.drawable.ic_notification)
+
+    @Serializable
+    data object Profile: Route(icon = R.drawable.ic_profile)
+
+    companion object {
+        val routes = listOf(
+            Home,
+            LeaderBoard,
+            Notification,
+            Profile
+        )
+    }
 }

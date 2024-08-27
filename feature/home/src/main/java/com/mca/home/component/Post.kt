@@ -53,15 +53,17 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mca.ui.R
 import com.mca.ui.component.CMProgressBar
-import com.mca.ui.theme.BrandColor
+import com.mca.ui.theme.Blue
 import com.mca.ui.theme.ExtraLightBlack
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LightRed
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
+import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.util.constants.toLikedBy
+import com.mca.util.constants.toLikes
 import com.mca.util.constants.toTimeStamp
 import com.mca.util.model.Post
 import kotlin.math.roundToInt
@@ -105,15 +107,18 @@ fun Post(
                     onDeleteClick = onDeleteClick
                 )
             }
-        } else if (posts.isEmpty() && !loading){
+        } else if (posts.isEmpty() && !loading) {
             items(count = 2) {
                 PostCardLoader()
             }
         }
+
+        item {
+            Spacer(modifier = Modifier.height(60.dp))
+        }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun PostCard(
     post: Post,
@@ -125,11 +130,6 @@ private fun PostCard(
     onUsernameClick: (String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
 ) {
-    var isLiked by remember(post.likes) { mutableStateOf(post.likes.contains(post.userId)) }
-    var likes by remember(post.likes) { mutableIntStateOf(post.likes.size) }
-
-    val interactionSource = remember { MutableInteractionSource() }
-
     Column(
         modifier
             .padding(vertical = 10.dp)
@@ -145,166 +145,188 @@ private fun PostCard(
             onUsernameClick = onUsernameClick,
             onDeleteClick = onDeleteClick
         )
-        Surface(
+        MainContent(
+            post = post,
+            onUsernameClick = onUsernameClick,
+            onLikeClick = onLikeClick,
+            onUnlikeClick = onUnlikeClick
+        )
+        PostBottomBar(post = post)
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun MainContent(
+    post: Post,
+    modifier: Modifier = Modifier,
+    onUsernameClick: (String) -> Unit,
+    onLikeClick: () -> Unit,
+    onUnlikeClick: () -> Unit
+) {
+    var isLiked by remember(post.likes) { mutableStateOf(post.likes.contains(post.userId)) }
+    var likes by remember(post.likes) { mutableIntStateOf(post.likes.size) }
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Surface(
+        modifier = modifier
+            .animateContentSize(animationSpec = tween(durationMillis = 800))
+            .fillMaxWidth()
+            .wrapContentHeight(Alignment.CenterVertically),
+        shape = RoundedCornerShape(15.dp),
+        color = LightBlack
+    ) {
+        Column(
             modifier = modifier
-                .animateContentSize(animationSpec = tween(durationMillis = 800))
-                .fillMaxWidth()
-                .wrapContentHeight(Alignment.CenterVertically),
-            shape = RoundedCornerShape(15.dp),
-            color = LightBlack
+                .padding(all = 15.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(all = 15.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        append(stringResource(R.string.currently_working_on))
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = BrandColor
-                            )
-                        ) {
-                            append(post.currentProject)
-                        }
-                    },
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = stringResource(R.string.team_members),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
-                )
-                FlowRow(
-                    modifier = Modifier
-                        .padding(vertical = 10.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    for (member in post.teamMembers) {
-                        MemberCard(
-                            username = member,
-                            onUsernameClick = onUsernameClick
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.currently_working_on))
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Yellow
                         )
+                    ) {
+                        append(post.currentProject)
                     }
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = stringResource(R.string.project_progress),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
+                },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
                 )
-                CMProgressBar(progress = post.projectProgress)
-                Text(
-                    text = stringResource(
-                        R.string.progress_percentage,
-                        (post.projectProgress * 100).roundToInt()
-                    ),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor,
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.team_members),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
                 )
-
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = buildAnnotatedString {
-                        append(stringResource(R.string.deadline))
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = LightRed
-                            )
-                        ) {
-                            append(post.deadline)
-                        }
-                    },
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        painter = painterResource(id = if (isLiked) R.drawable.like else R.drawable.unlike),
-                        contentDescription = stringResource(id = if (isLiked) R.string.unlike else R.string.like),
-                        tint = if (isLiked) Red else Color.White,
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(25.dp)
-                            .clickable(
-                                indication = null,
-                                interactionSource = interactionSource,
-                                onClick = {
-                                    if (isLiked) {
-                                        isLiked = false
-                                        likes -= 1
-                                        onUnlikeClick()
-                                    } else {
-                                        isLiked = true
-                                        likes += 1
-                                        onLikeClick()
-                                    }
-                                }
-                            )
-                    )
-                    Text(
-                        text = "$likes likes",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            fontFamily = dosis,
-                            color = fontColor
-                        )
-                    )
-                    Text(
-                        text = post.timeStamp.toTimeStamp(),
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            fontFamily = dosis,
-                            color = fontColor.copy(alpha = 0.5f),
-                            textAlign = TextAlign.End
-                        ),
-                        modifier = Modifier.weight(2f)
+            )
+            FlowRow(
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                for (member in post.teamMembers) {
+                    ActionChip(
+                        username = member,
+                        fontColor = LinkBlue,
+                        onUsernameClick = onUsernameClick
                     )
                 }
             }
-        }
 
-        PostBottomBar(post = post)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.project_progress),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                )
+            )
+            CMProgressBar(progress = post.projectProgress)
+            Text(
+                text = stringResource(
+                    R.string.progress_percentage,
+                    (post.projectProgress * 100).roundToInt()
+                ),
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontFamily = dosis,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.deadline))
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = LightRed
+                        )
+                    ) {
+                        append(post.deadline)
+                    }
+                },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                )
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    painter = painterResource(id = if (isLiked) R.drawable.like else R.drawable.unlike),
+                    contentDescription = stringResource(id = if (isLiked) R.string.unlike else R.string.like),
+                    tint = if (isLiked) Red else Color.White,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(25.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = interactionSource,
+                            onClick = {
+                                if (isLiked) {
+                                    isLiked = false
+                                    likes -= 1
+                                    onUnlikeClick()
+                                } else {
+                                    isLiked = true
+                                    likes += 1
+                                    onLikeClick()
+                                }
+                            }
+                        )
+                )
+                Text(
+                    text = likes.toLikes(),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = dosis,
+                        color = fontColor
+                    )
+                )
+                Text(
+                    text = post.timeStamp.toTimeStamp(),
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = dosis,
+                        color = fontColor.copy(alpha = 0.5f),
+                        textAlign = TextAlign.End
+                    ),
+                    modifier = Modifier.weight(2f)
+                )
+            }
+        }
     }
 }
 
@@ -321,7 +343,7 @@ private fun PostTopBar(
 
     Row(
         modifier = modifier
-            .padding(vertical = 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth()
             .clickable(
                 indication = null,
@@ -409,8 +431,9 @@ private fun PostBottomBar(
 }
 
 @Composable
-private fun MemberCard(
+private fun ActionChip(
     username: String,
+    fontColor: Color,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit
 ) {
@@ -439,7 +462,7 @@ private fun MemberCard(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = dosis,
-                    color = LinkBlue
+                    color = fontColor
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -549,8 +572,9 @@ private fun PostCardPreview() {
 @Preview
 @Composable
 private fun MemberCardPreview() {
-    MemberCard(
+    ActionChip(
         username = "kawaki",
+        fontColor = Blue,
         onUsernameClick = { }
     )
 }

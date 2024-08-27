@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
+import com.mca.ui.component.CMBottomBar
 import com.mca.ui.theme.Black
 import com.mca.util.navigation.Route
 
@@ -22,6 +23,7 @@ fun NavGraphBuilder.innerScreen() {
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
+            bottomBar = { CMBottomBar(navHostController = navHostController) },
             containerColor = Black
         ) {
             NavHost(
