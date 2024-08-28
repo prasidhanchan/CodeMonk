@@ -11,4 +11,4 @@
 - **XP and Attendance**: View your experience points (XP) earned from project completions and track your attendance percentage.
 
 ## License
-This project is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License - see the [LICENSE](https://github.com/prasidhanchan/CodeMonk?tab=readme-ov-file#license) file for details.
+This project is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License - see the [LICENSE](https://github.com/prasidhanchan/CodeMonk/blob/master/LICENSE.md) file for details.
