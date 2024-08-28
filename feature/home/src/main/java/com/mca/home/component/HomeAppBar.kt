@@ -58,32 +58,8 @@ fun HomeAppBar(
             .padding(vertical = 20.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.codemonk_logo),
-            contentDescription = stringResource(id = R.string.app_name),
-            modifier = Modifier.size(45.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = TextStyle(
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .weight(1f)
-        )
-        IconButton(onClick = onSearchClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.search),
-                contentDescription = stringResource(id = R.string.search),
-                tint = tintColor
-            )
-        }
         AsyncImage(
             model = userImage,
             contentDescription = stringResource(id = R.string.profile),
@@ -93,6 +69,36 @@ fun HomeAppBar(
                 .background(LightBlack)
                 .clickable(onClick = onProfileClick)
         )
+        Row(
+            modifier = modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.codemonk_logo),
+                contentDescription = stringResource(id = R.string.app_name),
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+        }
+        IconButton(onClick = onSearchClick) {
+            Icon(
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = stringResource(id = R.string.search),
+                tint = tintColor
+            )
+        }
     }
 }
 
