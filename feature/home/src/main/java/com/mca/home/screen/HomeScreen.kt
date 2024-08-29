@@ -44,13 +44,13 @@ internal fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .padding(all = 20.dp)
+            .padding(horizontal = 20.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Post(
-            posts = uiState.posts,
+            posts = { uiState.posts },
             isVerified = isVerified,
             currentUserId = currentUserId,
             loading = uiState.loading,

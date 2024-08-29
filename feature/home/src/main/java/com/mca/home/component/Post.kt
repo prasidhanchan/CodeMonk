@@ -86,7 +86,7 @@ import kotlin.math.roundToInt
  */
 @Composable
 fun Post(
-    posts: List<Post>,
+    posts: () -> List<Post>,
     isVerified: (String) -> Boolean,
     currentUserId: String,
     loading: Boolean,
@@ -108,8 +108,8 @@ fun Post(
             appBar()
         }
 
-        if (posts.isNotEmpty() && !loading) {
-            items(items = posts) { post ->
+        if (posts().isNotEmpty() && !loading) {
+            items(items = posts()) { post ->
                 PostCard(
                     post = post,
                     isVerified = isVerified,
@@ -120,14 +120,14 @@ fun Post(
                     onDeleteClick = onDeleteClick
                 )
             }
-        } else if (posts.isEmpty() && !loading) {
+        } else if (posts().isEmpty() && !loading) {
             items(count = 2) {
                 PostCardLoader()
             }
         }
 
         item {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 }

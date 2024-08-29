@@ -66,7 +66,12 @@ fun CMBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .height(80.dp),
-        shape = RoundedCornerShape(15.dp),
+        shape = RoundedCornerShape(
+            topStart = 15.dp,
+            topEnd = 15.dp,
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp
+        ),
         color = BottomBarBlack
     ) {
         Row(

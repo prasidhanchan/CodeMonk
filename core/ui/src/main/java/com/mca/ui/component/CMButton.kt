@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mca.ui.theme.BrandColor
 import com.mca.ui.theme.dosis
-import com.mca.ui.theme.fontColorDark
+import com.mca.ui.theme.fontColor
 
 /**
  * Custom Button composable with circular progress indicator.
@@ -72,14 +72,14 @@ fun CMButton(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = dosis,
-                        color = fontColorDark
+                        color = fontColor
                     )
                 )
             } else {
                 CircularProgressIndicator(
                     modifier = Modifier.size(26.dp),
                     strokeWidth = 3.5.dp,
-                    color = fontColorDark,
+                    color = fontColor,
                     strokeCap = StrokeCap.Round
                 )
             }

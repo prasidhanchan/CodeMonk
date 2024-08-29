@@ -26,7 +26,6 @@ fun NavGraphBuilder.loginNavigation(
     viewModel: AuthViewModel,
     navController: NavController
 ) {
-
     composable<Route.Login> {
         val uiState by viewModel.uiState.collectAsState()
 

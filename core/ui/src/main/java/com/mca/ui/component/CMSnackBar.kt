@@ -14,7 +14,6 @@
 package com.mca.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -75,17 +74,11 @@ fun CMSnackBar(
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically(
-            animationSpec = tween(
-                durationMillis = 200,
-                easing = LinearEasing
-            ),
+            animationSpec = tween(durationMillis = 200),
             initialOffsetY = { it }
         ),
         exit = slideOutVertically(
-            animationSpec = tween(
-                durationMillis = 200,
-                easing = LinearEasing
-            ),
+            animationSpec = tween(durationMillis = 200),
             targetOffsetY = { it }
         )
     ) {

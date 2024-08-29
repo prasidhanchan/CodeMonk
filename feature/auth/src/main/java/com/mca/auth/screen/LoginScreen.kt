@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -122,7 +123,8 @@ internal fun LoginScreen(
                             tint = tintColor
                         )
                     },
-                    keyboardType = KeyboardType.Email
+                    keyboardType = KeyboardType.Email,
+                    capitalization = KeyboardCapitalization.None
                 )
                 CMTextBox(
                     value = uiState.password,
@@ -156,7 +158,8 @@ internal fun LoginScreen(
                             localKeyboard?.hide()
                             onLoginClick ()
                         }
-                    )
+                    ),
+                    capitalization = KeyboardCapitalization.None
                 )
                 Text(
                     text = stringResource(id = R.string.forgot_password),

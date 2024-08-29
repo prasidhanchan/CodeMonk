@@ -55,7 +55,7 @@ fun HomeAppBar(
 ) {
     Row(
         modifier = modifier
-            .padding(vertical = 20.dp)
+            .padding(top = 20.dp, bottom = 10.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center

@@ -50,13 +50,8 @@ class AuthViewModel @Inject constructor(
             authRepository.login(
                 email = email,
                 password = password,
-                onSuccess = { response ->
-                    uiState.update {
-                        it.copy(
-                            response = response,
-                            loading = false
-                        )
-                    }
+                onSuccess = {
+                    uiState.update { it.copy(loading = false) }
                     onSuccess()
                 },
                 onError = { response ->

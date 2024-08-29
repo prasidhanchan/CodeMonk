@@ -15,11 +15,13 @@ package com.mca.codemonk.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -41,6 +43,7 @@ fun MainNavigation(
     viewModelAuth: AuthViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
+
     val currentUser = FirebaseAuth.getInstance().currentUser
     val uiStateAuth by viewModelAuth.uiState.collectAsState()
 
@@ -58,7 +61,8 @@ fun MainNavigation(
     ) {
         NavHost(
             navController = navController,
-            startDestination = Route.Splash
+            startDestination = Route.Splash,
+            modifier = Modifier.padding(top = 20.dp)
         ) {
             splashNavigation(
                 isLoggedIn = currentUser != null,
