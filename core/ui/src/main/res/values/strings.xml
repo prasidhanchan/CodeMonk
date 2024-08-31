@@ -35,4 +35,5 @@
     <string name="search">Search</string>
     <string name="profile">Profile</string>
     <string name="delete">Delete Post</string>
+    <string name="add_post">Add Post</string>
 </resources>

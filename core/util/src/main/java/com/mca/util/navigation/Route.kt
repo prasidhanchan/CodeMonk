@@ -17,7 +17,7 @@ import com.mca.util.R
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Route(val icon: Int = 0) {
+sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
 
     @Serializable
     data object Splash : Route()
@@ -38,15 +38,19 @@ sealed class Route(val icon: Int = 0) {
     data object LeaderBoard: Route(icon = R.drawable.ic_leaderboard)
 
     @Serializable
-    data object Notification: Route(icon = R.drawable.ic_notification)
+    data object Notification: Route(icon = R.drawable.ic_notification, notificationIcon = R.drawable.ic_new_notification)
 
     @Serializable
     data object Profile: Route(icon = R.drawable.ic_profile)
+
+    @Serializable
+    data object AddPost: Route(icon = R.drawable.ic_add)
 
     companion object {
         val routes = listOf(
             Home,
             LeaderBoard,
+            AddPost,
             Notification,
             Profile
         )

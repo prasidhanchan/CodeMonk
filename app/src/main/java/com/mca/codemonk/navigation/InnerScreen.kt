@@ -46,7 +46,10 @@ fun NavGraphBuilder.innerScreen() {
                 )
             }
 
-            CMBottomBar(navHostController = navHostController)
+            CMBottomBar(
+                isNewNotification = false,
+                navHostController = navHostController
+            )
         }
     }
 }
