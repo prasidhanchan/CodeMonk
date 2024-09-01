@@ -13,8 +13,11 @@
 
 package com.mca.codemonk.di
 
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mca.repository.AuthRepository
+import com.mca.repository.ProfileRepository
 import com.mca.repository.impl.AuthRepositoryImpl
+import com.mca.repository.impl.ProfileRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,4 +31,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(): ProfileRepository =
+        ProfileRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
 }

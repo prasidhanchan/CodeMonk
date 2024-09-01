@@ -36,4 +36,26 @@
     <string name="profile">Profile</string>
     <string name="delete">Delete Post</string>
     <string name="add_post">Add Post</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="github">GitHub</string>
+    <string name="more_link">Portfolio</string>
+    <string name="working_on">Working on</string>
+    <string name="not_working_on_project">Not working on any project</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="confirm_logout">Are you sure you want to logout?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove_profile">Remove Profile</string>
+    <string name="username_placeholder">Username</string>
+    <string name="name_placeholder">Name</string>
+    <string name="bio_placeholder">Bio</string>
+    <string name="current_project_placeholder">Current Project</string>
+    <string name="add_a_link_placeholder">Add a link</string>
+    <string name="update">Update</string>
+    <string name="tap_to_remove">Tap to remove a link</string>
+    <string name="invalid_link">Link should start with http:// or https://</string>
+    <string name="mentor">Mentor for %1$s</string>
 </resources>

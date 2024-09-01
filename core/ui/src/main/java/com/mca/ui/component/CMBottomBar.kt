@@ -13,6 +13,11 @@
 
 package com.mca.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -62,6 +67,7 @@ import com.mca.util.navigation.Route
  */
 @Composable
 fun CMBottomBar(
+    visible: Boolean,
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
     isNewNotification: Boolean
@@ -70,65 +76,71 @@ fun CMBottomBar(
     val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentScreen = navaBackStackEntry?.getCurrentRoute()
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp),
-        contentAlignment = Alignment.TopCenter
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow)),
     ) {
-        Surface(
-            modifier = modifier
-                .padding(top = 20.dp)
+        Box(
+            modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp),
-            shape = RoundedCornerShape(
-                topStart = 15.dp,
-                topEnd = 15.dp,
-                bottomStart = 0.dp,
-                bottomEnd = 0.dp
-            ),
-            color = BottomBarBlack
+                .height(100.dp),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(all = 10.dp)
-                    .padding(bottom = 10.dp)
-                    .height(80.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
+            Surface(
+                modifier = modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth()
+                    .height(80.dp),
+                shape = RoundedCornerShape(
+                    topStart = 15.dp,
+                    topEnd = 15.dp,
+                    bottomStart = 0.dp,
+                    bottomEnd = 0.dp
+                ),
+                color = BottomBarBlack
             ) {
-                routes.forEach { route ->
-                    if (route != Route.AddPost) {
-                        BottomBarItem(
-                            route = route,
-                            selected = currentScreen == route,
-                            isNewNotification = isNewNotification,
-                            onClick = {
-                                navHostController.navigate(route) {
-                                    popUpTo<Route.Home>()
-                                    launchSingleTop = true
-                                    restoreState = true
+                Row(
+                    modifier = Modifier
+                        .padding(all = 10.dp)
+                        .padding(bottom = 10.dp)
+                        .height(80.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    routes.forEach { route ->
+                        if (route != Route.AddPost) {
+                            BottomBarItem(
+                                route = route,
+                                selected = currentScreen == route,
+                                isNewNotification = isNewNotification,
+                                onClick = {
+                                    navHostController.navigate(route) {
+                                        popUpTo<Route.Home>()
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
-                            }
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.width(5.dp))
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.width(5.dp))
+                        }
                     }
                 }
             }
-        }
 
-        AddIcon(
-            modifier = Modifier.padding(top = 5.dp),
-            onClick = {
-                navHostController.navigate(Route.AddPost) {
-                    popUpTo<Route.Home>()
-                    launchSingleTop = true
-                    restoreState = true
+            AddIcon(
+                modifier = Modifier.padding(top = 5.dp),
+                onClick = {
+                    navHostController.navigate(Route.AddPost) {
+                        popUpTo<Route.Home>()
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -210,6 +222,7 @@ private fun AddIcon(
 @Composable
 private fun CMBottomBarPreview() {
     CMBottomBar(
+        visible = true,
         isNewNotification = true,
         navHostController = rememberNavController()
     )

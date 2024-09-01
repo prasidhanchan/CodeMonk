@@ -40,6 +40,8 @@ import com.mca.ui.theme.Black
 import com.mca.ui.theme.CodeMonkTheme
 import com.mca.ui.theme.Green
 import com.mca.ui.theme.Red
+import com.mca.util.constants.SnackBarHelper.Companion.messageState
+import com.mca.util.constants.SnackBarHelper.Companion.resetMessageState
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.ResponseType
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -64,17 +66,17 @@ class LoginScreenTest {
         composeRule.activity.setContent {
             val navController = rememberNavController()
             val viewModel: AuthViewModel = hiltViewModel()
-            val uiStateAuth by viewModel.uiState.collectAsState()
+            val snackBarResponse by messageState.collectAsState()
 
             CodeMonkTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = {
                         CMSnackBar(
-                            message = uiStateAuth.response?.message,
-                            visible = uiStateAuth.response != null,
-                            iconColor = if (uiStateAuth.response?.responseType == ResponseType.ERROR) Red else Green,
-                            onFinish = { viewModel.clearMessage() }
+                            message = snackBarResponse.message,
+                            visible = snackBarResponse.message?.isNotBlank() == true,
+                            iconColor = if (snackBarResponse.responseType == ResponseType.ERROR) Red else Green,
+                            onFinish = { resetMessageState() }
                         )
                     },
                     containerColor = Black

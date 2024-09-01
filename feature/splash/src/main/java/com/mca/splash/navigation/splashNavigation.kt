@@ -21,13 +21,19 @@ import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.splashNavigation(
     navController: NavController,
-    isLoggedIn: Boolean,
+    isLoggedIn: Boolean
 ) {
     composable<Route.Splash> {
         SplashScreen(
             isLoggedIn = isLoggedIn,
-            navigateToLogin = { navController.navigate(Route.Login) },
-            navigateToHome = { navController.navigate(Route.InnerScreen) }
+            navigateToLogin = {
+                navController.popBackStack()
+                navController.navigate(Route.Login)
+            },
+            navigateToHome = {
+                navController.popBackStack()
+                navController.navigate(Route.InnerScreen)
+            }
         )
     }
 }

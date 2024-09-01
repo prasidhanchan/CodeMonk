@@ -34,6 +34,8 @@ import com.mca.ui.component.CMSnackBar
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.Green
 import com.mca.ui.theme.Red
+import com.mca.util.constants.SnackBarHelper.Companion.messageState
+import com.mca.util.constants.SnackBarHelper.Companion.resetMessageState
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.ResponseType
 
@@ -45,16 +47,16 @@ fun MainNavigation(
     val navController = rememberNavController()
 
     val currentUser = FirebaseAuth.getInstance().currentUser
-    val uiStateAuth by viewModelAuth.uiState.collectAsState()
+    val snackBarResponse by messageState.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = {
             CMSnackBar(
-                message = uiStateAuth.response?.message,
-                visible = uiStateAuth.response != null,
-                iconColor = if (uiStateAuth.response?.responseType == ResponseType.ERROR) Red else Green,
-                onFinish = { viewModelAuth.clearMessage() }
+                message = snackBarResponse.message,
+                visible = snackBarResponse.message?.isNotBlank() == true,
+                iconColor = if (snackBarResponse.responseType == ResponseType.ERROR) Red else Green,
+                onFinish = { resetMessageState() }
             )
         },
         containerColor = Black
@@ -65,8 +67,8 @@ fun MainNavigation(
             modifier = Modifier.padding(top = 20.dp)
         ) {
             splashNavigation(
-                isLoggedIn = currentUser != null,
-                navController = navController
+                navController = navController,
+                isLoggedIn = currentUser != null
             )
             loginNavigation(
                 viewModel = viewModelAuth,
@@ -76,7 +78,15 @@ fun MainNavigation(
                 viewModel = viewModelAuth,
                 navController = navController
             )
-            innerScreen()
+            innerScreen(
+                navigateToLogin = {
+                    navController.navigate(Route.Login) {
+                        popUpTo(Route.InnerScreen) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
     }
 }

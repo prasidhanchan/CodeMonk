@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mca.ui.theme.BrandColor
@@ -41,7 +42,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun CMProgressBar(
     progress: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = BrandColor
 ) {
     var postProgress by remember { mutableFloatStateOf(0f) }
     LaunchedEffect(key1 = Unit) {
@@ -69,7 +71,7 @@ fun CMProgressBar(
                 .fillMaxWidth(postProgress)
                 .height(10.dp),
             shape = CircleShape,
-            color = BrandColor,
+            color = color,
             content = { }
         )
     }

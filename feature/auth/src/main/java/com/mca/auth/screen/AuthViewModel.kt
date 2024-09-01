@@ -17,8 +17,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mca.auth.UiState
 import com.mca.repository.AuthRepository
+import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,12 +42,7 @@ class AuthViewModel @Inject constructor(
         password: String,
         onSuccess: () -> Unit,
     ) {
-        uiState.update {
-            it.copy(
-                loading = true,
-                response = null
-            )
-        }
+        uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.login(
                 email = email,
@@ -55,42 +52,25 @@ class AuthViewModel @Inject constructor(
                     onSuccess()
                 },
                 onError = { response ->
-                    uiState.update {
-                        it.copy(
-                            response = response,
-                            loading = false
-                        )
-                    }
+                    showSnackBar(response)
+                    uiState.update { it.copy(loading = false) }
                 }
             )
         }
     }
 
     fun forgotPassword(email: String) {
-        uiState.update {
-            it.copy(
-                loading = true,
-                response = null
-            )
-        }
+        uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.forgotPassword(
                 email = email,
-                onSuccess = { success ->
-                    uiState.update {
-                        it.copy(
-                            response = success,
-                            loading = false
-                        )
-                    }
+                onSuccess = { response ->
+                    showSnackBar(response)
+                    uiState.update { it.copy(loading = false) }
                 },
-                onError = { error ->
-                    uiState.update {
-                        it.copy(
-                            response = error,
-                            loading = false
-                        )
-                    }
+                onError = { response ->
+                    showSnackBar(response)
+                    uiState.update { it.copy(loading = false) }
                 }
             )
         }
@@ -100,9 +80,12 @@ class AuthViewModel @Inject constructor(
 
     fun setPassword(value: String) = uiState.update { it.copy(password = value) }
 
-    fun clearMessage() = uiState.update { it.copy(response = null) }
-
-    private fun clearUiState() = uiState.update { UiState() }
+    fun clearUiState() {
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(500L)
+            uiState.update { UiState() }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

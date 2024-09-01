@@ -14,10 +14,17 @@
 package com.mca.util.constants
 
 import androidx.navigation.NavBackStackEntry
+import com.mca.util.model.User
 import com.mca.util.navigation.Route
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+enum class LinkType {
+    GITHUB,
+    LINKEDIN,
+    MORE
+}
 
 /**
  * Function to converts a list of likes to a string of liked by.
@@ -59,7 +66,9 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.Home::class.java.simpleName -> Route.Home
                 Route.LeaderBoard::class.java.simpleName -> Route.LeaderBoard
                 Route.Notification::class.java.simpleName -> Route.Notification
-                else -> Route.Profile
+                Route.Profile::class.java.simpleName -> Route.Profile
+                Route.AddPost::class.java.simpleName -> Route.AddPost
+                else -> Route.EditProfile
             }
         }
     return screen
@@ -67,8 +76,42 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
 
 /**
  * Function to convert an likes to a string of like or likes.
- * Ex: 1 like, 2 likes
+ * Ex: 1 like, 2 likes.
  */
 fun Int.toLikes(): String {
     return if (this == 1) "$this like" else "$this likes"
+}
+
+/**
+ * Function to get the link type of a link matching regex.
+ * Ex: Github, Linkedin, Other links.
+ */
+fun String.getLinkDetail(): LinkType {
+    return when {
+        this.matches(Regex("(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9_-]+/?")) -> LinkType.GITHUB
+        this.matches(Regex("(?:https?://)?(?:www\\.)?linkedin\\.com/in/[A-Za-z0-9_-]+/?")) -> LinkType.LINKEDIN
+        else -> LinkType.MORE
+    }
+}
+
+/**
+ * Function to convert a [User] to a Map of User.
+ */
+fun User.convertToMap(): HashMap<String, Any> {
+    return hashMapOf(
+        "username" to this.username,
+        "name" to this.name,
+        "bio" to this.bio,
+        "profileImage" to this.profileImage,
+        "email" to this.email,
+        "currentProject" to this.currentProject,
+        "gitHubLink" to this.gitHubLink,
+        "linkedInLink" to this.linkedInLink,
+        "portfolioLink" to this.portfolioLink,
+        "xp" to this.xp,
+        "attendance" to this.attendance,
+        "semester" to this.semester,
+        "isVerified" to this.isVerified,
+        "userType" to this.userType
+    )
 }

@@ -47,7 +47,7 @@ import com.mca.ui.theme.tintColor
  * Home AppBar for Home Screen.
  */
 @Composable
-fun HomeAppBar(
+internal fun HomeAppBar(
     modifier: Modifier = Modifier,
     userImage: String,
     onSearchClick: () -> Unit,

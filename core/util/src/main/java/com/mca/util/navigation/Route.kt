@@ -23,28 +23,32 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
     data object Splash : Route()
 
     @Serializable
-    data object  Login: Route()
+    data object Login : Route()
 
     @Serializable
-    data object ForgotPassword: Route()
+    data object ForgotPassword : Route()
 
     @Serializable
-    data object InnerScreen: Route()
+    data object InnerScreen : Route()
 
     @Serializable
-    data object Home: Route(icon = R.drawable.ic_home)
+    data object Home : Route(icon = R.drawable.ic_home)
 
     @Serializable
-    data object LeaderBoard: Route(icon = R.drawable.ic_leaderboard)
+    data object LeaderBoard : Route(icon = R.drawable.ic_leaderboard)
 
     @Serializable
-    data object Notification: Route(icon = R.drawable.ic_notification, notificationIcon = R.drawable.ic_new_notification)
+    data object Notification :
+        Route(icon = R.drawable.ic_notification, notificationIcon = R.drawable.ic_new_notification)
 
     @Serializable
-    data object Profile: Route(icon = R.drawable.ic_profile)
+    data object Profile : Route(icon = R.drawable.ic_profile)
 
     @Serializable
-    data object AddPost: Route(icon = R.drawable.ic_add)
+    data object EditProfile : Route()
+
+    @Serializable
+    data object AddPost : Route(icon = R.drawable.ic_add)
 
     companion object {
         val routes = listOf(

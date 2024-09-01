@@ -85,7 +85,7 @@ import kotlin.math.roundToInt
  * Post composable to display user Post.
  */
 @Composable
-fun Post(
+internal fun Post(
     posts: () -> List<Post>,
     isVerified: (String) -> Boolean,
     currentUserId: String,

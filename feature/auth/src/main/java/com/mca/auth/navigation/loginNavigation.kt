@@ -37,7 +37,14 @@ fun NavGraphBuilder.loginNavigation(
                 viewModel.login(
                     email = uiState.email,
                     password = uiState.password,
-                    onSuccess = { navController.navigate(Route.InnerScreen) }
+                    onSuccess = {
+                        navController.navigate(Route.InnerScreen) {
+                            popUpTo(Route.Login) {
+                                inclusive = true
+                            }
+                        }
+                        viewModel.clearUiState()
+                    }
                 )
             },
             onForgotPasswordClick = { navController.navigate(Route.ForgotPassword) }

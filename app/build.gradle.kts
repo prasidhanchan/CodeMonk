@@ -80,6 +80,7 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
 
     // Navigation Compose
@@ -115,4 +116,5 @@ dependencies {
     implementation(project(":feature:splash"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:profile"))
 }

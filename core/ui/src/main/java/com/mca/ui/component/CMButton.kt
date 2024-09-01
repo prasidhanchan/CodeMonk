@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -46,6 +47,8 @@ fun CMButton(
     text: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    fonSize: Int = 18,
+    color: Color = BrandColor,
     loading: Boolean = false,
     onClick: () -> Unit
 ) {
@@ -59,7 +62,7 @@ fun CMButton(
             )
             .semantics { contentDescription = text },
         shape = RoundedCornerShape(10.dp),
-        color = BrandColor
+        color = color
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -69,7 +72,7 @@ fun CMButton(
                 Text(
                     text = text,
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = fonSize.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = dosis,
                         color = fontColor

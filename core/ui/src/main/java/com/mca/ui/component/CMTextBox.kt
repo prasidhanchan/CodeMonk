@@ -13,6 +13,7 @@
 
 package com.mca.ui.component
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -59,12 +60,14 @@ fun CMTextBox(
     isPassword: Boolean = false,
     showPassword: Boolean = false,
     singleLine: Boolean = true,
+    maxLines: Int = 1,
     enabled: Boolean = true
 ) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier
+            .animateContentSize()
             .padding(vertical = 7.dp)
             .height(52.dp)
             .width(320.dp)
@@ -83,6 +86,7 @@ fun CMTextBox(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         singleLine = singleLine,
+        maxLines = maxLines,
         enabled = enabled,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = LightBlack,

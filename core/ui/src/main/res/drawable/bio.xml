@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M12.481,1.351C11.049,0.945 9.574,1.798 9.184,3.231L6.346,13.645C5.968,15.03 6.736,16.48 8.104,16.924L16.43,19.621C17.893,20.095 19.437,19.23 19.827,17.748L22.66,6.995C23.033,5.579 22.214,4.11 20.801,3.71L12.481,1.351ZM13.163,6.268C12.759,6.178 12.358,6.433 12.268,6.837C12.178,7.242 12.433,7.642 12.837,7.732L17.337,8.732C17.742,8.822 18.142,8.567 18.232,8.163C18.322,7.759 18.067,7.358 17.663,7.268L13.163,6.268ZM12.147,10.265C11.741,10.184 11.346,10.447 11.265,10.853C11.184,11.259 11.447,11.654 11.853,11.736L14.353,12.236C14.759,12.317 15.154,12.053 15.236,11.647C15.317,11.241 15.053,10.846 14.647,10.765L12.147,10.265Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M1.099,9.735C0.598,7.824 2.066,6 4.018,6H5.448C6.001,6 6.448,6.448 6.448,7C6.448,7.552 6.001,8 5.448,8H4.018C3.335,8 2.875,8.625 3.033,9.227L5.925,20.257C6.058,20.765 6.59,21.099 7.141,20.974L11.78,19.92C12.318,19.798 12.854,20.135 12.976,20.674C13.099,21.212 12.761,21.748 12.223,21.87L7.585,22.924C6.005,23.283 4.403,22.34 3.99,20.764L1.099,9.735Z" />
+</vector>
