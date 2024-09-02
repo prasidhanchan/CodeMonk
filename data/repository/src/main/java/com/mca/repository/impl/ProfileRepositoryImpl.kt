@@ -13,9 +13,11 @@
 
 package com.mca.repository.impl
 
+import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
 import com.mca.repository.ProfileRepository
 import com.mca.util.constants.convertToMap
 import com.mca.util.model.User
@@ -24,7 +26,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
-    val userRef: CollectionReference
+    val userRef: CollectionReference,
+    val userStorage: StorageReference
 ) : ProfileRepository {
 
     override suspend fun getUser(currentUserId: String): DataOrException<User, Boolean, Exception> {
@@ -54,7 +57,6 @@ class ProfileRepositoryImpl @Inject constructor(
     ) {
         try {
             val querySnap = userRef.get().await()
-
             querySnap.forEach { docSnap ->
                 if (docSnap.data["userId"] != user.userId && docSnap.data["username"] == user.username) {
                     throw Exception("Username already exists.")
@@ -82,15 +84,52 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateImageUrl(
+        user: User,
+        onSuccess: (url: String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            if (user.profileImage.isNotEmpty()) {
+                val taskSnap = userStorage.child("${user.username}.jpg")
+                    .putFile(user.profileImage.toUri())
+                    .addOnFailureListener { error ->
+                        error.localizedMessage?.let(onError)
+                    }
+                    .await()
+
+                taskSnap.storage.downloadUrl
+                    .addOnSuccessListener { uri ->
+                        onSuccess(uri.toString())
+                    }
+                    .addOnFailureListener { error ->
+                        error.localizedMessage?.let(onError)
+                    }
+                    .await()
+            } else {
+                onSuccess("")
+            }
+
+        } catch (e: Exception) {
+            e.localizedMessage?.let(onError)
+        }
+    }
+
     override suspend fun removeProfilePic(
-        currentUserId: String,
+        user: User,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         try {
-            userRef.document(currentUserId).update(mapOf("profileImage" to ""))
+            userRef.document(user.userId).update(mapOf("profileImage" to ""))
                 .addOnSuccessListener {
-                    onSuccess()
+                    userStorage.child("${user.username}.jpg").delete()
+                        .addOnSuccessListener {
+                            onSuccess()
+                        }
+                        .addOnFailureListener { error ->
+                            error.localizedMessage?.let(onError)
+                        }
                 }
                 .addOnFailureListener { error ->
                     error.localizedMessage?.let(onError)

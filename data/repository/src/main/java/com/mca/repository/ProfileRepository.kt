@@ -26,8 +26,14 @@ interface ProfileRepository {
         onError: (String) -> Unit
     )
 
+    suspend fun updateImageUrl(
+        user: User,
+        onSuccess: (url: String) -> Unit,
+        onError: (String) -> Unit
+    )
+
     suspend fun removeProfilePic(
-        currentUserId: String,
+        user: User,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )

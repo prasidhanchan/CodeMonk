@@ -13,13 +13,13 @@
 
 package com.mca.codemonk.navigation
 
-import androidx.compose.foundation.layout.Box
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,9 +36,11 @@ import com.mca.profile.screen.ProfileViewModel
 import com.mca.ui.R
 import com.mca.ui.component.CMAlertDialog
 import com.mca.ui.component.CMBottomBar
+import com.mca.ui.theme.Black
 import com.mca.util.constants.getCurrentRoute
 import com.mca.util.navigation.Route
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(navigateToLogin: () -> Unit) {
     composable<Route.InnerScreen> {
         val viewModelProfile: ProfileViewModel = hiltViewModel()
@@ -61,13 +63,20 @@ fun NavGraphBuilder.innerScreen(navigateToLogin: () -> Unit) {
             else -> false
         }
 
-        Box(
+        Scaffold(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
+            containerColor = Black,
+            bottomBar = {
+                CMBottomBar(
+                    visible = showBottomBar,
+                    isNewNotification = false,
+                    navHostController = navHostController
+                )
+            }
         ) {
             NavHost(
                 navController = navHostController,
-                startDestination = Route.Home
+                startDestination = Route.Profile
             ) {
                 homeNavigation(
                     navController = navHostController,
@@ -88,11 +97,6 @@ fun NavGraphBuilder.innerScreen(navigateToLogin: () -> Unit) {
                 )
             }
 
-            CMBottomBar(
-                visible = showBottomBar,
-                isNewNotification = false,
-                navHostController = navHostController
-            )
             CMAlertDialog(
                 title = alertTitle,
                 message = alertMessage,

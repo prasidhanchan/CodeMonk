@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.profile.UiState
 import com.mca.repository.ProfileRepository
 import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
+import com.mca.util.model.User
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,11 +45,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getUser() {
+        uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getUser(currentUser?.uid!!)
 
             withContext(Dispatchers.Main) {
-                uiState.update { it.copy(loading = true) }
                 if (result.data != null && !result.loading!!) {
                     uiState.update {
                         it.copy(
@@ -73,15 +74,46 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUser(onSuccess: () -> Unit) {
         uiState.update { it.copy(loading = true) }
+        // Update user profile image url
+        updateImageUrl(
+            user = uiState.value.currentUser,
+            onSuccess = { url ->
+                val updatedUser =
+                    if (url.isNotEmpty()) uiState.value.currentUser.copy(profileImage = url) else uiState.value.currentUser
+
+                // Update User
+                viewModelScope.launch(Dispatchers.IO) {
+                    profileRepository.updateUser(
+                        user = updatedUser,
+                        onSuccess = {
+                            onSuccess()
+                            uiState.update { it.copy(loading = false) }
+                        },
+                        onError = { error ->
+                            uiState.update { it.copy(loading = false) }
+                            showSnackBar(
+                                response = Response(
+                                    message = error,
+                                    responseType = ResponseType.ERROR
+                                )
+                            )
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    private fun updateImageUrl(
+        user: User,
+        onSuccess: (url: String) -> Unit
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
-            profileRepository.updateUser(
-                user = uiState.value.currentUser,
-                onSuccess = {
-                    onSuccess()
-                    uiState.update { it.copy(loading = false) }
-                },
+            val updatedUser = user.copy(profileImage = uiState.value.newProfileImage)
+            profileRepository.updateImageUrl(
+                user = updatedUser,
+                onSuccess = onSuccess,
                 onError = { error ->
-                    uiState.update { it.copy(loading = false) }
                     showSnackBar(
                         response = Response(
                             message = error,
@@ -96,7 +128,7 @@ class ProfileViewModel @Inject constructor(
     fun removeProfileImage(onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             profileRepository.removeProfilePic(
-                currentUserId = currentUser?.uid!!,
+                user = uiState.value.currentUser,
                 onSuccess = {
                     uiState.update { it.copy(currentUser = it.currentUser.copy(profileImage = "")) }
                     onSuccess()
@@ -128,7 +160,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun setProfileImage(profileImage: String) {
-        uiState.update { it.copy(currentUser = it.currentUser.copy(profileImage = profileImage)) }
+        uiState.update { it.copy(newProfileImage = profileImage) }
     }
 
     fun setBio(bio: String) {

@@ -14,6 +14,7 @@
 package com.mca.codemonk.di
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.mca.repository.AuthRepository
 import com.mca.repository.ProfileRepository
 import com.mca.repository.impl.AuthRepositoryImpl
@@ -35,5 +36,8 @@ object TestAppModule {
     @Provides
     @Singleton
     fun provideProfileRepository(): ProfileRepository =
-        ProfileRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
+        ProfileRepositoryImpl(
+            userRef = FirebaseFirestore.getInstance().collection("users"),
+            userStorage = FirebaseStorage.getInstance().getReference("users")
+        )
 }

@@ -18,5 +18,6 @@ import com.mca.util.model.User
 
 data class UiState(
     var currentUser: User = User(),
+    var newProfileImage: String = "",
     var loading: Boolean = false
 )
