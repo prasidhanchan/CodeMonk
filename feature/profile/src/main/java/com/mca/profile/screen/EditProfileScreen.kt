@@ -135,10 +135,14 @@ internal fun EditProfileScreen(
                 color = LightBlack,
                 content = {
                     AsyncImage(
-                        model = uiState.currentUser.profileImage,
+                        model = uiState.currentUser.profileImage.ifEmpty { uiState.newProfileImage },
                         contentDescription = stringResource(id = R.string.profile),
-                        modifier = Modifier.background(color = Black.copy(0.5f)),
                         contentScale = ContentScale.Crop
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = Black.copy(0.5f))
                     )
                 }
             )
@@ -288,6 +292,7 @@ internal fun EditProfileScreen(
             loading = uiState.loading,
             onClick = onUpdateClick
         )
+        Spacer(modifier = Modifier.height(50.dp))
     }
 
     BackHandler(onBack = onBackClick)

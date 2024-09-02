@@ -13,6 +13,10 @@
 
 package com.mca.splash.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -23,7 +27,12 @@ fun NavGraphBuilder.splashNavigation(
     navController: NavController,
     isLoggedIn: Boolean
 ) {
-    composable<Route.Splash> {
+    composable<Route.Splash>(
+        enterTransition = { EnterTransition.None },
+        exitTransition = {
+            fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+        }
+    ) {
         SplashScreen(
             isLoggedIn = isLoggedIn,
             navigateToLogin = {

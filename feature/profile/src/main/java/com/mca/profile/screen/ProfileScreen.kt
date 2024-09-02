@@ -53,6 +53,7 @@ import com.mca.profile.component.ProgressType
 import com.mca.ui.R
 import com.mca.ui.component.CMIconButton
 import com.mca.ui.component.CMRegularAppBar
+import com.mca.ui.component.Loader
 import com.mca.ui.theme.BrandColor
 import com.mca.ui.theme.Green
 import com.mca.ui.theme.LightBlack
@@ -95,7 +96,7 @@ internal fun ProfileScreen(
             color = LightBlack,
             content = {
                 AsyncImage(
-                    model = uiState.currentUser.profileImage,
+                    model = uiState.currentUser.profileImage.ifEmpty { R.drawable.user },
                     contentDescription = stringResource(id = R.string.profile),
                     contentScale = ContentScale.Crop
                 )
@@ -268,6 +269,8 @@ internal fun ProfileScreen(
             }
         )
     }
+
+    Loader(loading = uiState.loading)
 }
 
 @Composable

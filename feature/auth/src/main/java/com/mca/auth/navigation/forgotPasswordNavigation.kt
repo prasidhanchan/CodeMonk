@@ -13,6 +13,9 @@
 
 package com.mca.auth.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
@@ -26,7 +29,14 @@ fun NavGraphBuilder.forgotPasswordNavigation(
     viewModel: AuthViewModel,
     navController: NavController
 ) {
-    composable<Route.ForgotPassword> {
+    composable<Route.ForgotPassword>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 400))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 400))
+        }
+    ) {
         val uiState by viewModel.uiState.collectAsState()
 
         ForgotPasswordScreen(

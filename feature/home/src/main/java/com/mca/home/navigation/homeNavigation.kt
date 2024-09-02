@@ -13,6 +13,9 @@
 
 package com.mca.home.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -24,7 +27,14 @@ fun NavGraphBuilder.homeNavigation(
     navController: NavController,
     currentUserId: String
 ) {
-    composable<Route.Home> {
+    composable<Route.Home>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 400))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 400))
+        }
+    ) {
         HomeScreen(
             uiState = UiState(),
             isVerified = { true },
