@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.mca.home.UiState
 import com.mca.home.component.HomeAppBar
 import com.mca.home.component.Post
+import com.mca.ui.theme.Black
 import com.mca.util.model.Post
 
 @Composable
@@ -43,31 +45,36 @@ internal fun HomeScreen(
 ) {
     val state = rememberLazyListState()
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Black
     ) {
-        Post(
-            posts = { uiState.posts },
-            isVerified = isVerified,
-            currentUserId = currentUserId,
-            loading = uiState.loading,
-            state = state,
-            onLikeClick = onLikeClick,
-            onUnlikeClick = onUnlikeClick,
-            onUsernameClick = onUsernameClick,
-            onDeleteClick = onDeletedClick,
-            appBar = {
-                HomeAppBar(
-                    userImage = profileImage,
-                    onSearchClick = onSearchClick,
-                    onProfileClick = onProfileClick
-                )
-            }
-        )
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Post(
+                posts = { uiState.posts },
+                isVerified = isVerified,
+                currentUserId = currentUserId,
+                loading = uiState.loading,
+                state = state,
+                onLikeClick = onLikeClick,
+                onUnlikeClick = onUnlikeClick,
+                onUsernameClick = onUsernameClick,
+                onDeleteClick = onDeletedClick,
+                appBar = {
+                    HomeAppBar(
+                        userImage = profileImage,
+                        onSearchClick = onSearchClick,
+                        onProfileClick = onProfileClick
+                    )
+                }
+            )
+        }
     }
 }
 

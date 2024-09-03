@@ -103,196 +103,201 @@ internal fun EditProfileScreen(
     val state = rememberScrollState()
     val localKeyboard = LocalSoftwareKeyboardController.current
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxSize()
-            .verticalScroll(state),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Black
     ) {
-        CMRegularAppBar(
-            text = stringResource(id = R.string.edit_profile),
-            onBackClick = onBackClick
-        )
-        Box(
+        Column(
             modifier = Modifier
-                .padding(bottom = 15.dp)
-                .size(140.dp),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 20.dp)
+                .fillMaxSize()
+                .verticalScroll(state),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Surface(
+            CMRegularAppBar(
+                text = stringResource(id = R.string.edit_profile),
+                onBackClick = onBackClick
+            )
+            Box(
                 modifier = Modifier
-                    .size(140.dp)
-                    .clickable(
-                        onClick = {
-                            activityLauncher.launch(
-                                PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
-                        }
-                    ),
-                shape = CircleShape,
-                color = LightBlack,
-                content = {
-                    AsyncImage(
-                        model = uiState.currentUser.profileImage.ifEmpty { uiState.newProfileImage },
-                        contentDescription = stringResource(id = R.string.profile),
-                        contentScale = ContentScale.Crop
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Black.copy(0.5f))
-                    )
-                }
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.gallery),
-                contentDescription = stringResource(id = R.string.edit_profile),
-                tint = tintColor
-            )
-        }
-
-        if (uiState.currentUser.profileImage.isNotEmpty()) {
-            CMButton(
-                text = stringResource(id = R.string.remove_profile),
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(35.dp),
-                fonSize = 14,
-                color = Red,
-                onClick = onRemoveProfileImage
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-        CMTextBox(
-            modifier = Modifier.padding(vertical = 8.dp),
-            value = uiState.currentUser.username,
-            onValueChange = onUsernameChange,
-            placeHolder = stringResource(id = R.string.username_placeholder),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.username),
-                    contentDescription = stringResource(id = R.string.username),
-                    tint = tintColor
-                )
-            },
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.None
-        )
-        CMTextBox(
-            modifier = Modifier.padding(vertical = 8.dp),
-            value = uiState.currentUser.name,
-            onValueChange = onNameChange,
-            placeHolder = stringResource(id = R.string.name_placeholder),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.profile),
-                    contentDescription = stringResource(id = R.string.name_placeholder),
-                    tint = tintColor
-                )
-            },
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Words
-        )
-        CMTextBox(
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .height(100.dp),
-            value = uiState.currentUser.bio,
-            onValueChange = onBioChange,
-            placeHolder = stringResource(id = R.string.bio_placeholder),
-            leadingIcon = {
-                Box(
+                    .padding(bottom = 15.dp)
+                    .size(140.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
                     modifier = Modifier
-                        .padding(top = 15.dp)
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.TopCenter
-                ) {
+                        .size(140.dp)
+                        .clickable(
+                            onClick = {
+                                activityLauncher.launch(
+                                    PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+                        ),
+                    shape = CircleShape,
+                    color = LightBlack,
+                    content = {
+                        AsyncImage(
+                            model = uiState.currentUser.profileImage.ifEmpty { uiState.newProfileImage },
+                            contentDescription = stringResource(id = R.string.profile),
+                            contentScale = ContentScale.Crop
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = Black.copy(0.5f))
+                        )
+                    }
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.gallery),
+                    contentDescription = stringResource(id = R.string.edit_profile),
+                    tint = tintColor
+                )
+            }
+
+            if (uiState.currentUser.profileImage.isNotEmpty()) {
+                CMButton(
+                    text = stringResource(id = R.string.remove_profile),
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(35.dp),
+                    fonSize = 14,
+                    color = Red,
+                    onClick = onRemoveProfileImage
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            CMTextBox(
+                modifier = Modifier.padding(vertical = 8.dp),
+                value = uiState.currentUser.username,
+                onValueChange = onUsernameChange,
+                placeHolder = stringResource(id = R.string.username_placeholder),
+                leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.bio),
-                        contentDescription = stringResource(id = R.string.bio_placeholder),
+                        painter = painterResource(id = R.drawable.username),
+                        contentDescription = stringResource(id = R.string.username),
                         tint = tintColor
                     )
-                }
-            },
-            singleLine = false,
-            maxLines = 4,
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Sentences
-        )
-        CMTextBox(
-            modifier = Modifier.padding(vertical = 8.dp),
-            value = uiState.currentUser.currentProject,
-            onValueChange = onCurrentProjectChange,
-            placeHolder = stringResource(id = R.string.current_project_placeholder),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.working_on),
-                    contentDescription = stringResource(id = R.string.current_project_placeholder),
-                    tint = tintColor
-                )
-            },
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Words
-        )
-        CMTextBox(
-            modifier = Modifier.padding(vertical = 8.dp),
-            value = linkState,
-            onValueChange = { linkState = it },
-            placeHolder = stringResource(id = R.string.add_a_link_placeholder),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.more_link),
-                    contentDescription = stringResource(id = R.string.add_a_link_placeholder),
-                    tint = tintColor
-                )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        onAddLinkCLick(linkState)
-                        linkState = ""
-                    },
-                    enabled = uiState.currentUser.linkedInLink.isBlank() ||
-                            uiState.currentUser.gitHubLink.isBlank() ||
-                            uiState.currentUser.portfolioLink.isBlank(),
-                    colors = IconButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = tintColor,
-                        disabledContentColor = tintColor.copy(alpha = 0.5f),
-                        disabledContainerColor = Color.Transparent
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.add),
-                        contentDescription = stringResource(id = R.string.add_a_link_placeholder)
-                    )
-                }
-            },
-            keyboardType = KeyboardType.Uri,
-            capitalization = KeyboardCapitalization.None,
-            imeAction = ImeAction.Done,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    onUpdateClick()
-                    localKeyboard?.hide()
-                }
+                },
+                keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.None
             )
-        )
-        AddedLinksSection(
-            uiState = uiState,
-            onRemoveLinkCLick = onRemoveLinkCLick
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        CMButton(
-            text = stringResource(id = R.string.update),
-            enabled = !uiState.loading,
-            loading = uiState.loading,
-            onClick = onUpdateClick
-        )
-        Spacer(modifier = Modifier.height(50.dp))
+            CMTextBox(
+                modifier = Modifier.padding(vertical = 8.dp),
+                value = uiState.currentUser.name,
+                onValueChange = onNameChange,
+                placeHolder = stringResource(id = R.string.name_placeholder),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = stringResource(id = R.string.name_placeholder),
+                        tint = tintColor
+                    )
+                },
+                keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.Words
+            )
+            CMTextBox(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .height(100.dp),
+                value = uiState.currentUser.bio,
+                onValueChange = onBioChange,
+                placeHolder = stringResource(id = R.string.bio_placeholder),
+                leadingIcon = {
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 15.dp)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.bio),
+                            contentDescription = stringResource(id = R.string.bio_placeholder),
+                            tint = tintColor
+                        )
+                    }
+                },
+                singleLine = false,
+                maxLines = 4,
+                keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.Sentences
+            )
+            CMTextBox(
+                modifier = Modifier.padding(vertical = 8.dp),
+                value = uiState.currentUser.currentProject,
+                onValueChange = onCurrentProjectChange,
+                placeHolder = stringResource(id = R.string.current_project_placeholder),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.working_on),
+                        contentDescription = stringResource(id = R.string.current_project_placeholder),
+                        tint = tintColor
+                    )
+                },
+                keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.Words
+            )
+            CMTextBox(
+                modifier = Modifier.padding(vertical = 8.dp),
+                value = linkState,
+                onValueChange = { linkState = it },
+                placeHolder = stringResource(id = R.string.add_a_link_placeholder),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.more_link),
+                        contentDescription = stringResource(id = R.string.add_a_link_placeholder),
+                        tint = tintColor
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            onAddLinkCLick(linkState)
+                            linkState = ""
+                        },
+                        enabled = uiState.currentUser.linkedInLink.isBlank() ||
+                                uiState.currentUser.gitHubLink.isBlank() ||
+                                uiState.currentUser.portfolioLink.isBlank(),
+                        colors = IconButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = tintColor,
+                            disabledContentColor = tintColor.copy(alpha = 0.5f),
+                            disabledContainerColor = Color.Transparent
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.add),
+                            contentDescription = stringResource(id = R.string.add_a_link_placeholder)
+                        )
+                    }
+                },
+                keyboardType = KeyboardType.Uri,
+                capitalization = KeyboardCapitalization.None,
+                imeAction = ImeAction.Done,
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onUpdateClick()
+                        localKeyboard?.hide()
+                    }
+                )
+            )
+            AddedLinksSection(
+                uiState = uiState,
+                onRemoveLinkCLick = onRemoveLinkCLick
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            CMButton(
+                text = stringResource(id = R.string.update),
+                enabled = !uiState.loading,
+                loading = uiState.loading,
+                onClick = onUpdateClick
+            )
+            Spacer(modifier = Modifier.height(50.dp))
+        }
     }
 
     BackHandler(onBack = onBackClick)

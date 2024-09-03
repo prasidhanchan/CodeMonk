@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +52,8 @@ fun ChangePasswordScreen(
     onChangePasswordClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val localKeyboard = LocalSoftwareKeyboardController.current
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Black
@@ -78,12 +81,20 @@ fun ChangePasswordScreen(
                     )
                 },
                 keyboardType = KeyboardType.Password,
-                keyboardActions = KeyboardActions(onDone = { onChangePasswordClick() }),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        localKeyboard?.hide()
+                        onChangePasswordClick()
+                    }
+                ),
                 capitalization = KeyboardCapitalization.None
             )
             CMButton(
                 text = stringResource(id = R.string.change_password),
-                onClick = onChangePasswordClick,
+                onClick = {
+                    localKeyboard?.hide()
+                    onChangePasswordClick()
+                },
                 modifier = Modifier.padding(vertical = 20.dp)
             )
             Text(
