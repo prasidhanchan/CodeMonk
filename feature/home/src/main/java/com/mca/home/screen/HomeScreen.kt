@@ -31,6 +31,7 @@ import com.mca.util.model.Post
 @Composable
 internal fun HomeScreen(
     uiState: UiState,
+    profileImage: String,
     isVerified: (String) -> Boolean,
     currentUserId: String,
     onProfileClick: () -> Unit,
@@ -61,7 +62,7 @@ internal fun HomeScreen(
             onDeleteClick = onDeletedClick,
             appBar = {
                 HomeAppBar(
-                    userImage = uiState.profileImage,
+                    userImage = profileImage,
                     onSearchClick = onSearchClick,
                     onProfileClick = onProfileClick
                 )
@@ -100,6 +101,7 @@ private fun HomeScreenPreview() {
                 )
             )
         ),
+        profileImage = "",
         isVerified = { true },
         currentUserId = "1",
         onProfileClick = { },

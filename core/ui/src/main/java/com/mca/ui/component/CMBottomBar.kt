@@ -14,10 +14,9 @@
 package com.mca.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -78,8 +77,10 @@ fun CMBottomBar(
 
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
-        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        enter = slideInVertically(
+            initialOffsetY = { it }
+        ),
+        exit = fadeOut(animationSpec = tween(durationMillis = 200)),
     ) {
         Box(
             modifier = Modifier

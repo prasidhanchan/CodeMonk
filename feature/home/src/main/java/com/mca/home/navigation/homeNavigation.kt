@@ -25,6 +25,7 @@ import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.homeNavigation(
     navController: NavController,
+    profileImage: String,
     currentUserId: String
 ) {
     composable<Route.Home>(
@@ -37,9 +38,10 @@ fun NavGraphBuilder.homeNavigation(
     ) {
         HomeScreen(
             uiState = UiState(),
+            profileImage = profileImage,
             isVerified = { true },
             currentUserId = currentUserId,
-            onProfileClick = { },
+            onProfileClick = { navController.navigate(Route.EditProfile) },
             onSearchClick = { },
             onUsernameClick = { },
             onLikeClick = { },

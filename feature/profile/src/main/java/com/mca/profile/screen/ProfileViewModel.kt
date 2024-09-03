@@ -24,6 +24,7 @@ import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -151,6 +152,31 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun changePassword(
+        password: String,
+        onSuccess: () -> Unit
+    ) {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            profileRepository.changePassword(
+                password = password,
+                onSuccess = {
+                    onSuccess()
+                    uiState.update { it.copy(loading = false) }
+                },
+                onError = { error ->
+                    showSnackBar(
+                        response = Response(
+                            message = error,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                    uiState.update { it.copy(loading = false) }
+                }
+            )
+        }
+    }
+
     fun setUsername(username: String) {
         uiState.update { it.copy(currentUser = it.currentUser.copy(username = username)) }
     }
@@ -181,6 +207,15 @@ class ProfileViewModel @Inject constructor(
 
     fun setPortfolioLink(portfolioLink: String) {
         uiState.update { it.copy(currentUser = it.currentUser.copy(portfolioLink = portfolioLink)) }
+    }
+
+    fun setPassword(password: String) = uiState.update { it.copy(newPassword = password) }
+
+    fun clearPassword() {
+        viewModelScope.launch {
+            delay(200L)
+            uiState.update { it.copy(newPassword = "") }
+        }
     }
 
     private fun clearUiState() = uiState.update { UiState() }

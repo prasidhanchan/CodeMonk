@@ -16,13 +16,13 @@ package com.mca.codemonk.navigation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
+import com.mca.profile.navigation.changePasswordNavigation
 import com.mca.profile.navigation.editProfileNavigation
 import com.mca.profile.navigation.profileNavigation
 import com.mca.profile.screen.ProfileViewModel
@@ -41,9 +42,12 @@ import com.mca.util.constants.getCurrentRoute
 import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun NavGraphBuilder.innerScreen(navigateToLogin: () -> Unit) {
+fun NavGraphBuilder.innerScreen(
+    viewModelProfile: ProfileViewModel,
+    navigateToLogin: () -> Unit
+) {
     composable<Route.InnerScreen> {
-        val viewModelProfile: ProfileViewModel = hiltViewModel()
+        val uiStateProfile by viewModelProfile.uiState.collectAsState()
 
         val navHostController = rememberNavController()
 
@@ -76,10 +80,11 @@ fun NavGraphBuilder.innerScreen(navigateToLogin: () -> Unit) {
         ) {
             NavHost(
                 navController = navHostController,
-                startDestination = Route.Profile
+                startDestination = Route.Home
             ) {
                 homeNavigation(
                     navController = navHostController,
+                    profileImage = uiStateProfile.currentUser.profileImage,
                     currentUserId = currentUser?.uid ?: ""
                 )
                 profileNavigation(
@@ -92,6 +97,10 @@ fun NavGraphBuilder.innerScreen(navigateToLogin: () -> Unit) {
                     }
                 )
                 editProfileNavigation(
+                    viewModel = viewModelProfile,
+                    navHostController = navHostController
+                )
+                changePasswordNavigation(
                     viewModel = viewModelProfile,
                     navHostController = navHostController
                 )

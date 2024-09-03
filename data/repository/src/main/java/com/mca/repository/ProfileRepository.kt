@@ -39,4 +39,6 @@ interface ProfileRepository {
     )
 
     suspend fun logout()
+
+    suspend fun changePassword(password: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 }

@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.auth.navigation.forgotPasswordNavigation
 import com.mca.auth.navigation.loginNavigation
 import com.mca.auth.screen.AuthViewModel
+import com.mca.profile.screen.ProfileViewModel
 import com.mca.splash.navigation.splashNavigation
 import com.mca.ui.component.CMSnackBar
 import com.mca.ui.theme.Black
@@ -42,7 +43,8 @@ import com.mca.util.warpper.ResponseType
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainNavigation(
-    viewModelAuth: AuthViewModel = hiltViewModel()
+    viewModelAuth: AuthViewModel = hiltViewModel(),
+    viewModelProfile: ProfileViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
 
@@ -79,6 +81,7 @@ fun MainNavigation(
                 navController = navController
             )
             innerScreen(
+                viewModelProfile = viewModelProfile,
                 navigateToLogin = {
                     navController.navigate(Route.Login) {
                         popUpTo(Route.InnerScreen) {

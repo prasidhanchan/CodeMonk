@@ -46,7 +46,7 @@ fun NavGraphBuilder.profileNavigation(
         ProfileScreen(
             uiState = uiState,
             onEditProfileClick = { navHostController.navigate(Route.EditProfile) },
-            onChangePasswordClick = { },
+            onChangePasswordClick = { navHostController.navigate(Route.ChangePassword) },
             onAboutClick = { },
             onLogoutClick = onLogoutClick
         )

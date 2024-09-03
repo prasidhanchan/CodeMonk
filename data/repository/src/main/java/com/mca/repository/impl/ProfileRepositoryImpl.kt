@@ -143,4 +143,23 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun logout() {
         FirebaseAuth.getInstance().signOut()
     }
+
+    override suspend fun changePassword(
+        password: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            FirebaseAuth.getInstance().currentUser?.updatePassword(password)
+                ?.addOnSuccessListener {
+                    onSuccess()
+                }
+                ?.addOnFailureListener { error ->
+                    error.localizedMessage?.let(onError)
+                }
+                ?.await()
+        } catch (e: Exception) {
+            e.localizedMessage?.let(onError)
+        }
+    }
 }

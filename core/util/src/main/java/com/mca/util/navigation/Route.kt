@@ -48,6 +48,9 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
     data object EditProfile : Route()
 
     @Serializable
+    data object ChangePassword : Route()
+
+    @Serializable
     data object AddPost : Route(icon = R.drawable.ic_add)
 
     companion object {
