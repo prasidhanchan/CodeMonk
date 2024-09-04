@@ -21,34 +21,27 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.mca.profile.screen.ProfileScreen
+import com.mca.profile.screen.AboutScreen
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.util.navigation.Route
 
-fun NavGraphBuilder.profileNavigation(
+fun NavGraphBuilder.aboutNavigation(
     viewModel: ProfileViewModel,
-    navHostController: NavHostController,
-    onLogoutClick: (
-        title: String,
-        message: String
-    ) -> Unit
+    navHostController: NavHostController
 ) {
-    composable<Route.Profile>(
+    composable<Route.About>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = 200))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = 200))
         }
     ) {
         val uiState by viewModel.uiState.collectAsState()
 
-        ProfileScreen(
+        AboutScreen(
             uiState = uiState,
-            onEditProfileClick = { navHostController.navigate(Route.EditProfile) },
-            onChangePasswordClick = { navHostController.navigate(Route.ChangePassword) },
-            onAboutClick = { navHostController.navigate(Route.About) },
-            onLogoutClick = onLogoutClick
+            onBackClick = { navHostController.popBackStack() }
         )
     }
 }

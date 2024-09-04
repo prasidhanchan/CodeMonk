@@ -20,6 +20,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.mca.repository.ProfileRepository
 import com.mca.util.constants.convertToMap
+import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.tasks.await
@@ -27,6 +28,7 @@ import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
     val userRef: CollectionReference,
+    val updateRef: CollectionReference,
     val userStorage: StorageReference
 ) : ProfileRepository {
 
@@ -161,5 +163,25 @@ class ProfileRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             e.localizedMessage?.let(onError)
         }
+    }
+
+    override suspend fun getUpdate(): DataOrException<Update, Boolean, Exception> {
+        val dataOrException: DataOrException<Update, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            updateRef.document("Stable").get()
+                .addOnSuccessListener { docSnap ->
+                    dataOrException.data = docSnap.toObject<Update>()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        }
+        dataOrException.loading = false
+        return dataOrException
     }
 }

@@ -53,6 +53,9 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
     @Serializable
     data object AddPost : Route(icon = R.drawable.ic_add)
 
+    @Serializable
+    data object About : Route()
+
     companion object {
         val routes = listOf(
             Home,

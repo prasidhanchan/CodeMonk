@@ -30,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
+import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
 import com.mca.profile.navigation.editProfileNavigation
 import com.mca.profile.navigation.profileNavigation
@@ -101,6 +102,10 @@ fun NavGraphBuilder.innerScreen(
                     navHostController = navHostController
                 )
                 changePasswordNavigation(
+                    viewModel = viewModelProfile,
+                    navHostController = navHostController
+                )
+                aboutNavigation(
                     viewModel = viewModelProfile,
                     navHostController = navHostController
                 )

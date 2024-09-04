@@ -38,6 +38,8 @@
     <string name="add_post">Add Post</string>
     <string name="linkedin">LinkedIn</string>
     <string name="github">GitHub</string>
+    <string name="x">X</string>
+    <string name="website">Website</string>
     <string name="more_link">Portfolio</string>
     <string name="working_on">Working on</string>
     <string name="not_working_on_project">Not working on any project</string>
@@ -60,4 +62,11 @@
     <string name="mentor">Mentor for %1$s</string>
     <string name="recent_login_note">This action requires you to be recently logged in.</string>
     <string name="password_updated">Password updated successfully.</string>
+    <string name="current_version">Version: %1$s (%2$s)</string>
+    <string name="whats_new">What\'s new</string>
+    <string name="download">Download latest update</string>
+    <string name="report">Report an issue</string>
+    <string name="github_link">https://github.com/prasidhanchan/</string>
+    <string name="x_link">https://github.com/prasidhanchan/</string>
+    <string name="website_link">https://codemonk.club/</string>
 </resources>

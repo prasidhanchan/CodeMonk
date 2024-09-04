@@ -43,6 +43,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getUser()
+        getUpdate()
     }
 
     fun getUser() {
@@ -51,22 +52,20 @@ class ProfileViewModel @Inject constructor(
             val result = profileRepository.getUser(currentUser?.uid!!)
 
             withContext(Dispatchers.Main) {
-                if (result.data != null && !result.loading!!) {
+                if (result.data != null && !result.loading!! && result.exception == null) {
                     uiState.update {
                         it.copy(
                             currentUser = result.data!!,
                             loading = result.loading!!
                         )
                     }
-                } else if (result.exception != null && !result.loading!!) {
+                } else {
                     showSnackBar(
                         response = Response(
                             message = result.exception?.localizedMessage,
                             responseType = ResponseType.ERROR
                         )
                     )
-                    uiState.update { it.copy(loading = result.loading!!) }
-                } else {
                     uiState.update { it.copy(loading = result.loading!!) }
                 }
             }
@@ -174,6 +173,32 @@ class ProfileViewModel @Inject constructor(
                     uiState.update { it.copy(loading = false) }
                 }
             )
+        }
+    }
+
+    fun getUpdate() {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = profileRepository.getUpdate()
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && !result.loading!! && result.exception == null) {
+                    uiState.update {
+                        it.copy(
+                            update = result.data!!,
+                            loading = false
+                        )
+                    }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                    uiState.update { it.copy(loading = false) }
+                }
+            }
         }
     }
 

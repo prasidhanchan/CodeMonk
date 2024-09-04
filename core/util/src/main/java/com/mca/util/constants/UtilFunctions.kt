@@ -13,6 +13,9 @@
 
 package com.mca.util.constants
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.navigation.NavBackStackEntry
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
@@ -69,7 +72,8 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.Profile::class.java.simpleName -> Route.Profile
                 Route.EditProfile::class.java.simpleName -> Route.EditProfile
                 Route.ChangePassword::class.java.simpleName -> Route.ChangePassword
-                else -> Route.AddPost
+                Route.AddPost::class.java.simpleName -> Route.AddPost
+                else -> Route.About
             }
         }
     return screen
@@ -115,4 +119,18 @@ fun User.convertToMap(): HashMap<String, Any> {
         "isVerified" to this.isVerified,
         "userType" to this.userType
     )
+}
+
+/**
+ * Function to get the current version of the app.
+ */
+fun Context.getCurrentVersion(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.getPackageInfo(
+            packageName,
+            PackageManager.PackageInfoFlags.of(0)
+        ).versionName
+    } else {
+        packageManager.getPackageInfo(packageName, 0).versionName
+    }
 }

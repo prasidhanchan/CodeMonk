@@ -13,6 +13,7 @@
 
 package com.mca.repository
 
+import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
 
@@ -41,4 +42,6 @@ interface ProfileRepository {
     suspend fun logout()
 
     suspend fun changePassword(password: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
+    suspend fun getUpdate(): DataOrException<Update, Boolean, Exception>
 }

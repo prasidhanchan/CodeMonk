@@ -11,16 +11,12 @@
  *
  */
 
-package com.mca.profile
+package com.mca.util.model
 
-import com.mca.util.model.Update
-import com.mca.util.model.User
-
-
-data class UiState(
-    var currentUser: User = User(),
-    var newProfileImage: String = "",
-    var newPassword: String = "",
-    var update: Update = Update(),
-    var loading: Boolean = false
+data class Update(
+    var latestVersion: String = "",
+    var versionInfo: String = "",
+    var changeLogs: String = "",
+    var download: String = "",
+    var report: String = ""
 )

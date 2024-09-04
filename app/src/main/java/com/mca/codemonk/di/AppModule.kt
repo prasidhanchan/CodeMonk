@@ -38,6 +38,7 @@ object AppModule {
     fun provideProfileRepository(): ProfileRepository =
         ProfileRepositoryImpl(
             userRef = FirebaseFirestore.getInstance().collection("users"),
+            updateRef = FirebaseFirestore.getInstance().collection("updates"),
             userStorage = FirebaseStorage.getInstance().getReference("users")
         )
 }
