@@ -81,6 +81,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.realtime.database)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
 
@@ -118,4 +119,5 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
     implementation(project(":feature:profile"))
+    implementation(project(":feature:post"))
 }

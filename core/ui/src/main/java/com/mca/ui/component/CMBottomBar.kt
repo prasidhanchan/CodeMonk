@@ -109,7 +109,7 @@ fun CMBottomBar(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     routes.forEach { route ->
-                        if (route != Route.AddPost) {
+                        if (route != Route.Post) {
                             BottomBarItem(
                                 route = route,
                                 selected = currentScreen == route,
@@ -132,7 +132,7 @@ fun CMBottomBar(
             AddIcon(
                 modifier = Modifier.padding(top = 5.dp),
                 onClick = {
-                    navHostController.navigate(Route.AddPost) {
+                    navHostController.navigate(Route.Post) {
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true

@@ -91,6 +91,11 @@ fun CMTextBox(
         colors = TextFieldDefaults.colors(
             focusedContainerColor = LightBlack,
             unfocusedContainerColor = LightBlack,
+            focusedTextColor = fontColor,
+            unfocusedTextColor = fontColor,
+            disabledContainerColor = LightBlack,
+            disabledTextColor = fontColor.copy(alpha = 0.5f),
+            disabledIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
@@ -98,8 +103,7 @@ fun CMTextBox(
         textStyle = TextStyle(
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold,
-            fontFamily = dosis,
-            color = fontColor
+            fontFamily = dosis
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,

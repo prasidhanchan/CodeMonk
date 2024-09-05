@@ -16,14 +16,17 @@ package com.mca.home.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mca.home.UiState
 import com.mca.home.screen.HomeScreen
+import com.mca.home.screen.HomeViewModel
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.homeNavigation(
+    viewModel: HomeViewModel,
     navController: NavController,
     profileImage: String,
     currentUserId: String
@@ -36,8 +39,10 @@ fun NavGraphBuilder.homeNavigation(
             fadeOut(animationSpec = tween(durationMillis = 400))
         }
     ) {
+        val uiState by viewModel.uiState.collectAsState()
+
         HomeScreen(
-            uiState = UiState(),
+            uiState = uiState,
             profileImage = profileImage,
             isVerified = { true },
             currentUserId = currentUserId,

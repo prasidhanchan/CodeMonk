@@ -17,6 +17,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.navigation.NavBackStackEntry
+import com.mca.util.model.Post
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
 import java.text.SimpleDateFormat
@@ -72,7 +73,7 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.Profile::class.java.simpleName -> Route.Profile
                 Route.EditProfile::class.java.simpleName -> Route.EditProfile
                 Route.ChangePassword::class.java.simpleName -> Route.ChangePassword
-                Route.AddPost::class.java.simpleName -> Route.AddPost
+                Route.Post::class.java.simpleName -> Route.Post
                 else -> Route.About
             }
         }
@@ -104,20 +105,34 @@ fun String.getLinkDetail(): LinkType {
  */
 fun User.convertToMap(): HashMap<String, Any> {
     return hashMapOf(
-        "username" to this.username,
-        "name" to this.name,
-        "bio" to this.bio,
-        "profileImage" to this.profileImage,
-        "email" to this.email,
-        "currentProject" to this.currentProject,
-        "gitHubLink" to this.gitHubLink,
-        "linkedInLink" to this.linkedInLink,
-        "portfolioLink" to this.portfolioLink,
-        "xp" to this.xp,
-        "attendance" to this.attendance,
-        "semester" to this.semester,
-        "isVerified" to this.isVerified,
-        "userType" to this.userType
+        "username" to username,
+        "name" to name,
+        "bio" to bio,
+        "profileImage" to profileImage,
+        "email" to email,
+        "currentProject" to currentProject,
+        "gitHubLink" to gitHubLink,
+        "linkedInLink" to linkedInLink,
+        "portfolioLink" to portfolioLink,
+        "xp" to xp,
+        "attendance" to attendance,
+        "semester" to semester,
+        "isVerified" to isVerified,
+        "userType" to userType
+    )
+}
+
+/**
+ * Function to convert a [Post] to a Map of Post.
+ */
+fun Post.convertToMap(): HashMap<String, Any> {
+    return hashMapOf(
+        "userId" to userId,
+        "username" to username,
+        "userImage" to userImage,
+        "currentProject" to currentProject,
+        "teamMembers" to teamMembers,
+        "projectProgress" to projectProgress,
     )
 }
 

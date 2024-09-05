@@ -13,11 +13,16 @@
 
 package com.mca.codemonk.di
 
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mca.repository.AuthRepository
+import com.mca.repository.HomeRepository
+import com.mca.repository.PostRepository
 import com.mca.repository.ProfileRepository
 import com.mca.repository.impl.AuthRepositoryImpl
+import com.mca.repository.impl.HomeRepositoryImpl
+import com.mca.repository.impl.PostRepositoryImpl
 import com.mca.repository.impl.ProfileRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -38,6 +43,17 @@ object TestAppModule {
     fun provideProfileRepository(): ProfileRepository =
         ProfileRepositoryImpl(
             userRef = FirebaseFirestore.getInstance().collection("users"),
+            updateRef = FirebaseFirestore.getInstance().collection("update"),
             userStorage = FirebaseStorage.getInstance().getReference("users")
         )
+
+    @Singleton
+    @Provides
+    fun provideHomeRepository(): HomeRepository =
+        HomeRepositoryImpl(postDB = FirebaseDatabase.getInstance().getReference("posts"))
+
+    @Singleton
+    @Provides
+    fun providePostRepository(): PostRepository =
+        PostRepositoryImpl(postDB = FirebaseDatabase.getInstance().getReference("posts"))
 }

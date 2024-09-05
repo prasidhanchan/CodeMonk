@@ -11,16 +11,11 @@
  *
  */
 
-package com.mca.util.model
+package com.mca.repository
 
-data class Post(
-    var userId:String = "",
-    var username: String = "",
-    var userImage: String = "",
-    var currentProject: String = "",
-    var teamMembers: List<String> = emptyList(),
-    var projectProgress: Int = 0,
-    var deadline: String = "",
-    var likes: List<String> = emptyList(),
-    var timeStamp: Long = 0L
-)
+import com.mca.util.model.Post
+
+interface PostRepository {
+
+    suspend fun upsertPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
+}

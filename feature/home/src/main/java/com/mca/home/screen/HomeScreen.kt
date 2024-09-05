@@ -95,7 +95,7 @@ private fun HomeScreenPreview() {
                         "uchiha_sasuke",
                         "kakashi"
                     ),
-                    projectProgress = 0.2f,
+                    projectProgress = 20,
                     deadline = "30 Nov, 2024",
                     likes = listOf(
                         "naruto",

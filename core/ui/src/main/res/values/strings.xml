@@ -69,4 +69,13 @@
     <string name="github_link">https://github.com/prasidhanchan/</string>
     <string name="x_link">https://github.com/prasidhanchan/</string>
     <string name="website_link">https://codemonk.club/</string>
+    <string name="remove_member">Remove Member</string>
+    <string name="add_member">Add Member</string>
+    <string name="team_member">Team Member</string>
+    <string name="me">me</string>
+    <string name="deadline_placeholder">Deadline</string>
+    <string name="progress">Progress</string>
+    <string name="percent">Percentage</string>
+    <string name="post">Post</string>
+    <string name="no_posts_yet">No posts yet!</string>
 </resources>

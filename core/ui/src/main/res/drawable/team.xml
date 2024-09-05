@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M4.25,7.5C4.25,5.153 6.153,3.25 8.5,3.25C10.847,3.25 12.75,5.153 12.75,7.5C12.75,9.847 10.847,11.75 8.5,11.75C6.153,11.75 4.25,9.847 4.25,7.5Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M1.25,18.286C1.25,15.449 3.722,13.25 6.643,13.25H10.357C10.75,13.25 11.135,13.29 11.507,13.366C12.147,13.496 12.467,13.561 12.805,13.975C13.143,14.389 13.143,14.836 13.143,15.728V17.75C13.143,19.164 13.143,19.871 12.704,20.311C12.264,20.75 11.557,20.75 10.143,20.75H3.857C2.475,20.75 1.25,19.702 1.25,18.286Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M18.75,12.75C19.302,12.75 19.75,13.198 19.75,13.75V15.75H21.75C22.302,15.75 22.75,16.198 22.75,16.75C22.75,17.302 22.302,17.75 21.75,17.75H19.75V19.75C19.75,20.302 19.302,20.75 18.75,20.75C18.198,20.75 17.75,20.302 17.75,19.75V17.75H15.75C15.198,17.75 14.75,17.302 14.75,16.75C14.75,16.198 15.198,15.75 15.75,15.75L17.75,15.75V13.75C17.75,13.198 18.198,12.75 18.75,12.75Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12.499,11.632C12.82,11.709 13.155,11.75 13.5,11.75C15.847,11.75 17.75,9.847 17.75,7.5C17.75,5.153 15.847,3.25 13.5,3.25C13.155,3.25 12.82,3.291 12.499,3.369C13.579,4.414 14.25,5.879 14.25,7.5C14.25,9.121 13.579,10.586 12.499,11.632Z" />
+</vector>

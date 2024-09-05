@@ -47,27 +47,29 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getUser() {
-        uiState.update { it.copy(loading = true) }
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = profileRepository.getUser(currentUser?.uid!!)
+        if (currentUser != null) {
+            uiState.update { it.copy(loading = true) }
+            viewModelScope.launch(Dispatchers.IO) {
+                val result = profileRepository.getUser(currentUser.uid)
 
-            withContext(Dispatchers.Main) {
-                if (result.data != null && !result.loading!! && result.exception == null) {
-                    uiState.update {
-                        it.copy(
-                            currentUser = result.data!!,
-                            tempUsername = result.data?.username!!,
-                            loading = result.loading!!
+                withContext(Dispatchers.Main) {
+                    if (result.data != null && !result.loading!! && result.exception == null) {
+                        uiState.update {
+                            it.copy(
+                                currentUser = result.data!!,
+                                tempUsername = result.data?.username!!,
+                                loading = result.loading!!
+                            )
+                        }
+                    } else {
+                        showSnackBar(
+                            response = Response(
+                                message = result.exception?.localizedMessage,
+                                responseType = ResponseType.ERROR
+                            )
                         )
+                        uiState.update { it.copy(loading = result.loading!!) }
                     }
-                } else {
-                    showSnackBar(
-                        response = Response(
-                            message = result.exception?.localizedMessage,
-                            responseType = ResponseType.ERROR
-                        )
-                    )
-                    uiState.update { it.copy(loading = result.loading!!) }
                 }
             }
         }

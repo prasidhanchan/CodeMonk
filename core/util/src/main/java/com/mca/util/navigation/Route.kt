@@ -51,7 +51,7 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
     data object ChangePassword : Route()
 
     @Serializable
-    data object AddPost : Route(icon = R.drawable.ic_add)
+    data object Post : Route(icon = R.drawable.ic_add)
 
     @Serializable
     data object About : Route()
@@ -60,7 +60,7 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
         val routes = listOf(
             Home,
             LeaderBoard,
-            AddPost,
+            Post,
             Notification,
             Profile
         )

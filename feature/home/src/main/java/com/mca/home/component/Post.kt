@@ -79,7 +79,6 @@ import com.mca.util.constants.toLikedBy
 import com.mca.util.constants.toLikes
 import com.mca.util.constants.toTimeStamp
 import com.mca.util.model.Post
-import kotlin.math.roundToInt
 
 /**
  * Post composable to display user Post.
@@ -120,9 +119,21 @@ internal fun Post(
                     onDeleteClick = onDeleteClick
                 )
             }
-        } else if (posts().isEmpty() && !loading) {
+        } else if (posts().isEmpty() && loading) {
             items(count = 2) {
                 PostCardLoader()
+            }
+        } else {
+            item {
+                Text(
+                    text = stringResource(id = R.string.no_posts_yet),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = dosis,
+                        color = fontColor
+                    )
+                )
             }
         }
 
@@ -145,7 +156,7 @@ private fun PostCard(
 ) {
     Column(
         modifier
-            .padding(vertical = 10.dp)
+            .padding(vertical = 20.dp)
             .wrapContentHeight(Alignment.CenterVertically)
             .width(350.dp),
         verticalArrangement = Arrangement.Top,
@@ -164,7 +175,7 @@ private fun PostCard(
             onLikeClick = onLikeClick,
             onUnlikeClick = onUnlikeClick
         )
-        PostBottomBar(post = post)
+        if (post.likes.isNotEmpty()) PostBottomBar(post = post)
     }
 }
 
@@ -252,11 +263,11 @@ fun MainContent(
                     color = fontColor
                 )
             )
-            CMProgressBar(progress = post.projectProgress)
+            CMProgressBar(progress = (post.projectProgress / 100f))
             Text(
                 text = stringResource(
                     R.string.progress_percentage,
-                    (post.projectProgress * 100).roundToInt()
+                    post.projectProgress
                 ),
                 style = TextStyle(
                     fontSize = 16.sp,
@@ -562,7 +573,7 @@ private fun PostCardPreview() {
                 "uchiha_sasuke",
                 "kakashi"
             ),
-            projectProgress = 0.2f,
+            projectProgress = 20,
             deadline = "30 Nov, 2024",
             likes = listOf(
                 "naruto",

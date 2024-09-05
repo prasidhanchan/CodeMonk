@@ -11,16 +11,13 @@
  *
  */
 
-package com.mca.util.model
+package com.mca.post
 
-data class Post(
-    var userId:String = "",
-    var username: String = "",
-    var userImage: String = "",
+data class UiState(
     var currentProject: String = "",
     var teamMembers: List<String> = emptyList(),
     var projectProgress: Int = 0,
     var deadline: String = "",
     var likes: List<String> = emptyList(),
-    var timeStamp: Long = 0L
+    var loading: Boolean = false
 )

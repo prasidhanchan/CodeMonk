@@ -30,6 +30,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
+import com.mca.home.screen.HomeViewModel
+import com.mca.post.navigation.postNavigation
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
 import com.mca.profile.navigation.editProfileNavigation
@@ -44,6 +46,7 @@ import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(
+    viewModelHome: HomeViewModel,
     viewModelProfile: ProfileViewModel,
     navigateToLogin: () -> Unit
 ) {
@@ -84,6 +87,7 @@ fun NavGraphBuilder.innerScreen(
                 startDestination = Route.Home
             ) {
                 homeNavigation(
+                    viewModel = viewModelHome,
                     navController = navHostController,
                     profileImage = uiStateProfile.currentUser.profileImage,
                     currentUserId = currentUser?.uid ?: ""
@@ -107,6 +111,12 @@ fun NavGraphBuilder.innerScreen(
                 )
                 aboutNavigation(
                     viewModel = viewModelProfile,
+                    navHostController = navHostController
+                )
+                postNavigation(
+                    userType = uiStateProfile.currentUser.userType,
+                    username = uiStateProfile.currentUser.username,
+                    userImage = uiStateProfile.currentUser.profileImage,
                     navHostController = navHostController
                 )
             }
