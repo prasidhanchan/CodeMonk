@@ -15,6 +15,7 @@ package com.mca.repository.impl
 
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
@@ -67,7 +68,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
             when {
                 user.username.isEmpty() -> throw Exception("Username cannot be empty.")
-                !user.username.matches(Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$\n")) -> throw Exception("Invalid username.")
+                !user.username.matches(Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")) -> throw Exception("Invalid username.")
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
                 else -> {
@@ -93,7 +94,7 @@ class ProfileRepositoryImpl @Inject constructor(
     ) {
         try {
             if (user.profileImage.isNotEmpty()) {
-                val taskSnap = userStorage.child("${user.username}.jpg")
+                val taskSnap = userStorage.child("${user.userId}.jpg")
                     .putFile(user.profileImage.toUri())
                     .addOnFailureListener { error ->
                         error.localizedMessage?.let(onError)
@@ -125,7 +126,7 @@ class ProfileRepositoryImpl @Inject constructor(
         try {
             userRef.document(user.userId).update(mapOf("profileImage" to ""))
                 .addOnSuccessListener {
-                    userStorage.child("${user.username}.jpg").delete()
+                    userStorage.child("${user.userId}.jpg").delete()
                         .addOnSuccessListener {
                             onSuccess()
                         }
@@ -152,15 +153,30 @@ class ProfileRepositoryImpl @Inject constructor(
         onError: (String) -> Unit
     ) {
         try {
+            if (password.isBlank()) throw Exception("Password cannot be empty.")
+
             FirebaseAuth.getInstance().currentUser?.updatePassword(password)
                 ?.addOnSuccessListener {
                     onSuccess()
                 }
                 ?.addOnFailureListener { error ->
-                    error.localizedMessage?.let(onError)
+                    if (error is FirebaseAuthException) {
+                        when(error.errorCode) {
+                            "ERROR_REQUIRES_RECENT_LOGIN" -> throw Exception("This operation requires a recent login.")
+                            "ERROR_WEAK_PASSWORD" -> throw Exception("Password should be at least 6 characters.")
+                            else  -> throw Exception("An unknown error occurred.")
+                        }
+                    }
                 }
                 ?.await()
         } catch (e: Exception) {
+            if (e is FirebaseAuthException) {
+                when(e.errorCode) {
+                    "ERROR_REQUIRES_RECENT_LOGIN" -> throw Exception("This operation requires a recent login.")
+                    "ERROR_WEAK_PASSWORD" -> throw Exception("Password should be at least 6 characters.")
+                    else  -> throw Exception("An unknown error occurred.")
+                }
+            }
             e.localizedMessage?.let(onError)
         }
     }

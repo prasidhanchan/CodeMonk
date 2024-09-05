@@ -98,6 +98,7 @@ fun NavGraphBuilder.editProfileNavigation(
             },
             onBackClick = {
                 navHostController.popBackStack()
+                viewModel.setUsername(uiState.tempUsername) // Reset username if not updated
                 viewModel.setProfileImage("")
             }
         )

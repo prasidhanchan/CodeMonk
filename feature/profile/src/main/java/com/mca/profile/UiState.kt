@@ -20,6 +20,7 @@ import com.mca.util.model.User
 data class UiState(
     var currentUser: User = User(),
     var newProfileImage: String = "",
+    var tempUsername: String = "",
     var newPassword: String = "",
     var update: Update = Update(),
     var loading: Boolean = false
