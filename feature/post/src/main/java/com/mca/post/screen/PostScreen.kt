@@ -140,8 +140,9 @@ fun PostScreen(
                             onClick = {
                                 if (newMember.isNotBlank() && !teamMembers.contains(newMember)) {
                                     teamMembers.add(newMember.trim())
-                                    newMember = ""
+                                    onTeamMemberChange(teamMembers.toList())
                                 }
+                                newMember = ""
                             },
                             interactionSource = interactionSource
                         ),
@@ -207,7 +208,6 @@ fun PostScreen(
                 imeAction = ImeAction.Done,
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        onTeamMemberChange(teamMembers)
                         localKeyboard?.hide()
                         onPostClick()
                     }
@@ -219,7 +219,6 @@ fun PostScreen(
                 modifier = Modifier.padding(vertical = 20.dp),
                 loading = uiState.loading,
                 onClick = {
-                    onTeamMemberChange(teamMembers)
                     localKeyboard?.hide()
                     onPostClick()
                 }
