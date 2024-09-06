@@ -14,9 +14,16 @@
 package com.mca.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -38,9 +45,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -52,14 +64,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mca.ui.R
+import com.mca.ui.theme.Black
 import com.mca.ui.theme.BottomBarBlack
 import com.mca.ui.theme.BrandColor
 import com.mca.ui.theme.OffWhite
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
+import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.constants.getCurrentRoute
 import com.mca.util.navigation.Route
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
 
 /**
  * BottomBar composable to display navigation screens.
@@ -75,6 +91,18 @@ fun CMBottomBar(
     val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentScreen = navaBackStackEntry?.getCurrentRoute()
 
+    var isOpen by remember { mutableStateOf(false) }
+    val animateHeight by animateDpAsState(
+        targetValue = if (isOpen) 180.dp else 80.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "heightBottomBar"
+    )
+
+    val context = LocalContext.current
+
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(animationSpec = tween(durationMillis = 200)),
@@ -83,60 +111,79 @@ fun CMBottomBar(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp),
-            contentAlignment = Alignment.TopCenter
+                .height(animateHeight + 20.dp),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Surface(
-                modifier = modifier
-                    .padding(top = 20.dp)
-                    .fillMaxWidth()
-                    .height(80.dp),
-                shape = RoundedCornerShape(
-                    topStart = 15.dp,
-                    topEnd = 15.dp,
-                    bottomStart = 0.dp,
-                    bottomEnd = 0.dp
-                ),
-                color = BottomBarBlack
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(all = 10.dp)
-                        .padding(bottom = 10.dp)
-                        .height(80.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                Surface(
+                    modifier = modifier
+                        .padding(top = 20.dp)
+                        .fillMaxWidth()
+                        .height(animateHeight),
+                    shape = RoundedCornerShape(
+                        topStart = 15.dp,
+                        topEnd = 15.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 0.dp
+                    ),
+                    color = BottomBarBlack
                 ) {
-                    routes.forEach { route ->
-                        if (route != Route.Post) {
-                            BottomBarItem(
-                                route = route,
-                                selected = currentScreen == route,
-                                isNewNotification = isNewNotification,
-                                onClick = {
-                                    navHostController.navigate(route) {
-                                        popUpTo<Route.Home>()
-                                        launchSingleTop = true
-                                        restoreState = true
+                    Row(
+                        modifier = Modifier
+                            .padding(all = 10.dp)
+                            .height(80.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        routes.forEach { route ->
+                            if (route != Route.Post) {
+                                BottomBarItem(
+                                    route = route,
+                                    selected = currentScreen == route,
+                                    isNewNotification = isNewNotification,
+                                    onClick = {
+                                        navHostController.navigate(route) {
+                                            popUpTo<Route.Home>()
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
                                     }
-                                }
-                            )
-                        } else {
-                            Spacer(modifier = Modifier.width(5.dp))
+                                )
+                            } else {
+                                Spacer(modifier = Modifier.width(5.dp))
+                            }
                         }
                     }
                 }
+
+                AddIcon(
+                    modifier = Modifier.padding(top = 5.dp),
+                    isOpen = isOpen,
+                    onClick = { isOpen = !isOpen }
+                )
             }
 
-            AddIcon(
-                modifier = Modifier.padding(top = 5.dp),
-                onClick = {
+            PostOptions(
+                visible = isOpen,
+                onProjectOptionClick = {
                     navHostController.navigate(Route.Post) {
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true
+                        isOpen = false
                     }
+                },
+                onAnnouncementClick = {
+                    showSnackBar(
+                        response = Response(
+                            message = context.getString(R.string.feature_not_available),
+                            responseType = ResponseType.ERROR
+                        )
+                    )
                 }
             )
         }
@@ -155,7 +202,7 @@ private fun BottomBarItem(
 
     Column(
         modifier = modifier
-            .height(45.dp)
+            .height(50.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
             .clickable(
                 indication = null,
@@ -182,12 +229,14 @@ private fun BottomBarItem(
                 color = if (selected) fontColor else OffWhite
             )
         )
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
 @Composable
 private fun AddIcon(
     modifier: Modifier = Modifier,
+    isOpen: Boolean,
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -211,10 +260,77 @@ private fun AddIcon(
             Icon(
                 painter = painterResource(id = R.drawable.ic_add),
                 contentDescription = stringResource(id = R.string.add_post),
+                modifier = Modifier.rotateIcon(isOpen),
                 tint = tintColor
             )
         }
     }
+}
+
+@Composable
+private fun PostOptions(
+    visible: Boolean,
+    onProjectOptionClick: () -> Unit,
+    onAnnouncementClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically(
+            animationSpec = tween(durationMillis = 200),
+            initialOffsetY = { it }
+        ),
+        exit = slideOutVertically(
+            animationSpec = tween(durationMillis = 200),
+            targetOffsetY = { it }
+        ),
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(if (visible) 140.dp else 0.dp)
+                .background(color = BottomBarBlack),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CMButton(
+                text = stringResource(id = R.string.project_post),
+                onClick = onProjectOptionClick
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            CMButton(
+                text = stringResource(id = R.string.announcement),
+                textColor = Black,
+                color = tintColor,
+                onClick = onAnnouncementClick
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+}
+
+
+/**
+ * Function to rotate an icon 45 degrees.
+ */
+private fun Modifier.rotateIcon(isOpen: Boolean) = composed {
+    val rotation by animateFloatAsState(
+        targetValue = if (isOpen) 45f else 0f,
+        animationSpec = tween(durationMillis = 600),
+        label = "rotationBottomBar"
+    )
+
+    this.rotate(rotation)
+}
+
+@Preview
+@Composable
+private fun PostOptionsPreview() {
+    PostOptions(
+        visible = true,
+        onProjectOptionClick = { },
+        onAnnouncementClick = { }
+    )
 }
 
 @Preview

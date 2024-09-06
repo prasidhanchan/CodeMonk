@@ -78,4 +78,7 @@
     <string name="percent">Percentage</string>
     <string name="post">Post</string>
     <string name="no_posts_yet">No posts yet!</string>
+    <string name="project_post">Project Post</string>
+    <string name="announcement">Announcement</string>
+    <string name="feature_not_available">Feature not available yet!</string>
 </resources>

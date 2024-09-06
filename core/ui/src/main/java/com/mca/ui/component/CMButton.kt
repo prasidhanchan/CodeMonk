@@ -48,6 +48,7 @@ fun CMButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     fonSize: Int = 18,
+    textColor: Color = fontColor,
     color: Color = BrandColor,
     loading: Boolean = false,
     onClick: () -> Unit
@@ -75,7 +76,7 @@ fun CMButton(
                         fontSize = fonSize.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = dosis,
-                        color = fontColor
+                        color = textColor
                     )
                 )
             } else {
