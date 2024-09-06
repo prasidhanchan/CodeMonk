@@ -192,7 +192,7 @@ class ProfileViewModel @Inject constructor(
                     uiState.update {
                         it.copy(
                             update = result.data!!,
-                            loading = false
+                            loading = result.loading!!
                         )
                     }
                 } else {
@@ -203,6 +203,65 @@ class ProfileViewModel @Inject constructor(
                         )
                     )
                     uiState.update { it.copy(loading = false) }
+                }
+            }
+        }
+    }
+
+    fun getSelectedUser(
+        username: String,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = profileRepository.getSelectedUser(
+                username = username,
+                onSuccess = onSuccess,
+                onError = onError
+            )
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
+                    uiState.update {
+                        it.copy(
+                            selectedUser = result.data!!,
+                            loading = result.loading!!
+                        )
+                    }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                    uiState.update { it.copy(loading = false) }
+                }
+            }
+        }
+    }
+
+    fun getAllMentors() {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = profileRepository.getAllMentors(uiState.value.selectedUser.userId)
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
+                    uiState.update {
+                        it.copy(
+                            otherMentors = result.data!!,
+                            loading = result.loading!!
+                        )
+                    }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
                 }
             }
         }
@@ -228,6 +287,10 @@ class ProfileViewModel @Inject constructor(
         uiState.update { it.copy(currentUser = it.currentUser.copy(currentProject = currentProject)) }
     }
 
+    fun setMentor(mentor: String) {
+        uiState.update { it.copy(currentUser = it.currentUser.copy(mentor = mentor)) }
+    }
+
     fun setLinkedInLink(linkedInLink: String) {
         uiState.update { it.copy(currentUser = it.currentUser.copy(linkedInLink = linkedInLink)) }
     }
@@ -241,6 +304,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun setPassword(password: String) = uiState.update { it.copy(newPassword = password) }
+
+    fun clearSelectedUser() = uiState.update { it.copy(selectedUser = User()) }
 
     fun clearPassword() {
         viewModelScope.launch {

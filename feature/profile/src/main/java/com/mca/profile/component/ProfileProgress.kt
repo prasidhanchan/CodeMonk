@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,8 @@ import com.mca.ui.theme.fontColor
  */
 internal enum class ProgressType {
     XP,
-    ATTENDANCE
+    ATTENDANCE,
+    PROJECT_PROGRESS
 }
 
 /**
@@ -76,7 +78,14 @@ internal fun ProfileProgress(
             color = tint
         )
         Text(
-            text = if (progressType == ProgressType.XP) "$progress pts" else "${progress}%",
+            text = if (progressType == ProgressType.XP) {
+                stringResource(id = R.string.xp_points, progress)
+            } else {
+                stringResource(
+                    id = R.string.progress_percentage,
+                    progress
+                )
+            },
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,

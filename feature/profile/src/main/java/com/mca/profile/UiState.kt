@@ -19,6 +19,8 @@ import com.mca.util.model.User
 
 data class UiState(
     var currentUser: User = User(),
+    var selectedUser: User = User(),
+    var otherMentors: List<User> = emptyList(),
     var newProfileImage: String = "",
     var tempUsername: String = "",
     var newPassword: String = "",

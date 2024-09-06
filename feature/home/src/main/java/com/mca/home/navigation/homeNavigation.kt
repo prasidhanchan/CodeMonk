@@ -18,8 +18,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.mca.home.screen.HomeScreen
 import com.mca.home.screen.HomeViewModel
@@ -27,7 +27,8 @@ import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.homeNavigation(
     viewModel: HomeViewModel,
-    navController: NavController,
+    isVerified: (userId: String) -> Boolean,
+    navHostController: NavHostController,
     profileImage: String,
     currentUserId: String
 ) {
@@ -44,11 +45,13 @@ fun NavGraphBuilder.homeNavigation(
         HomeScreen(
             uiState = uiState,
             profileImage = profileImage,
-            isVerified = { true },
+            isVerified = isVerified,
             currentUserId = currentUserId,
-            onProfileClick = { navController.navigate(Route.EditProfile) },
+            onProfileClick = { navHostController.navigate(Route.EditProfile) },
             onSearchClick = { },
-            onUsernameClick = { },
+            onUsernameClick = { userId ->
+                navHostController.navigate(Route.ViewProfile(userId))
+            },
             onLikeClick = { },
             onUnlikeClick = { },
             onDeletedClick = { }

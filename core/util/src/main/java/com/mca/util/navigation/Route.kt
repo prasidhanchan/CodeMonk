@@ -54,6 +54,9 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
     data object Post : Route(icon = R.drawable.ic_add)
 
     @Serializable
+    data class ViewProfile(val username: String) : Route()
+
+    @Serializable
     data object About : Route()
 
     companion object {

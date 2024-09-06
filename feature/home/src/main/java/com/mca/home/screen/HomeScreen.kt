@@ -34,7 +34,7 @@ import com.mca.util.model.Post
 internal fun HomeScreen(
     uiState: UiState,
     profileImage: String,
-    isVerified: (String) -> Boolean,
+    isVerified: (userId: String) -> Boolean,
     currentUserId: String,
     onProfileClick: () -> Unit,
     onSearchClick: () -> Unit,

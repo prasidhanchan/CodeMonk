@@ -54,6 +54,7 @@ fun NavGraphBuilder.editProfileNavigation(
             onProfileImageChange = viewModel::setProfileImage,
             onBioChange = viewModel::setBio,
             onCurrentProjectChange = viewModel::setCurrentProject,
+            onMentorChange = viewModel::setMentor,
             onAddLinkCLick = { link ->
                 if (link.startsWith("http://") || link.startsWith("https://")) {
                     when (link.getLinkDetail()) {

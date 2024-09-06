@@ -85,6 +85,7 @@ internal fun EditProfileScreen(
     onProfileImageChange: (String) -> Unit,
     onBioChange: (String) -> Unit,
     onCurrentProjectChange: (String) -> Unit,
+    onMentorChange: (String) -> Unit,
     onAddLinkCLick: (String) -> Unit,
     onRemoveLinkCLick: (LinkType) -> Unit,
     onRemoveProfileImage: () -> Unit,
@@ -239,8 +240,27 @@ internal fun EditProfileScreen(
                     )
                 },
                 keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Words
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
             )
+            if (uiState.currentUser.userType != "Admin") {
+                CMTextBox(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    value = uiState.currentUser.mentor,
+                    onValueChange = onMentorChange,
+                    placeHolder = stringResource(id = R.string.mentor),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.mentor),
+                            contentDescription = stringResource(id = R.string.mentor),
+                            tint = tintColor
+                        )
+                    },
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.None
+                )
+            }
+
             CMTextBox(
                 modifier = Modifier.padding(vertical = 8.dp),
                 value = linkState,
@@ -387,6 +407,7 @@ private fun EditProfileScreenPreview() {
         onProfileImageChange = { },
         onBioChange = { },
         onCurrentProjectChange = { },
+        onMentorChange = { },
         onAddLinkCLick = { },
         onRemoveLinkCLick = { },
         onRemoveProfileImage = { },

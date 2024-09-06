@@ -19,11 +19,13 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
+import com.mca.repository.BuildConfig.UPDATE_CHANNEL
 import com.mca.repository.ProfileRepository
 import com.mca.util.constants.convertToMap
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -71,6 +73,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 !user.username.matches(Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")) -> throw Exception("Invalid username.")
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
+                user.mentor.isEmpty() -> if (user.userType != "Admin") throw Exception("Please add a mentor.")
                 else -> {
                     userRef.document(user.userId).update(user.convertToMap())
                         .addOnSuccessListener {
@@ -161,20 +164,20 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 ?.addOnFailureListener { error ->
                     if (error is FirebaseAuthException) {
-                        when(error.errorCode) {
+                        when (error.errorCode) {
                             "ERROR_REQUIRES_RECENT_LOGIN" -> throw Exception("This operation requires a recent login.")
                             "ERROR_WEAK_PASSWORD" -> throw Exception("Password should be at least 6 characters.")
-                            else  -> throw Exception("An unknown error occurred.")
+                            else -> throw Exception("An unknown error occurred.")
                         }
                     }
                 }
                 ?.await()
         } catch (e: Exception) {
             if (e is FirebaseAuthException) {
-                when(e.errorCode) {
+                when (e.errorCode) {
                     "ERROR_REQUIRES_RECENT_LOGIN" -> throw Exception("This operation requires a recent login.")
                     "ERROR_WEAK_PASSWORD" -> throw Exception("Password should be at least 6 characters.")
-                    else  -> throw Exception("An unknown error occurred.")
+                    else -> throw Exception("An unknown error occurred.")
                 }
             }
             e.localizedMessage?.let(onError)
@@ -186,7 +189,7 @@ class ProfileRepositoryImpl @Inject constructor(
             DataOrException(loading = true)
 
         try {
-            updateRef.document("Stable").get()
+            updateRef.document(UPDATE_CHANNEL).get()
                 .addOnSuccessListener { docSnap ->
                     dataOrException.data = docSnap.toObject<Update>()
                 }
@@ -194,6 +197,65 @@ class ProfileRepositoryImpl @Inject constructor(
                     dataOrException.exception = error
                 }
                 .await()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        }
+        dataOrException.loading = false
+        return dataOrException
+    }
+
+    override suspend fun getSelectedUser(
+        username: String,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ): DataOrException<User, Boolean, Exception> {
+        val dataOrException: DataOrException<User, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            userRef.whereEqualTo("username", username).get()
+                .addOnSuccessListener { dataSnap ->
+                    try {
+                        dataOrException.data = dataSnap.firstNotNullOf { docSnap ->
+                            docSnap.toObject<User>()
+                        }
+                    } catch (e: Exception) {
+                        onError()
+                        dataOrException.exception = Exception("User profile not created!")
+                    }
+                    onSuccess()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        }
+        dataOrException.loading = false
+        return dataOrException
+    }
+
+    override suspend fun getAllMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<User>, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            userRef
+                .whereEqualTo("userType", "Admin").get()
+                .addOnSuccessListener { querySnap ->
+                    dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
+                        docSnap.toObject<User>()
+                    }
+                        .filter { user -> user.userId != selectedUserId }
+                        .shuffled()
+                        .take(3)
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+                .asFlow()
         } catch (e: Exception) {
             dataOrException.exception = e
         }

@@ -13,6 +13,7 @@
 
 package com.mca.home.screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mca.home.UiState
@@ -48,7 +49,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val resultFlow = homeRepository.getPosts()
 
-            delay(4000L)
+            delay(1000L)
             withContext(Dispatchers.Main) {
                 resultFlow.distinctUntilChanged()
                     .collectLatest { result ->
@@ -71,5 +72,4 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
 }

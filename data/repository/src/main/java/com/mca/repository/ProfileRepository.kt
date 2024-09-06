@@ -44,4 +44,12 @@ interface ProfileRepository {
     suspend fun changePassword(password: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 
     suspend fun getUpdate(): DataOrException<Update, Boolean, Exception>
+
+    suspend fun getSelectedUser(
+        username: String,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ): DataOrException<User, Boolean, Exception>
+
+    suspend fun getAllMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception>
 }

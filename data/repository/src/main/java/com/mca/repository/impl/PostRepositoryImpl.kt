@@ -33,7 +33,6 @@ class PostRepositoryImpl @Inject constructor(
             if (post.currentProject.isBlank()) throw Exception("Current project cannot be empty.")
             if (post.teamMembers.size == 1) throw Exception("Team members cannot be empty")
 
-
             val projectName = post.currentProject.replace(" ", "_")
             postDB.child("${post.username}-${projectName}-${post.timeStamp}")
                 .updateChildren(post.convertToMap())

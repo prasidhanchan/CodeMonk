@@ -186,7 +186,7 @@ internal fun ProfileScreen(
 
             if (uiState.currentUser.userType == "Admin") {
                 Text(
-                    text = stringResource(R.string.mentor, uiState.currentUser.mentor),
+                    text = stringResource(R.string.mentor_for, uiState.currentUser.mentor),
                     modifier = Modifier.padding(all = 8.dp),
                     style = TextStyle(
                         fontSize = 16.sp,
@@ -330,7 +330,7 @@ private fun ProfileScreenPreview() {
                 portfolioLink = "https://github.com/prasidhgopal",
                 xp = 20,
                 attendance = 75,
-                userType = "Admin",
+                userType = "student",
                 mentor = "Team Android"
             )
         ),

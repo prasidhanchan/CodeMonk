@@ -14,8 +14,10 @@
 package com.mca.util.model
 
 import androidx.compose.runtime.Stable
+import kotlinx.serialization.Serializable
 
 @Stable
+@Serializable
 data class User(
     val username: String = "",
     val name: String = "",
@@ -24,6 +26,7 @@ data class User(
     val profileImage: String = "",
     val email: String = "",
     val currentProject: String = "",
+    val currentProjectProgress: Int = 0,
     val gitHubLink: String = "",
     val linkedInLink: String = "",
     val portfolioLink: String = "",
@@ -32,5 +35,6 @@ data class User(
     val semester: String = "1",
     val isVerified: Boolean = false,
     val userType: String = "student",
-    val mentor: String = ""
+    val mentor: String = "",
+    val mentorFor: String = ""
 )

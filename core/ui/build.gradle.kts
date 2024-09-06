@@ -61,6 +61,9 @@ android {
 
 dependencies {
 
+    // Coil
+    implementation(libs.coil.compose)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.navigation.compose)
     implementation(platform(libs.androidx.compose.bom))

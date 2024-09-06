@@ -118,7 +118,8 @@ fun User.convertToMap(): HashMap<String, Any> {
         "attendance" to attendance,
         "semester" to semester,
         "isVerified" to isVerified,
-        "userType" to userType
+        "userType" to userType,
+        "mentor" to mentor
     )
 }
 

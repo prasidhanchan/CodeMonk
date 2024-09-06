@@ -15,7 +15,6 @@ package com.mca.post.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.mca.post.UiState
 import com.mca.repository.PostRepository
 import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
@@ -36,8 +35,6 @@ class PostViewModel @Inject constructor(
 
     var uiState = MutableStateFlow(UiState())
         private set
-
-    private val currentUser = FirebaseAuth.getInstance().currentUser
 
     fun upsertPost(
         post: Post,

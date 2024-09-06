@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
+import com.google.firebase.firestore.CollectionReference
 import com.mca.repository.HomeRepository
 import com.mca.util.model.Post
 import com.mca.util.warpper.DataOrException
@@ -28,7 +29,8 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(
-    val postDB: DatabaseReference
+    val postDB: DatabaseReference,
+    val userRef: CollectionReference
 ) : HomeRepository {
 
     override suspend fun getPosts(): Flow<DataOrException<List<Post>, Boolean, Exception>> {
@@ -43,13 +45,14 @@ class HomeRepositoryImpl @Inject constructor(
                             data = snapshot.children.map { dataSnap ->
                                 dataSnap.getValue<Post>()!!
                             }
+                                .sortedByDescending { post -> post.timeStamp }
                         )
                     }
                     dataOrException.update { it.copy(loading = false) }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    throw error.toException()
+                    dataOrException.update { it.copy(exception = error.toException()) }
                 }
             }
             postDB.addValueEventListener(valueEventListener)

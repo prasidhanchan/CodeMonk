@@ -29,8 +29,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.auth.navigation.forgotPasswordNavigation
 import com.mca.auth.navigation.loginNavigation
 import com.mca.auth.screen.AuthViewModel
-import com.mca.home.screen.HomeViewModel
-import com.mca.profile.screen.ProfileViewModel
 import com.mca.splash.navigation.splashNavigation
 import com.mca.ui.component.CMSnackBar
 import com.mca.ui.theme.Black
@@ -45,8 +43,7 @@ import com.mca.util.warpper.ResponseType
 @Composable
 fun MainNavigation(
     viewModelAuth: AuthViewModel = hiltViewModel(),
-    viewModelHome: HomeViewModel = hiltViewModel(),
-    viewModelProfile: ProfileViewModel = hiltViewModel()
+//    viewModelProfile: ProfileViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
 
@@ -83,8 +80,6 @@ fun MainNavigation(
                 navController = navController
             )
             innerScreen(
-                viewModelHome = viewModelHome,
-                viewModelProfile = viewModelProfile,
                 navigateToLogin = {
                     navController.navigate(Route.Login) {
                         popUpTo(Route.InnerScreen) {

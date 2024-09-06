@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,6 +37,7 @@ import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
 import com.mca.profile.navigation.editProfileNavigation
 import com.mca.profile.navigation.profileNavigation
+import com.mca.profile.navigation.viewProfileNavigation
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.ui.R
 import com.mca.ui.component.CMAlertDialog
@@ -46,11 +48,11 @@ import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(
-    viewModelHome: HomeViewModel,
-    viewModelProfile: ProfileViewModel,
     navigateToLogin: () -> Unit
 ) {
     composable<Route.InnerScreen> {
+        val viewModelHome: HomeViewModel = hiltViewModel()
+        val viewModelProfile: ProfileViewModel = hiltViewModel()
         val uiStateProfile by viewModelProfile.uiState.collectAsState()
 
         val navHostController = rememberNavController()
@@ -88,7 +90,8 @@ fun NavGraphBuilder.innerScreen(
             ) {
                 homeNavigation(
                     viewModel = viewModelHome,
-                    navController = navHostController,
+                    isVerified = { true },
+                    navHostController = navHostController,
                     profileImage = uiStateProfile.currentUser.profileImage,
                     currentUserId = currentUser?.uid ?: ""
                 )
@@ -117,6 +120,10 @@ fun NavGraphBuilder.innerScreen(
                     userType = uiStateProfile.currentUser.userType,
                     username = uiStateProfile.currentUser.username,
                     userImage = uiStateProfile.currentUser.profileImage,
+                    navHostController = navHostController
+                )
+                viewProfileNavigation(
+                    viewModel = viewModelProfile,
                     navHostController = navHostController
                 )
             }

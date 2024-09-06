@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -86,7 +87,7 @@ import com.mca.util.model.Post
 @Composable
 internal fun Post(
     posts: () -> List<Post>,
-    isVerified: (String) -> Boolean,
+    isVerified: (userId: String) -> Boolean,
     currentUserId: String,
     loading: Boolean,
     modifier: Modifier = Modifier,
@@ -146,7 +147,7 @@ internal fun Post(
 @Composable
 private fun PostCard(
     post: Post,
-    isVerified: (String) -> Boolean,
+    isVerified: (userId: String) -> Boolean,
     currentUserId: String,
     modifier: Modifier = Modifier,
     onLikeClick: () -> Unit,
@@ -245,7 +246,7 @@ fun MainContent(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 for (member in post.teamMembers) {
-                    ActionChip(
+                    UsernameChip(
                         username = member,
                         fontColor = LinkBlue,
                         onUsernameClick = onUsernameClick
@@ -358,7 +359,7 @@ fun MainContent(
 private fun PostTopBar(
     post: Post,
     currentUserId: String,
-    isVerified: (String) -> Boolean,
+    isVerified: (userId: String) -> Boolean,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
@@ -396,7 +397,7 @@ private fun PostTopBar(
             ),
             modifier = Modifier.padding(end = 5.dp)
         )
-        if (isVerified(post.username)) {
+        if (isVerified(post.userId)) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
@@ -455,12 +456,14 @@ private fun PostBottomBar(
 }
 
 @Composable
-private fun ActionChip(
+private fun UsernameChip(
     username: String,
     fontColor: Color,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit
 ) {
+    val context = LocalContext.current
+
     Surface(
         modifier = modifier
             .height(35.dp)
@@ -468,7 +471,9 @@ private fun ActionChip(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
-                onClick = { onUsernameClick(username) }
+                onClick = {
+                    if (username != context.getString(R.string.me)) onUsernameClick(username)
+                }
             ),
         shape = RoundedCornerShape(8.dp),
         color = ExtraLightBlack
@@ -596,7 +601,7 @@ private fun PostCardPreview() {
 @Preview
 @Composable
 private fun MemberCardPreview() {
-    ActionChip(
+    UsernameChip(
         username = "kawaki",
         fontColor = Blue,
         onUsernameClick = { }
