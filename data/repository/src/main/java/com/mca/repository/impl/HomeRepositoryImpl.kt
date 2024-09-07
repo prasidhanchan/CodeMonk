@@ -19,13 +19,16 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.toObject
 import com.mca.repository.HomeRepository
 import com.mca.util.model.Post
+import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(
@@ -41,11 +44,10 @@ class HomeRepositoryImpl @Inject constructor(
             val valueEventListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     dataOrException.update {
-                        it.copy(
-                            data = snapshot.children.map { dataSnap ->
-                                dataSnap.getValue<Post>()!!
-                            }
-                                .sortedByDescending { post -> post.timeStamp }
+                        it.copy(data = snapshot.children.map { dataSnap ->
+                            dataSnap.getValue<Post>()!!
+                        }
+                            .sortedByDescending { post -> post.timeStamp }
                         )
                     }
                     dataOrException.update { it.copy(loading = false) }
@@ -60,5 +62,94 @@ class HomeRepositoryImpl @Inject constructor(
             dataOrException.update { it.copy(exception = e) }
         }
         return dataOrException.asStateFlow()
+    }
+
+    override suspend fun getUserDetail(userId: String): DataOrException<User, Boolean, Exception> {
+        val dataOrException: DataOrException<User, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            userRef.document(userId).get()
+                .addOnSuccessListener { docSnap ->
+                    dataOrException.data = docSnap.toObject<User>()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
+    }
+
+    override suspend fun deletePost(postId: String, onError: (String) -> Unit) {
+        try {
+            postDB.child(postId).removeValue()
+                .addOnFailureListener { error ->
+                    error.localizedMessage?.let(onError)
+                }
+                .await()
+        } catch (e: Exception) {
+            e.localizedMessage?.let(onError)
+        }
+    }
+
+    override suspend fun like(
+        postId: String,
+        currentUsername: String,
+        onError: (String) -> Unit
+    ) {
+        var likes = mutableListOf<String>()
+
+        try {
+            val valueEventListener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val snap = snapshot.child(postId).child("likes")
+                    if (snap.exists()) {
+                        likes = snap.getValue<List<String>>()?.toMutableList()!!
+                    }
+                    likes.add(currentUsername)
+                    postDB.child(postId).updateChildren(mapOf("likes" to likes))
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    error.toException().localizedMessage?.let(onError)
+                }
+            }
+            postDB.addListenerForSingleValueEvent(valueEventListener)
+        } catch (e: Exception) {
+            onError("Couldn't like the post")
+        }
+    }
+
+    override suspend fun unLike(
+        postId: String,
+        currentUsername: String,
+        onError: (String) -> Unit
+    ) {
+        var likes: MutableList<String>
+
+        try {
+            val valueEventListener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val snap = snapshot.child(postId).child("likes")
+                    if (snap.exists()) {
+                        likes = snap.getValue<List<String>>()?.toMutableList()!!
+                        likes.remove(currentUsername)
+                        postDB.child(postId).updateChildren(mapOf("likes" to likes))
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    error.toException().localizedMessage?.let(onError)
+                }
+            }
+            postDB.addListenerForSingleValueEvent(valueEventListener)
+        } catch (e: Exception) {
+            onError("Couldn't remove the like")
+        }
     }
 }

@@ -11,7 +11,7 @@
  *
  */
 
-package com.mca.util.constants
+package com.mca.util.constant
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -73,7 +73,7 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.Profile::class.java.simpleName -> Route.Profile
                 Route.EditProfile::class.java.simpleName -> Route.EditProfile
                 Route.ChangePassword::class.java.simpleName -> Route.ChangePassword
-                Route.Post::class.java.simpleName -> Route.Post
+                Route.Post::class.java.simpleName -> Route.Post()
                 else -> Route.About
             }
         }
@@ -129,11 +129,12 @@ fun User.convertToMap(): HashMap<String, Any> {
 fun Post.convertToMap(): HashMap<String, Any> {
     return hashMapOf(
         "userId" to userId,
-        "username" to username,
-        "userImage" to userImage,
         "currentProject" to currentProject,
+        "projectId" to projectId,
         "teamMembers" to teamMembers,
         "projectProgress" to projectProgress,
+        "deadline" to deadline,
+        "timeStamp" to timeStamp
     )
 }
 
@@ -149,4 +150,13 @@ fun Context.getCurrentVersion(): String {
     } else {
         packageManager.getPackageInfo(packageName, 0).versionName
     }
+}
+
+/**
+ * Function to retrieve a postId from a [Post].
+ * Format: userId-Current_Project-projectId.
+ * Ex: ABC123-Project_K-Project123456.
+ */
+fun Post.toPostId(): String {
+    return "${userId}-${currentProject.replace(" ", "_")}-${projectId}"
 }

@@ -20,30 +20,44 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mca.home.UiState
 import com.mca.home.component.HomeAppBar
+import com.mca.home.component.NoPostsIndicator
 import com.mca.home.component.Post
+import com.mca.ui.R
+import com.mca.ui.component.CMAlertDialog
 import com.mca.ui.theme.Black
 import com.mca.util.model.Post
+import com.mca.util.model.User
 
 @Composable
 internal fun HomeScreen(
     uiState: UiState,
     profileImage: String,
-    isVerified: (userId: String) -> Boolean,
     currentUserId: String,
+    currentUsername: String,
+    currentUserType: String,
     onProfileClick: () -> Unit,
     onSearchClick: () -> Unit,
     onUsernameClick: (String) -> Unit,
-    onLikeClick: () -> Unit,
-    onUnlikeClick: () -> Unit,
+    onEditPostClick: (postId: String) -> Unit,
+    onLikeClick: (postId: String) -> Unit,
+    onUnlikeClick: (postId: String) -> Unit,
     onDeletedClick: (postId: String) -> Unit
 ) {
     val state = rememberLazyListState()
+
+    var visible by remember { mutableStateOf(false) }
+    var postId by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -58,14 +72,19 @@ internal fun HomeScreen(
         ) {
             Post(
                 posts = { uiState.posts },
-                isVerified = isVerified,
                 currentUserId = currentUserId,
+                currentUsername = currentUsername,
+                currentUserType = currentUserType,
                 loading = uiState.loading,
                 state = state,
                 onLikeClick = onLikeClick,
                 onUnlikeClick = onUnlikeClick,
                 onUsernameClick = onUsernameClick,
-                onDeleteClick = onDeletedClick,
+                onEditPostClick = onEditPostClick,
+                onDeleteClick = { id ->
+                    postId = id
+                    visible = true
+                },
                 appBar = {
                     HomeAppBar(
                         userImage = profileImage,
@@ -75,6 +94,21 @@ internal fun HomeScreen(
                 }
             )
         }
+
+        CMAlertDialog(
+            title = stringResource(id = R.string.delete_post),
+            message = stringResource(R.string.delete_post_message),
+            visible = visible,
+            confirmText = stringResource(id = R.string.delete),
+            dismissText = stringResource(id = R.string.cancel),
+            onConfirm = {
+                visible = false
+                onDeletedClick(postId)
+            },
+            onDismiss = { visible = false }
+        )
+
+        NoPostsIndicator(uiState)
     }
 }
 
@@ -84,36 +118,44 @@ private fun HomeScreenPreview() {
     HomeScreen(
         uiState = UiState(
             posts = listOf(
-                Post(
-                    userId = "1",
-                    username = "kawaki_22",
-                    userImage = "",
-                    currentProject = "Project X",
-                    teamMembers = listOf(
-                        "me",
-                        "naruto",
-                        "uchiha_sasuke",
-                        "kakashi"
+                Pair(
+                    Post(
+                        userId = "1",
+                        currentProject = "Project X",
+                        teamMembers = listOf(
+                            "me",
+                            "naruto",
+                            "uchiha_sasuke",
+                            "kakashi"
+                        ),
+                        projectProgress = 20,
+                        deadline = "30 Nov, 2024",
+                        likes = listOf(
+                            "naruto",
+                            "kakashi",
+                            "sasuke",
+                            "minato",
+                            "itachi"
+                        ),
+                        timeStamp = 1690885200000L
                     ),
-                    projectProgress = 20,
-                    deadline = "30 Nov, 2024",
-                    likes = listOf(
-                        "naruto",
-                        "kakashi",
-                        "sasuke",
-                        "minato",
-                        "itachi"
-                    ),
-                    timeStamp = 1690885200000L
+                    User(
+                        userId = "1",
+                        username = "kawaki_22",
+                        profileImage = "",
+                        isVerified = true
+                    )
                 )
             )
         ),
         profileImage = "",
-        isVerified = { true },
         currentUserId = "1",
+        currentUsername = "pra_sidh_22",
+        currentUserType = "student",
         onProfileClick = { },
         onSearchClick = { },
         onUsernameClick = { },
+        onEditPostClick = { },
         onLikeClick = { },
         onUnlikeClick = { },
         onDeletedClick = { }

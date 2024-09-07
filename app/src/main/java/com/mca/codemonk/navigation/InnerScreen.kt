@@ -16,13 +16,10 @@ package com.mca.codemonk.navigation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -39,11 +36,9 @@ import com.mca.profile.navigation.editProfileNavigation
 import com.mca.profile.navigation.profileNavigation
 import com.mca.profile.navigation.viewProfileNavigation
 import com.mca.profile.screen.ProfileViewModel
-import com.mca.ui.R
-import com.mca.ui.component.CMAlertDialog
 import com.mca.ui.component.CMBottomBar
 import com.mca.ui.theme.Black
-import com.mca.util.constants.getCurrentRoute
+import com.mca.util.constant.getCurrentRoute
 import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -59,10 +54,6 @@ fun NavGraphBuilder.innerScreen(
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        var visible by remember { mutableStateOf(false) }
-        var alertTitle by remember { mutableStateOf("") }
-        var alertMessage by remember { mutableStateOf("") }
-
         val backStackEntry by navHostController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.getCurrentRoute()
         val showBottomBar = when (currentRoute) {
@@ -71,6 +62,10 @@ fun NavGraphBuilder.innerScreen(
             Route.Notification -> true
             Route.Profile -> true
             else -> false
+        }
+
+        LaunchedEffect(key1 = uiStateProfile.currentUser) {
+            viewModelProfile.getUser()
         }
 
         Scaffold(
@@ -90,18 +85,19 @@ fun NavGraphBuilder.innerScreen(
             ) {
                 homeNavigation(
                     viewModel = viewModelHome,
-                    isVerified = { true },
                     navHostController = navHostController,
                     profileImage = uiStateProfile.currentUser.profileImage,
-                    currentUserId = currentUser?.uid ?: ""
+                    currentUserId = currentUser?.uid ?: "",
+                    currentUsername = uiStateProfile.currentUser.username,
+                    currentUserType = uiStateProfile.currentUser.userType,
+                    onDeletedClick = viewModelHome::deletePost
                 )
                 profileNavigation(
                     viewModel = viewModelProfile,
                     navHostController = navHostController,
-                    onLogoutClick = { title, message ->
-                        alertTitle = title
-                        alertMessage = message
-                        visible = true
+                    onLogoutClick = {
+                        viewModelProfile.logout()
+                        navigateToLogin()
                     }
                 )
                 editProfileNavigation(
@@ -118,8 +114,6 @@ fun NavGraphBuilder.innerScreen(
                 )
                 postNavigation(
                     userType = uiStateProfile.currentUser.userType,
-                    username = uiStateProfile.currentUser.username,
-                    userImage = uiStateProfile.currentUser.profileImage,
                     navHostController = navHostController
                 )
                 viewProfileNavigation(
@@ -127,19 +121,6 @@ fun NavGraphBuilder.innerScreen(
                     navHostController = navHostController
                 )
             }
-
-            CMAlertDialog(
-                title = alertTitle,
-                message = alertMessage,
-                visible = visible,
-                confirmText = stringResource(id = R.string.confirm),
-                dismissText = stringResource(id = R.string.cancel),
-                onConfirm = {
-                    viewModelProfile.logout()
-                    navigateToLogin()
-                },
-                onDismiss = { visible = false }
-            )
         }
     }
 }

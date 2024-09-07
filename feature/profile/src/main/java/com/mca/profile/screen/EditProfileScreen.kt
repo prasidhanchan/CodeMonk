@@ -74,7 +74,7 @@ import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
-import com.mca.util.constants.LinkType
+import com.mca.util.constant.LinkType
 import com.mca.util.model.User
 
 @Composable

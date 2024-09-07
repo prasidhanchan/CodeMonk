@@ -40,8 +40,8 @@ import com.mca.ui.theme.Black
 import com.mca.ui.theme.CodeMonkTheme
 import com.mca.ui.theme.Green
 import com.mca.ui.theme.Red
-import com.mca.util.constants.SnackBarHelper.Companion.messageState
-import com.mca.util.constants.SnackBarHelper.Companion.resetMessageState
+import com.mca.util.constant.SnackBarHelper.Companion.messageState
+import com.mca.util.constant.SnackBarHelper.Companion.resetMessageState
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.ResponseType
 import dagger.hilt.android.testing.HiltAndroidRule

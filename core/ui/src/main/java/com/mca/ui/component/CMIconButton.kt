@@ -41,7 +41,7 @@ fun CMIconButton(
     if (link.isNotBlank()) {
         Icon(
             painter = icon,
-            contentDescription = stringResource(id = R.string.linkedin),
+            contentDescription = stringResource(id = R.string.link),
             tint = tintColor,
             modifier = modifier
                 .padding(horizontal = 15.dp)

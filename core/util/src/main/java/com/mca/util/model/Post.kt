@@ -15,9 +15,8 @@ package com.mca.util.model
 
 data class Post(
     var userId:String = "",
-    var username: String = "",
-    var userImage: String = "",
     var currentProject: String = "",
+    var projectId: String = "",
     var teamMembers: List<String> = emptyList(),
     var projectProgress: Int = 0,
     var deadline: String = "",

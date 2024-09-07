@@ -14,6 +14,7 @@
 package com.mca.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -71,8 +72,8 @@ import com.mca.ui.theme.OffWhite
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
-import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
-import com.mca.util.constants.getCurrentRoute
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
+import com.mca.util.constant.getCurrentRoute
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
@@ -93,7 +94,7 @@ fun CMBottomBar(
 
     var isOpen by remember { mutableStateOf(false) }
     val animateHeight by animateDpAsState(
-        targetValue = if (isOpen) 180.dp else 80.dp,
+        targetValue = if (isOpen) 185.dp else 85.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -140,7 +141,7 @@ fun CMBottomBar(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         routes.forEach { route ->
-                            if (route != Route.Post) {
+                            if (route != Route.Post()) {
                                 BottomBarItem(
                                     route = route,
                                     selected = currentScreen == route,
@@ -170,7 +171,7 @@ fun CMBottomBar(
             PostOptions(
                 visible = isOpen,
                 onProjectOptionClick = {
-                    navHostController.navigate(Route.Post) {
+                    navHostController.navigate(Route.Post()) {
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true
@@ -202,7 +203,7 @@ private fun BottomBarItem(
 
     Column(
         modifier = modifier
-            .height(50.dp)
+            .height(55.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
             .clickable(
                 indication = null,
@@ -229,7 +230,7 @@ private fun BottomBarItem(
                 color = if (selected) fontColor else OffWhite
             )
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -277,7 +278,10 @@ private fun PostOptions(
     AnimatedVisibility(
         visible = visible,
         enter = slideInVertically(
-            animationSpec = tween(durationMillis = 200),
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            ),
             initialOffsetY = { it }
         ),
         exit = slideOutVertically(
@@ -287,8 +291,9 @@ private fun PostOptions(
     ) {
         Column(
             modifier = modifier
+                .animateContentSize()
                 .fillMaxWidth()
-                .height(if (visible) 140.dp else 0.dp)
+                .height(if (visible) 145.dp else 0.dp)
                 .background(color = BottomBarBlack),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -304,7 +309,7 @@ private fun PostOptions(
                 color = tintColor,
                 onClick = onAnnouncementClick
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(25.dp))
         }
     }
 }

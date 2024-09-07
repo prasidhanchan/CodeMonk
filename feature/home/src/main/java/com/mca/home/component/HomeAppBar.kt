@@ -55,13 +55,13 @@ internal fun HomeAppBar(
 ) {
     Row(
         modifier = modifier
-            .padding(top = 20.dp, bottom = 10.dp)
+            .padding(vertical = 10.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         AsyncImage(
-            model = userImage,
+            model = userImage.ifEmpty { R.drawable.user },
             contentDescription = stringResource(id = R.string.profile),
             modifier = Modifier
                 .clip(CircleShape)

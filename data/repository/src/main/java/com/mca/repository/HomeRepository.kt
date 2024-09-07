@@ -14,10 +14,19 @@
 package com.mca.repository
 
 import com.mca.util.model.Post
+import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
 
     suspend fun getPosts(): Flow<DataOrException<List<Post>, Boolean, Exception>>
+
+    suspend fun getUserDetail(userId: String): DataOrException<User, Boolean, Exception>
+
+    suspend fun deletePost(postId: String, onError: (String) -> Unit)
+
+    suspend fun like(postId: String, currentUsername: String, onError: (String) -> Unit)
+
+    suspend fun unLike(postId: String, currentUsername: String, onError: (String) -> Unit)
 }

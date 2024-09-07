@@ -52,7 +52,7 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
-import com.mca.util.constants.getCurrentVersion
+import com.mca.util.constant.getCurrentVersion
 import com.mca.util.model.Update
 
 @Composable

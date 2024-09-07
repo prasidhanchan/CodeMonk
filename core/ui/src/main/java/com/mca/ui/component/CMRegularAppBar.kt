@@ -46,7 +46,7 @@ fun CMRegularAppBar(
     Row(
         modifier = modifier
             .padding(
-                top = 20.dp,
+                top = 10.dp,
                 bottom = 30.dp,
                 start = 10.dp,
                 end = 10.dp

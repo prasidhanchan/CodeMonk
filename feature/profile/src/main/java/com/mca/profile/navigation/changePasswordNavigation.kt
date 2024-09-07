@@ -25,7 +25,7 @@ import androidx.navigation.compose.composable
 import com.mca.profile.screen.ChangePasswordScreen
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.ui.R
-import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType

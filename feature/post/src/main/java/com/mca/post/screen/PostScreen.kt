@@ -39,7 +39,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -59,16 +58,19 @@ import com.mca.ui.R
 import com.mca.ui.component.CMButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
+import com.mca.ui.component.Loader
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.tintColor
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PostScreen(
+internal fun PostScreen(
+    postId: String,
     uiState: UiState,
     userType: String,
     onCurrentProjectChange: (String) -> Unit,
@@ -82,11 +84,16 @@ fun PostScreen(
     val interactionSource = remember { MutableInteractionSource() }
     val context = LocalContext.current
 
-    var teamMembers = remember { mutableStateListOf(context.getString(R.string.me)) }
+    val teamMembers = remember { mutableStateListOf<String>() }
     var newMember by remember { mutableStateOf("") }
 
-    LaunchedEffect(key1 = Unit) {
-        teamMembers = uiState.teamMembers.toMutableStateList()
+    LaunchedEffect(key1 = uiState.loading) {
+        launch {
+            if (postId.isBlank()) teamMembers.add(context.getString(R.string.me)) // If create new post add @me
+            uiState.teamMembers.forEach { member ->
+                teamMembers.add(member)
+            }
+        }
     }
 
     Surface(
@@ -96,13 +103,12 @@ fun PostScreen(
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .animateContentSize()
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CMRegularAppBar(
-                text = stringResource(id = R.string.add_post),
+                text = stringResource(id = if (postId.isBlank()) R.string.add_post else R.string.edit_post),
                 onBackClick = onBackClick
             )
             CMTextBox(
@@ -156,7 +162,8 @@ fun PostScreen(
             FlowRow(
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 10.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .animateContentSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -165,14 +172,15 @@ fun PostScreen(
                         member = member,
                         onRemove = { oldMember ->
                             teamMembers.remove(oldMember)
+                            onTeamMemberChange(teamMembers.toList())
                         }
                     )
                 }
             }
             CMTextBox(
-                value = uiState.projectProgress.toString(),
+                value = uiState.projectProgress,
                 onValueChange = onProgressChange,
-                placeHolder = stringResource(id = R.string.team_member),
+                placeHolder = stringResource(id = R.string.progress_progress),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.progress),
@@ -215,9 +223,9 @@ fun PostScreen(
                 enabled = userType == "Admin"
             )
             CMButton(
-                text = stringResource(id = R.string.post),
+                text = stringResource(id = if (postId.isBlank()) R.string.post else R.string.update),
                 modifier = Modifier.padding(vertical = 20.dp),
-                loading = uiState.loading,
+                loading = uiState.updating,
                 onClick = {
                     localKeyboard?.hide()
                     onPostClick()
@@ -225,6 +233,8 @@ fun PostScreen(
             )
         }
     }
+
+    Loader(loading = uiState.loading)
 }
 
 @Composable
@@ -252,7 +262,7 @@ private fun TeamMemberChip(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = "@${member}",
+                text = stringResource(id = R.string.username, member),
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -281,6 +291,7 @@ private fun TeamMemberChip(
 @Composable
 private fun PostScreenPreview() {
     PostScreen(
+        postId = "",
         uiState = UiState(),
         userType = "student",
         onCurrentProjectChange = { },

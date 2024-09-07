@@ -21,7 +21,8 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.mca.repository.BuildConfig.UPDATE_CHANNEL
 import com.mca.repository.ProfileRepository
-import com.mca.util.constants.convertToMap
+import com.mca.util.constant.Constant.USERNAME_REGEX
+import com.mca.util.constant.convertToMap
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
@@ -70,7 +71,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
             when {
                 user.username.isEmpty() -> throw Exception("Username cannot be empty.")
-                !user.username.matches(Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")) -> throw Exception("Invalid username.")
+                !user.username.matches(USERNAME_REGEX) -> throw Exception("Invalid username.")
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
                 user.mentor.isEmpty() -> if (user.userType != "Admin") throw Exception("Please add a mentor.")

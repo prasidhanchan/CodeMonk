@@ -18,7 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.profile.UiState
 import com.mca.repository.ProfileRepository
-import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.model.User
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType

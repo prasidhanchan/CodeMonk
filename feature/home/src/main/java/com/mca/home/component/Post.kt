@@ -76,25 +76,30 @@ import com.mca.ui.theme.Red
 import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
-import com.mca.util.constants.toLikedBy
-import com.mca.util.constants.toLikes
-import com.mca.util.constants.toTimeStamp
+import com.mca.ui.theme.tintColor
+import com.mca.util.constant.toLikedBy
+import com.mca.util.constant.toLikes
+import com.mca.util.constant.toPostId
+import com.mca.util.constant.toTimeStamp
 import com.mca.util.model.Post
+import com.mca.util.model.User
 
 /**
  * Post composable to display user Post.
  */
 @Composable
 internal fun Post(
-    posts: () -> List<Post>,
-    isVerified: (userId: String) -> Boolean,
+    posts: () -> List<Pair<Post, User>>,
     currentUserId: String,
+    currentUsername: String,
+    currentUserType: String,
     loading: Boolean,
     modifier: Modifier = Modifier,
     state: LazyListState,
-    onLikeClick: () -> Unit,
-    onUnlikeClick: () -> Unit,
+    onLikeClick: (postId: String) -> Unit,
+    onUnlikeClick: (postId: String) -> Unit,
     onUsernameClick: (String) -> Unit,
+    onEditPostClick: (postId: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit,
     appBar: @Composable () -> Unit = { }
 ) {
@@ -109,32 +114,23 @@ internal fun Post(
         }
 
         if (posts().isNotEmpty() && !loading) {
-            items(items = posts()) { post ->
+            items(items = posts()) { (post, user) ->
                 PostCard(
                     post = post,
-                    isVerified = isVerified,
+                    user = user,
                     currentUserId = currentUserId,
+                    currentUsername = currentUsername,
+                    currentUserType = currentUserType,
                     onLikeClick = onLikeClick,
                     onUnlikeClick = onUnlikeClick,
                     onUsernameClick = onUsernameClick,
+                    onEditPostClick = onEditPostClick,
                     onDeleteClick = onDeleteClick
                 )
             }
         } else if (posts().isEmpty() && loading) {
             items(count = 2) {
                 PostCardLoader()
-            }
-        } else {
-            item {
-                Text(
-                    text = stringResource(id = R.string.no_posts_yet),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
-                )
             }
         }
 
@@ -147,12 +143,15 @@ internal fun Post(
 @Composable
 private fun PostCard(
     post: Post,
-    isVerified: (userId: String) -> Boolean,
+    user: User,
     currentUserId: String,
+    currentUsername: String,
+    currentUserType: String,
     modifier: Modifier = Modifier,
-    onLikeClick: () -> Unit,
-    onUnlikeClick: () -> Unit,
+    onLikeClick: (postId: String) -> Unit,
+    onUnlikeClick: (postId: String) -> Unit,
     onUsernameClick: (String) -> Unit,
+    onEditPostClick: (postId: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
 ) {
     Column(
@@ -165,14 +164,18 @@ private fun PostCard(
     ) {
         PostTopBar(
             post = post,
-            isVerified = isVerified,
+            user = user,
             currentUserId = currentUserId,
             onUsernameClick = onUsernameClick,
             onDeleteClick = onDeleteClick
         )
         MainContent(
             post = post,
+            currentUserId = currentUserId,
+            currentUsername = currentUsername,
+            currentUserType = currentUserType,
             onUsernameClick = onUsernameClick,
+            onEditPostClick = onEditPostClick,
             onLikeClick = onLikeClick,
             onUnlikeClick = onUnlikeClick
         )
@@ -184,15 +187,17 @@ private fun PostCard(
 @Composable
 fun MainContent(
     post: Post,
+    currentUserId: String,
+    currentUsername: String,
+    currentUserType: String,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit,
-    onLikeClick: () -> Unit,
-    onUnlikeClick: () -> Unit
+    onEditPostClick: (postId: String) -> Unit,
+    onLikeClick: (postId: String) -> Unit,
+    onUnlikeClick: (postId: String) -> Unit
 ) {
-    var isLiked by remember(post.likes) { mutableStateOf(post.likes.contains(post.userId)) }
+    var isLiked by remember(post.likes) { mutableStateOf(post.likes.contains(currentUsername)) }
     var likes by remember(post.likes) { mutableIntStateOf(post.likes.size) }
-
-    val interactionSource = remember { MutableInteractionSource() }
 
     Surface(
         modifier = modifier
@@ -209,25 +214,43 @@ fun MainContent(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = buildAnnotatedString {
-                    append(stringResource(R.string.currently_working_on))
-                    withStyle(
-                        style = SpanStyle(
-                            fontWeight = FontWeight.ExtraBold,
-                            color = Yellow
-                        )
-                    ) {
-                        append(post.currentProject)
-                    }
-                },
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = dosis,
-                    color = fontColor
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        append(stringResource(R.string.currently_working_on))
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Yellow
+                            )
+                        ) {
+                            append(post.currentProject)
+                        }
+                    },
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = dosis,
+                        color = fontColor
+                    )
                 )
-            )
+                if (post.userId == currentUserId || currentUserType == "Admin") {
+                    Icon(
+                        painter = painterResource(id = R.drawable.edit_post),
+                        contentDescription = stringResource(id = R.string.edit_post),
+                        modifier= Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { onEditPostClick(post.toPostId()) }
+                        ),
+                        tint = tintColor
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = stringResource(R.string.team_members),
@@ -256,7 +279,7 @@ fun MainContent(
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = stringResource(R.string.project_progress),
+                text = stringResource(R.string.progress_header),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
@@ -290,7 +313,11 @@ fun MainContent(
                             color = LightRed
                         )
                     ) {
-                        append(post.deadline)
+                        if (post.deadline.isBlank()) {
+                            append(stringResource(R.string.not_set))
+                        } else {
+                            append(post.deadline)
+                        }
                     }
                 },
                 style = TextStyle(
@@ -316,16 +343,16 @@ fun MainContent(
                         .size(25.dp)
                         .clickable(
                             indication = null,
-                            interactionSource = interactionSource,
+                            interactionSource = remember { MutableInteractionSource() },
                             onClick = {
                                 if (isLiked) {
                                     isLiked = false
                                     likes -= 1
-                                    onUnlikeClick()
+                                    onUnlikeClick(post.toPostId())
                                 } else {
                                     isLiked = true
                                     likes += 1
-                                    onLikeClick()
+                                    onLikeClick(post.toPostId())
                                 }
                             }
                         )
@@ -358,8 +385,8 @@ fun MainContent(
 @Composable
 private fun PostTopBar(
     post: Post,
+    user: User,
     currentUserId: String,
-    isVerified: (userId: String) -> Boolean,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
@@ -373,14 +400,14 @@ private fun PostTopBar(
             .clickable(
                 indication = null,
                 interactionSource = interactionSource,
-                onClick = { onUsernameClick(post.username) }
+                onClick = { onUsernameClick(user.username) }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
         AsyncImage(
-            model = post.userImage,
-            contentDescription = post.username,
+            model = user.profileImage.ifEmpty { R.drawable.user },
+            contentDescription = user.username,
             modifier = Modifier
                 .padding(end = 8.dp)
                 .clip(CircleShape)
@@ -388,7 +415,7 @@ private fun PostTopBar(
                 .size(30.dp)
         )
         Text(
-            text = post.username,
+            text = user.username,
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
@@ -397,7 +424,7 @@ private fun PostTopBar(
             ),
             modifier = Modifier.padding(end = 5.dp)
         )
-        if (isVerified(post.userId)) {
+        if (user.isVerified || user.userType == "Admin") {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
@@ -415,7 +442,7 @@ private fun PostTopBar(
                     contentDescription = stringResource(id = R.string.delete),
                     tint = Red,
                     modifier = Modifier.clickable(
-                        onClick = { onDeleteClick("${post.username}-${post.timeStamp}") }
+                        onClick = { onDeleteClick(post.toPostId()) }
                     )
                 )
             }
@@ -569,8 +596,6 @@ private fun PostCardPreview() {
     PostCard(
         post = Post(
             userId = "1",
-            username = "kawaki_22",
-            userImage = "",
             currentProject = "Project X",
             teamMembers = listOf(
                 "me",
@@ -589,11 +614,14 @@ private fun PostCardPreview() {
             ),
             timeStamp = 1690885200000L
         ),
-        isVerified = { true },
+        user = User(),
         currentUserId = "1",
+        currentUsername = "pra_sidh_22",
+        currentUserType = "student",
         onLikeClick = { },
         onUnlikeClick = { },
         onUsernameClick = { },
+        onEditPostClick = { },
         onDeleteClick = { }
     )
 }

@@ -11,7 +11,7 @@
  *
  */
 
-package com.mca.util.constants
+package com.mca.util.constant
 
 import com.mca.util.warpper.Response
 import kotlinx.coroutines.flow.MutableStateFlow

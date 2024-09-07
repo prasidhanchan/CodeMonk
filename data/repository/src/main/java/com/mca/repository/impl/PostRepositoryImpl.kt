@@ -13,10 +13,21 @@
 
 package com.mca.repository.impl
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.mca.repository.PostRepository
-import com.mca.util.constants.convertToMap
+import com.mca.util.constant.Constant.DEADLINE_REGEX
+import com.mca.util.constant.convertToMap
+import com.mca.util.constant.toPostId
 import com.mca.util.model.Post
+import com.mca.util.warpper.DataOrException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -32,9 +43,11 @@ class PostRepositoryImpl @Inject constructor(
         try {
             if (post.currentProject.isBlank()) throw Exception("Current project cannot be empty.")
             if (post.teamMembers.size == 1) throw Exception("Team members cannot be empty")
+            if (post.projectProgress > 100) throw Exception("Project progress cannot be more than 100.")
+            if (post.deadline.isNotBlank() && !post.deadline.matches(DEADLINE_REGEX))
+                throw Exception("Deadline should be of format dd MMM yyyy.")
 
-            val projectName = post.currentProject.replace(" ", "_")
-            postDB.child("${post.username}-${projectName}-${post.timeStamp}")
+            postDB.child(post.toPostId())
                 .updateChildren(post.convertToMap())
                 .addOnSuccessListener {
                     onSuccess()
@@ -46,5 +59,32 @@ class PostRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             e.localizedMessage?.let(onError)
         }
+    }
+
+    override suspend fun getPost(postId: String): Flow<DataOrException<Post, Boolean, Exception>> {
+        val dataOrException: MutableStateFlow<DataOrException<Post, Boolean, Exception>> =
+            MutableStateFlow(DataOrException(loading = true))
+
+        try {
+            val valueEventListener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    dataOrException.update {
+                        it.copy(
+                            data = snapshot.child(postId).getValue<Post>()
+                        )
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    dataOrException.update { it.copy(exception = error.toException()) }
+                }
+            }
+            postDB.addListenerForSingleValueEvent(valueEventListener)
+        } catch (e: Exception) {
+            dataOrException.update { it.copy(exception = e) }
+        } finally {
+            dataOrException.update { it.copy(loading = false) }
+        }
+        return dataOrException.asStateFlow()
     }
 }

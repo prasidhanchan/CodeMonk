@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mca.auth.UiState
 import com.mca.repository.AuthRepository
-import com.mca.util.constants.SnackBarHelper.Companion.showSnackBar
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

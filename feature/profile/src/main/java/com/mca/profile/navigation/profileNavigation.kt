@@ -28,10 +28,7 @@ import com.mca.util.navigation.Route
 fun NavGraphBuilder.profileNavigation(
     viewModel: ProfileViewModel,
     navHostController: NavHostController,
-    onLogoutClick: (
-        title: String,
-        message: String
-    ) -> Unit
+    onLogoutClick: () -> Unit
 ) {
     composable<Route.Profile>(
         enterTransition = {

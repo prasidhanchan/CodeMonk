@@ -14,8 +14,10 @@
 package com.mca.home
 
 import com.mca.util.model.Post
+import com.mca.util.model.User
 
 data class UiState(
-    var posts: List<Post> = emptyList(),
+    var posts: List<Pair<Post, User>> = emptyList(),
+    var userDetailLoading: Boolean = false,
     var loading: Boolean = false
 )

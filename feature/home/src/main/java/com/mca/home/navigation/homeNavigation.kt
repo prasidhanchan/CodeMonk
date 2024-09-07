@@ -27,10 +27,12 @@ import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.homeNavigation(
     viewModel: HomeViewModel,
-    isVerified: (userId: String) -> Boolean,
     navHostController: NavHostController,
     profileImage: String,
-    currentUserId: String
+    currentUserId: String,
+    currentUsername: String,
+    currentUserType: String,
+    onDeletedClick: (postId: String) -> Unit
 ) {
     composable<Route.Home>(
         enterTransition = {
@@ -45,16 +47,30 @@ fun NavGraphBuilder.homeNavigation(
         HomeScreen(
             uiState = uiState,
             profileImage = profileImage,
-            isVerified = isVerified,
             currentUserId = currentUserId,
+            currentUsername = currentUsername,
+            currentUserType = currentUserType,
             onProfileClick = { navHostController.navigate(Route.EditProfile) },
             onSearchClick = { },
             onUsernameClick = { userId ->
                 navHostController.navigate(Route.ViewProfile(userId))
             },
-            onLikeClick = { },
-            onUnlikeClick = { },
-            onDeletedClick = { }
+            onEditPostClick = { postId ->
+                navHostController.navigate(Route.Post(postId))
+                              },
+            onLikeClick = { postId ->
+                viewModel.like(
+                    postId = postId,
+                    currentUsername = currentUsername
+                )
+            },
+            onUnlikeClick = { postId ->
+                viewModel.unLike(
+                    postId = postId,
+                    currentUsername = currentUsername
+                )
+            },
+            onDeletedClick = onDeletedClick
         )
     }
 }

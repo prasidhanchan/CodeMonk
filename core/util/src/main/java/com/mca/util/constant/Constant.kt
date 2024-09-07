@@ -11,15 +11,13 @@
  *
  */
 
-package com.mca.post
+package com.mca.util.constant
 
-data class UiState(
-    var currentProject: String = "",
-    var teamMembers: List<String> = emptyList(),
-    var projectProgress: String = "",
-    var deadline: String = "",
-    var likes: List<String> = emptyList(),
-    var projectId: String = "",
-    var loading: Boolean = false,
-    var updating: Boolean = false
-)
+object Constant {
+
+    /** Regex for username ex: pra_sidh_22 */
+    val USERNAME_REGEX = Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")
+
+    /** Regex for deadline ex: 20 Apr 2024 */
+    val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")
+}

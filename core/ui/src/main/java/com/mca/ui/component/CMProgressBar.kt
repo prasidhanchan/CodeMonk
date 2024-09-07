@@ -46,7 +46,7 @@ fun CMProgressBar(
     color: Color = BrandColor
 ) {
     var postProgress by remember { mutableFloatStateOf(0f) }
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = progress) {
         delay(800L)
         postProgress = progress
     }

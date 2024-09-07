@@ -14,8 +14,12 @@
 package com.mca.repository
 
 import com.mca.util.model.Post
+import com.mca.util.warpper.DataOrException
+import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
 
     suspend fun upsertPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
+
+    suspend fun getPost(postId: String): Flow<DataOrException<Post, Boolean, Exception>>
 }

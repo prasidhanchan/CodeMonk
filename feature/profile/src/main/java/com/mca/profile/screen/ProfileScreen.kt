@@ -28,10 +28,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,6 +54,7 @@ import com.mca.profile.component.ProfileActionButton
 import com.mca.profile.component.ProfileProgress
 import com.mca.profile.component.ProgressType
 import com.mca.ui.R
+import com.mca.ui.component.CMAlertDialog
 import com.mca.ui.component.CMIconButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.Loader
@@ -70,13 +74,11 @@ internal fun ProfileScreen(
     onEditProfileClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
     onAboutClick: () -> Unit,
-    onLogoutClick: (
-        title: String,
-        message: String
-    ) -> Unit
+    onLogoutClick: () -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
-    val context = LocalContext.current
+
+    var visible by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -186,7 +188,7 @@ internal fun ProfileScreen(
 
             if (uiState.currentUser.userType == "Admin") {
                 Text(
-                    text = stringResource(R.string.mentor_for, uiState.currentUser.mentor),
+                    text = stringResource(R.string.mentor_for, uiState.currentUser.mentorFor),
                     modifier = Modifier.padding(all = 8.dp),
                     style = TextStyle(
                         fontSize = 16.sp,
@@ -266,15 +268,23 @@ internal fun ProfileScreen(
                 text = stringResource(id = R.string.logout),
                 leadingIcon = painterResource(id = R.drawable.logout),
                 enableTrailingIcon = false,
-                onClick = {
-                    onLogoutClick(
-                        context.getString(R.string.logout),
-                        context.getString(R.string.confirm_logout)
-                    )
-                }
+                onClick = { visible = true }
             )
         }
     }
+
+    CMAlertDialog(
+        title = stringResource(id = R.string.logout),
+        message = stringResource(R.string.confirm_logout),
+        visible = visible,
+        confirmText = stringResource(id = R.string.confirm),
+        dismissText = stringResource(id = R.string.cancel),
+        onConfirm = {
+            visible = false
+            onLogoutClick()
+        },
+        onDismiss = { visible = false }
+    )
 
     Loader(loading = uiState.loading)
 }
@@ -337,6 +347,6 @@ private fun ProfileScreenPreview() {
         onEditProfileClick = { },
         onChangePasswordClick = { },
         onAboutClick = { },
-        onLogoutClick = { _, _ -> }
+        onLogoutClick = { }
     )
 }
