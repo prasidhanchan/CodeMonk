@@ -51,7 +51,7 @@ fun NavGraphBuilder.homeNavigation(
             currentUsername = currentUsername,
             currentUserType = currentUserType,
             onProfileClick = { navHostController.navigate(Route.EditProfile) },
-            onSearchClick = { },
+            onSearchClick = { navHostController.navigate(Route.Search) },
             onUsernameClick = { userId ->
                 navHostController.navigate(Route.ViewProfile(userId))
             },

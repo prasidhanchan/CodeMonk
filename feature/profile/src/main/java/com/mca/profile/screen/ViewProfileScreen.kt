@@ -14,8 +14,6 @@
 package com.mca.profile.screen
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,14 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -69,7 +61,6 @@ import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.util.model.User
-import kotlinx.coroutines.delay
 
 @Composable
 internal fun ViewProfileScreen(
@@ -222,12 +213,6 @@ private fun OtherMentorsSection(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        var alpha by remember { mutableFloatStateOf(0f) }
-        LaunchedEffect(key1 = Unit) {
-            delay(500L)
-            alpha = 1f
-        }
-
         Text(
             text = stringResource(id = R.string.other_mentors),
             style = TextStyle(
@@ -246,17 +231,9 @@ private fun OtherMentorsSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             mentors.forEachIndexed { index, mentor ->
-                val animatedAlpha by animateFloatAsState(
-                    targetValue = alpha,
-                    animationSpec = tween(
-                        durationMillis = 800,
-                        delayMillis = 200 * index
-                    ),
-                    label = "profileCardAlpha"
-                )
                 CMProfileCard(
                     user = mentor,
-                    modifier = Modifier.alpha(animatedAlpha),
+                    delay = 200 * index,
                     onClick = onProfileCardClick
                 )
             }

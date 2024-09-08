@@ -59,6 +59,9 @@ sealed class Route(val icon: Int = 0, val notificationIcon: Int = 0) {
     @Serializable
     data object About : Route()
 
+    @Serializable
+    data object Search : Route()
+
     companion object {
         val routes = listOf(
             Home,

@@ -13,6 +13,8 @@
 
 package com.mca.ui.component
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -32,9 +34,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +58,7 @@ import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.util.model.User
+import kotlinx.coroutines.delay
 
 /**
  * profile card composable to display info of a user.
@@ -59,8 +67,23 @@ import com.mca.util.model.User
 fun CMProfileCard(
     user: User,
     modifier: Modifier = Modifier,
+    delay: Int = 200,
     onClick: (username: String) -> Unit
 ) {
+    var alpha by remember { mutableFloatStateOf(0f) }
+    val animatedAlpha by animateFloatAsState(
+        targetValue = alpha,
+        animationSpec = tween(
+            durationMillis = 800,
+            delayMillis = delay
+        ),
+        label = "profileCardAlpha"
+    )
+    LaunchedEffect(key1 = Unit) {
+        delay(500L)
+        alpha = 1f
+    }
+
     Surface(
         modifier = modifier
             .padding(vertical = 5.dp)
@@ -70,7 +93,8 @@ fun CMProfileCard(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = { onClick(user.username) }
-            ),
+            )
+            .alpha(animatedAlpha),
         shape = RoundedCornerShape(10.dp),
         color = LightBlack
     ) {

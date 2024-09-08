@@ -120,4 +120,5 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:post"))
+    implementation(project(":feature:search"))
 }

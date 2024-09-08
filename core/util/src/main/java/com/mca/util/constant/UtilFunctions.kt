@@ -160,3 +160,24 @@ fun Context.getCurrentVersion(): String {
 fun Post.toPostId(): String {
     return "${userId}-${currentProject.replace(" ", "_")}-${projectId}"
 }
+
+/**
+ * Function to check if a [User] matches a search query.
+ */
+fun User.matchUsernameAndName(search: String): Boolean {
+    return when {
+        username.contains(search, ignoreCase = true) &&
+                username.startsWith(search, ignoreCase = true) -> true
+
+        name.contains(search, ignoreCase = true) &&
+                name.startsWith(search, ignoreCase = true) -> true
+
+        name.contains(search, ignoreCase = true) &&
+                name.substringAfter(" ").startsWith(search, ignoreCase = true) -> true
+
+        name.contains(search, ignoreCase = true) &&
+                name.substringAfterLast(" ").startsWith(search, ignoreCase = true) -> true
+
+        else -> false
+    }
+}

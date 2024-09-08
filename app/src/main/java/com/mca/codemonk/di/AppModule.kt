@@ -20,10 +20,12 @@ import com.mca.repository.AuthRepository
 import com.mca.repository.HomeRepository
 import com.mca.repository.PostRepository
 import com.mca.repository.ProfileRepository
+import com.mca.repository.SearchRepository
 import com.mca.repository.impl.AuthRepositoryImpl
 import com.mca.repository.impl.HomeRepositoryImpl
 import com.mca.repository.impl.PostRepositoryImpl
 import com.mca.repository.impl.ProfileRepositoryImpl
+import com.mca.repository.impl.SearchRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +61,9 @@ object AppModule {
     @Provides
     fun providePostRepository(): PostRepository =
         PostRepositoryImpl(postDB = FirebaseDatabase.getInstance().getReference("posts"))
+
+    @Singleton
+    @Provides
+    fun provideSearchRepository(): SearchRepository =
+        SearchRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
 }

@@ -220,11 +220,11 @@ class ProfileRepositoryImpl @Inject constructor(
                         dataOrException.data = dataSnap.firstNotNullOf { docSnap ->
                             docSnap.toObject<User>()
                         }
+                        onSuccess()
                     } catch (e: Exception) {
                         onError()
                         dataOrException.exception = Exception("User profile not created!")
                     }
-                    onSuccess()
                 }
                 .addOnFailureListener { error ->
                     dataOrException.exception = error

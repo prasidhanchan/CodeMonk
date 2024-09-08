@@ -36,6 +36,7 @@ import com.mca.profile.navigation.editProfileNavigation
 import com.mca.profile.navigation.profileNavigation
 import com.mca.profile.navigation.viewProfileNavigation
 import com.mca.profile.screen.ProfileViewModel
+import com.mca.search.navigation.searchNavigation
 import com.mca.ui.component.CMBottomBar
 import com.mca.ui.theme.Black
 import com.mca.util.constant.getCurrentRoute
@@ -120,6 +121,7 @@ fun NavGraphBuilder.innerScreen(
                     viewModel = viewModelProfile,
                     navHostController = navHostController
                 )
+                searchNavigation(navHostController)
             }
         }
     }

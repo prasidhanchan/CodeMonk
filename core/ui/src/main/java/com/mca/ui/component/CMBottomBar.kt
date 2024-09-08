@@ -43,6 +43,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,7 +91,7 @@ fun CMBottomBar(
     val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentScreen = navaBackStackEntry?.getCurrentRoute()
 
-    var isOpen by remember { mutableStateOf(true) }
+    var isOpen by remember { mutableStateOf(false) }
     val animateHeight by animateDpAsState(
         targetValue = if (isOpen) 185.dp else 85.dp,
         animationSpec = spring(
@@ -99,6 +100,10 @@ fun CMBottomBar(
         ),
         label = "heightBottomBar"
     )
+
+    LaunchedEffect(key1 = visible) {
+        if (!visible) isOpen = false
+    }
 
     val context = LocalContext.current
 
