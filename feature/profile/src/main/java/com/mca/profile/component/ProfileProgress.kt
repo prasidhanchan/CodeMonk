@@ -14,6 +14,7 @@
 package com.mca.profile.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -52,10 +53,10 @@ internal enum class ProgressType {
  */
 @Composable
 internal fun ProfileProgress(
-    icon: Painter,
-    tint: Color,
     progress: Int,
     progressType: ProgressType,
+    icon: Painter,
+    tint: Color,
     modifier: Modifier = Modifier,
     contentDescription: String? = null
 ) {
@@ -95,6 +96,42 @@ internal fun ProfileProgress(
             modifier = Modifier
                 .padding(start = 10.dp)
                 .width(38.dp)
+        )
+    }
+}
+
+/**
+ * Profile Progress Composable with header to display progress for XP, Attendance and more.
+ */
+@Composable
+internal fun ProfileProgress(
+    progress: Int,
+    progressType: ProgressType,
+    header: String,
+    icon: Painter,
+    modifier: Modifier = Modifier,
+    color: Color
+) {
+    Column(
+        modifier = modifier
+            .padding(vertical = 5.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = header,
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = dosis,
+                color = fontColor
+            )
+        )
+        ProfileProgress(icon = icon,
+            tint = color,
+            progress = progress,
+            progressType = progressType
         )
     }
 }

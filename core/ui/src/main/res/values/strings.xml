@@ -62,7 +62,7 @@
     <string name="tap_to_remove">Tap to remove a link</string>
     <string name="invalid_link">Link should start with http:// or https://</string>
     <string name="mentor_for">Mentor for %1$s</string>
-    <string name="mentor">Your mentor\'s username</string>
+    <string name="mentor_username">Your mentor\'s username</string>
     <string name="recent_login_note">This action requires you to be recently logged in.</string>
     <string name="password_updated">Password updated successfully.</string>
     <string name="current_version">Version: %1$s (%2$s)</string>
@@ -93,4 +93,5 @@
     <string name="link">Link</string>
     <string name="edit_post">Edit Post</string>
     <string name="my_project_id">Project%1$s</string>
+    <string name="mentor">Mentor:</string>
 </resources>

@@ -41,9 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -57,10 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mca.profile.UiState
+import com.mca.profile.component.LinkSection
 import com.mca.profile.component.ProfileProgress
 import com.mca.profile.component.ProgressType
 import com.mca.ui.R
-import com.mca.ui.component.CMIconButton
 import com.mca.ui.component.CMProfileCard
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.Loader
@@ -184,14 +181,14 @@ internal fun ViewProfileScreen(
             }
             Spacer(modifier = Modifier.height(40.dp))
             if (uiState.selectedUser.userType != "Admin") {
-                ProgressIndicator(
+                ProfileProgress(
                     progress = uiState.selectedUser.xp,
                     progressType = ProgressType.XP,
                     header = stringResource(id = R.string.dev_experience),
                     icon = painterResource(id = R.drawable.xp_icon),
                     color = Yellow
                 )
-                ProgressIndicator(
+                ProfileProgress(
                     progress = uiState.selectedUser.currentProjectProgress,
                     progressType = ProgressType.PROJECT_PROGRESS,
                     header = stringResource(id = R.string.current_project_progress),
@@ -267,83 +264,6 @@ private fun OtherMentorsSection(
     }
 }
 
-@Composable
-private fun LinkSection(
-    user: User,
-    modifier: Modifier = Modifier
-) {
-    val uriHandler = LocalUriHandler.current
-
-    if (
-        user.linkedInLink.isNotBlank() ||
-        user.gitHubLink.isNotBlank() ||
-        user.portfolioLink.isNotBlank()
-    ) {
-        Row(
-            modifier = modifier
-                .padding(vertical = 10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            if (user.linkedInLink.isNotBlank()) {
-                CMIconButton(
-                    link = user.linkedInLink,
-                    icon = painterResource(id = R.drawable.linkedin),
-                    onClick = { uriHandler.openUri(user.linkedInLink) }
-                )
-            }
-            if (user.gitHubLink.isNotBlank()) {
-                CMIconButton(
-                    link = user.gitHubLink,
-                    icon = painterResource(id = R.drawable.github),
-                    onClick = { uriHandler.openUri(user.gitHubLink) }
-                )
-            }
-            if (user.portfolioLink.isNotBlank()) {
-                CMIconButton(
-                    link = user.portfolioLink,
-                    icon = painterResource(id = R.drawable.more_link),
-                    onClick = { uriHandler.openUri(user.portfolioLink) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ProgressIndicator(
-    progress: Int,
-    progressType: ProgressType,
-    header: String,
-    icon: Painter,
-    modifier: Modifier = Modifier,
-    color: Color
-) {
-    Column(
-        modifier = modifier
-            .padding(vertical = 5.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(
-            text = header,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            )
-        )
-        ProfileProgress(icon = icon,
-            tint = color,
-            progress = progress,
-            progressType = progressType
-        )
-    }
-}
-
 @Preview
 @Composable
 private fun ViewProfileScreenPreview() {
@@ -360,7 +280,8 @@ private fun ViewProfileScreenPreview() {
                 currentProjectProgress = 50,
                 xp = 20,
                 userType = "student",
-                mentorFor = "Team Android"
+                mentor = "pra_sidh_22",
+                mentorFor = ""
             ),
             otherMentors = listOf(
                 User(

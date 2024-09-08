@@ -248,11 +248,11 @@ internal fun EditProfileScreen(
                     modifier = Modifier.padding(vertical = 8.dp),
                     value = uiState.currentUser.mentor,
                     onValueChange = onMentorChange,
-                    placeHolder = stringResource(id = R.string.mentor),
+                    placeHolder = stringResource(id = R.string.mentor_username),
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.mentor),
-                            contentDescription = stringResource(id = R.string.mentor),
+                            contentDescription = stringResource(id = R.string.mentor_username),
                             tint = tintColor
                         )
                     },

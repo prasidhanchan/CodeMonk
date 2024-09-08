@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -50,12 +48,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mca.profile.UiState
+import com.mca.profile.component.LinkSection
 import com.mca.profile.component.ProfileActionButton
 import com.mca.profile.component.ProfileProgress
 import com.mca.profile.component.ProgressType
 import com.mca.ui.R
 import com.mca.ui.component.CMAlertDialog
-import com.mca.ui.component.CMIconButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.Loader
 import com.mca.ui.theme.Black
@@ -76,8 +74,6 @@ internal fun ProfileScreen(
     onAboutClick: () -> Unit,
     onLogoutClick: () -> Unit
 ) {
-    val uriHandler = LocalUriHandler.current
-
     var visible by remember { mutableStateOf(false) }
 
     Surface(
@@ -134,21 +130,13 @@ internal fun ProfileScreen(
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
-            if (uiState.currentUser.linkedInLink.isNotEmpty() ||
-                uiState.currentUser.gitHubLink.isNotEmpty() ||
-                uiState.currentUser.portfolioLink.isNotEmpty()
-            ) {
-                LinkSection(
-                    uiState = uiState,
-                    onLinkedInClick = { uriHandler.openUri(uiState.currentUser.linkedInLink) },
-                    onGitHubClick = { uriHandler.openUri(uiState.currentUser.gitHubLink) },
-                    onPortfolioClick = { uriHandler.openUri(uiState.currentUser.portfolioLink) }
-                )
-            }
-
+            LinkSection(
+                user = uiState.currentUser,
+                modifier = Modifier.padding(top = 10.dp)
+            )
             Surface(
                 modifier = Modifier
-                    .padding(top = 20.dp, bottom = 10.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
                     .wrapContentSize(Alignment.Center),
                 shape = CircleShape,
                 color = LightBlack,
@@ -229,6 +217,27 @@ internal fun ProfileScreen(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
+//                Text(
+//                    text = buildAnnotatedString {
+//                        append(stringResource(R.string.mentor))
+//                        append(" ")
+//                        withStyle(
+//                            style = SpanStyle(color = LinkBlue)
+//                        ) {
+//                            append(stringResource(id = R.string.username, uiState.currentUser.mentor))
+//                        }
+//                    },
+////                    modifier = Modifier.padding(all = 8.dp),
+//                    style = TextStyle(
+//                        fontSize = 1.sp,
+//                        fontWeight = FontWeight.Bold,
+//                        fontFamily = dosis,
+//                        color = fontColor,
+//                        textAlign = TextAlign.Center
+//                    ),
+//                    maxLines = 4,
+//                    overflow = TextOverflow.Ellipsis
+//                )
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -289,39 +298,6 @@ internal fun ProfileScreen(
     Loader(loading = uiState.loading)
 }
 
-@Composable
-private fun LinkSection(
-    uiState: UiState,
-    modifier: Modifier = Modifier,
-    onLinkedInClick: () -> Unit,
-    onGitHubClick: () -> Unit,
-    onPortfolioClick: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .padding(top = 20.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        CMIconButton(
-            link = uiState.currentUser.linkedInLink,
-            icon = painterResource(id = R.drawable.linkedin),
-            onClick = onLinkedInClick
-        )
-        CMIconButton(
-            link = uiState.currentUser.gitHubLink,
-            icon = painterResource(id = R.drawable.github),
-            onClick = onGitHubClick
-        )
-        CMIconButton(
-            link = uiState.currentUser.portfolioLink,
-            icon = painterResource(id = R.drawable.more_link),
-            onClick = onPortfolioClick
-        )
-    }
-}
-
 @Preview(
     showBackground = true,
     backgroundColor = 0xFF000000
@@ -341,7 +317,8 @@ private fun ProfileScreenPreview() {
                 xp = 20,
                 attendance = 75,
                 userType = "student",
-                mentor = "Team Android"
+                mentor = "pra_sidh_22",
+                mentorFor = "Team Android"
             )
         ),
         onEditProfileClick = { },

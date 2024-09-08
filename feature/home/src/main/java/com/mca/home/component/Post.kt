@@ -60,6 +60,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -171,6 +172,7 @@ private fun PostCard(
         )
         MainContent(
             post = post,
+            mentor = user.mentor,
             currentUserId = currentUserId,
             currentUsername = currentUsername,
             currentUserType = currentUserType,
@@ -187,6 +189,7 @@ private fun PostCard(
 @Composable
 fun MainContent(
     post: Post,
+    mentor: String,
     currentUserId: String,
     currentUsername: String,
     currentUserType: String,
@@ -242,7 +245,7 @@ fun MainContent(
                     Icon(
                         painter = painterResource(id = R.drawable.edit_post),
                         contentDescription = stringResource(id = R.string.edit_post),
-                        modifier= Modifier.clickable(
+                        modifier = Modifier.clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
                             onClick = { onEditPostClick(post.toPostId()) }
@@ -278,31 +281,11 @@ fun MainContent(
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = stringResource(R.string.progress_header),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = dosis,
-                    color = fontColor
-                )
+            MyMentor(
+                mentor = mentor,
+                onUsernameClick = onUsernameClick
             )
-            CMProgressBar(progress = (post.projectProgress / 100f))
-            Text(
-                text = stringResource(
-                    R.string.progress_percentage,
-                    post.projectProgress
-                ),
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontFamily = dosis,
-                    color = fontColor,
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
+            ProjectProgress(post = post)
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = buildAnnotatedString {
@@ -485,8 +468,9 @@ private fun PostBottomBar(
 @Composable
 private fun UsernameChip(
     username: String,
-    fontColor: Color,
     modifier: Modifier = Modifier,
+    isVerified: Boolean = false,
+    fontColor: Color,
     onUsernameClick: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -505,12 +489,13 @@ private fun UsernameChip(
         shape = RoundedCornerShape(8.dp),
         color = ExtraLightBlack
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
                 .fillMaxHeight()
                 .wrapContentWidth(Alignment.CenterHorizontally),
-            contentAlignment = Alignment.Center
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(R.string.username, username),
@@ -521,9 +506,93 @@ private fun UsernameChip(
                     color = fontColor
                 ),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 3.dp)
+            )
+            if (isVerified) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.tick),
+                    contentDescription = stringResource(id = R.string.blue_tick),
+                    modifier = Modifier.padding(bottom = 2.dp),
+                    tint = LinkBlue
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MyMentor(
+    mentor: String,
+    modifier: Modifier = Modifier,
+    onUsernameClick: (String) -> Unit
+) {
+    if (mentor.isNotBlank()) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = stringResource(R.string.mentor),
+                modifier = modifier,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                ),
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            UsernameChip(
+                username = mentor,
+                isVerified = true,
+                fontColor = LinkBlue,
+                onUsernameClick = onUsernameClick
             )
         }
+    }
+}
+
+@Composable
+private fun ProjectProgress(
+    post: Post,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .padding(vertical = 20.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = stringResource(R.string.progress_header),
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = dosis,
+                color = fontColor
+            )
+        )
+        CMProgressBar(progress = (post.projectProgress / 100f))
+        Text(
+            text = stringResource(
+                R.string.progress_percentage,
+                post.projectProgress
+            ),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.ExtraBold,
+                fontFamily = dosis,
+                color = fontColor,
+                textAlign = TextAlign.Center
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -614,7 +683,7 @@ private fun PostCardPreview() {
             ),
             timeStamp = 1690885200000L
         ),
-        user = User(),
+        user = User(mentor = "pra_sidh_22"),
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
         currentUserType = "student",

@@ -33,7 +33,7 @@ import com.mca.ui.theme.fontColor
  * NoPostsIndicator composable to display no posts yet.
  */
 @Composable
-fun NoPostsIndicator(
+internal fun NoPostsIndicator(
     uiState: UiState,
     modifier: Modifier = Modifier
 ) {
