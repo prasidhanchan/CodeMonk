@@ -22,8 +22,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -92,7 +90,7 @@ fun CMBottomBar(
     val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentScreen = navaBackStackEntry?.getCurrentRoute()
 
-    var isOpen by remember { mutableStateOf(false) }
+    var isOpen by remember { mutableStateOf(true) }
     val animateHeight by animateDpAsState(
         targetValue = if (isOpen) 185.dp else 85.dp,
         animationSpec = spring(
@@ -275,42 +273,32 @@ private fun PostOptions(
     onAnnouncementClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = slideInVertically(
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            ),
-            initialOffsetY = { it }
-        ),
-        exit = slideOutVertically(
-            animationSpec = tween(durationMillis = 200),
-            targetOffsetY = { it }
-        ),
+    Column(
+        modifier = modifier
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
+            .fillMaxWidth()
+            .height(if (visible) 145.dp else 0.dp)
+            .background(color = BottomBarBlack),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = modifier
-                .animateContentSize()
-                .fillMaxWidth()
-                .height(if (visible) 145.dp else 0.dp)
-                .background(color = BottomBarBlack),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CMButton(
-                text = stringResource(id = R.string.project_post),
-                onClick = onProjectOptionClick
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            CMButton(
-                text = stringResource(id = R.string.announcement),
-                textColor = Black,
-                color = tintColor,
-                onClick = onAnnouncementClick
-            )
-            Spacer(modifier = Modifier.height(25.dp))
-        }
+        CMButton(
+            text = stringResource(id = R.string.project_post),
+            onClick = onProjectOptionClick
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        CMButton(
+            text = stringResource(id = R.string.announcement),
+            textColor = Black,
+            color = tintColor,
+            onClick = onAnnouncementClick
+        )
+        Spacer(modifier = Modifier.height(25.dp))
     }
 }
 
@@ -321,10 +309,9 @@ private fun PostOptions(
 private fun Modifier.rotateIcon(isOpen: Boolean) = composed {
     val rotation by animateFloatAsState(
         targetValue = if (isOpen) 45f else 0f,
-        animationSpec = tween(durationMillis = 600),
+        animationSpec = tween(durationMillis = 400),
         label = "rotationBottomBar"
     )
-
     this.rotate(rotation)
 }
 
