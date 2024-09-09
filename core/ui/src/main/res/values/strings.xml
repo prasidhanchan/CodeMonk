@@ -94,4 +94,5 @@
     <string name="edit_post">Edit Post</string>
     <string name="my_project_id">Project%1$s</string>
     <string name="mentor">Mentor:</string>
+    <string name="monk_not_found">Monk not found!</string>
 </resources>

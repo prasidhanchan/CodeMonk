@@ -35,9 +35,9 @@ import com.mca.ui.R
 import com.mca.ui.component.CMProfileCard
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
+import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.tintColor
-import com.mca.util.model.User
 
 @Composable
 internal fun SearchScreen(
@@ -79,19 +79,26 @@ internal fun SearchScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                itemsIndexed(
-                    key = { _, user -> user.userId },
-                    items = uiState.users
-                ) { index, user ->
-                    CMProfileCard(
-                        user = user,
-                        delay = 200 * index,
-                        onClick = onProfileClick
-                    )
+                if (!uiState.users.isNullOrEmpty()) {
+                    itemsIndexed(
+                        key = { _, user -> user.userId },
+                        items = uiState.users!!
+                    ) { index, user ->
+                        CMProfileCard(
+                            user = user,
+                            delay = 200 * index,
+                            onClick = onProfileClick
+                        )
+                    }
                 }
             }
         }
     }
+
+    EmptyResponseIndicator(
+        visible = uiState.users == null,
+        message = stringResource(id = R.string.monk_not_found)
+    )
 }
 
 @Preview
@@ -99,20 +106,7 @@ internal fun SearchScreen(
 private fun SearchScreenPreview() {
     SearchScreen(
         uiState = UiState(
-            users = listOf(
-                User(
-                    username = "pra_sidh_22",
-                    name = "Prasidh Gopal Anchan",
-                    userId = "1",
-                    bio = "Android Developer | Kotlin | Compose"
-                ),
-                User(
-                    username = "naruto",
-                    name = "Uzumaki Naruto",
-                    userId = "2",
-                    bio = " 7th Hokage of Konohagakure"
-                )
-            )
+            users = null
         ),
         onProfileClick = { },
         onSearchChange = { },

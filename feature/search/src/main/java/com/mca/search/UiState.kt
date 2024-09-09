@@ -17,6 +17,6 @@ import com.mca.util.model.User
 
 data class UiState(
     var search: String = "",
-    var users: List<User> = emptyList(),
+    var users: List<User>? = emptyList(),
     var loading: Boolean = false
 )

@@ -27,17 +27,21 @@ class SearchRepositoryImpl @Inject constructor(
     val userRef: CollectionReference
 ) : SearchRepository {
 
-    override suspend fun getSearchUser(search: String): DataOrException<List<User>, Boolean, Exception> {
-        val dataOrException: DataOrException<List<User>, Boolean, Exception> =
+    override suspend fun getSearchUser(search: String): DataOrException<List<User>?, Boolean, Exception> {
+        val dataOrException: DataOrException<List<User>?, Boolean, Exception> =
             DataOrException(loading = true)
 
         try {
             userRef.get()
                 .addOnSuccessListener { querySnap ->
-                    dataOrException.data = querySnap.documents.map { docSnap ->
-                        docSnap.toObject<User>()!!
+                    dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
+                        docSnap.toObject<User>()
                     }
                         .filter { user -> user.matchUsernameAndName(search) }
+                    when {
+                        dataOrException.data?.isEmpty() == true -> dataOrException.data = null
+                        search.isBlank() -> dataOrException.data = emptyList()
+                    }
                 }
                 .addOnFailureListener { error ->
                     dataOrException.exception = error

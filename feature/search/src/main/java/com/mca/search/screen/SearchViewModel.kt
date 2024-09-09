@@ -42,10 +42,10 @@ class SearchViewModel @Inject constructor(
                 val result = searchRepository.getSearchUser(search)
 
                 withContext(Dispatchers.Main) {
-                    if (result.data != null && result.exception == null && !result.loading!!) {
+                    if (result.exception == null && !result.loading!!) {
                         uiState.update {
                             it.copy(
-                                users = result.data!!,
+                                users = result.data,
                                 loading = false
                             )
                         }

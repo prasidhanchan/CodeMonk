@@ -11,7 +11,7 @@
  *
  */
 
-package com.mca.home.component
+package com.mca.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,34 +19,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.mca.home.UiState
-import com.mca.ui.R
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 
 /**
- * NoPostsIndicator composable to display no posts yet.
+ * Empty response indicator composable.
  */
 @Composable
-internal fun NoPostsIndicator(
-    uiState: UiState,
+fun EmptyResponseIndicator(
+    visible: Boolean,
+    message: String,
     modifier: Modifier = Modifier
 ) {
-    if (uiState.posts.isEmpty() && !uiState.loading) {
+    if (visible) {
         Box(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = stringResource(id = R.string.no_posts_yet),
+                text = message,
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = dosis,
                     color = fontColor
                 ),
