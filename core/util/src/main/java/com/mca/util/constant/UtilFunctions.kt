@@ -154,11 +154,11 @@ fun Context.getCurrentVersion(): String {
 
 /**
  * Function to retrieve a postId from a [Post].
- * Format: userId-Current_Project-projectId.
- * Ex: ABC123-Project_K-Project123456.
+ * Format: userId-projectId.
+ * Ex: ABC123-Project123456.
  */
 fun Post.toPostId(): String {
-    return "${userId}-${currentProject.replace(" ", "_")}-${projectId}"
+    return "${userId}-${projectId}"
 }
 
 /**
