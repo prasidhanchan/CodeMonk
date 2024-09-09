@@ -83,7 +83,7 @@ class ProfileViewModel @Inject constructor(
             onSuccess = { url ->
                 val updatedUser =
                     uiState.value.currentUser.copy(
-                        userType = uiState.value.tempUsername.ifEmpty { uiState.value.currentUser.username },
+                        username = uiState.value.tempUsername.ifEmpty { uiState.value.currentUser.username },
                         profileImage = url.ifEmpty { uiState.value.currentUser.profileImage }
                     )
 

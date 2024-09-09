@@ -13,6 +13,7 @@
 
 package com.mca.repository.impl
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -69,12 +70,13 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
             }
 
+            Log.d("USERRR", "updateUser: ${user.userType}")
             when {
                 user.username.isEmpty() -> throw Exception("Username cannot be empty.")
                 !user.username.matches(USERNAME_REGEX) -> throw Exception("Invalid username.")
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
-                user.mentor.isEmpty() -> if (user.userType != "Admin") throw Exception("Please add a mentor.")
+                user.mentor.isEmpty() && user.userType != "Admin" -> throw Exception("Please add a mentor.")
                 else -> {
                     userRef.document(user.userId).update(user.convertToMap())
                         .addOnSuccessListener {
