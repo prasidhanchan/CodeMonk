@@ -60,7 +60,10 @@ object TestAppModule {
     @Singleton
     @Provides
     fun providePostRepository(): PostRepository =
-        PostRepositoryImpl(postDB = FirebaseDatabase.getInstance().getReference("posts"))
+        PostRepositoryImpl(
+            postDB = FirebaseDatabase.getInstance().getReference("posts"),
+            userRef = FirebaseFirestore.getInstance().collection("users")
+        )
 
     @Singleton
     @Provides

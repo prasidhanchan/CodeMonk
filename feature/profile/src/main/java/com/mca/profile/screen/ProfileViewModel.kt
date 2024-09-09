@@ -57,7 +57,6 @@ class ProfileViewModel @Inject constructor(
                         uiState.update {
                             it.copy(
                                 currentUser = result.data!!,
-                                tempUsername = result.data?.username!!,
                                 loading = result.loading!!
                             )
                         }
@@ -83,7 +82,7 @@ class ProfileViewModel @Inject constructor(
             onSuccess = { url ->
                 val updatedUser =
                     uiState.value.currentUser.copy(
-                        username = uiState.value.tempUsername.ifEmpty { uiState.value.currentUser.username },
+                        username = uiState.value.currentUser.username,
                         profileImage = url.ifEmpty { uiState.value.currentUser.profileImage }
                     )
 
@@ -115,7 +114,7 @@ class ProfileViewModel @Inject constructor(
         onSuccess: (url: String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val updatedUser = user.copy(profileImage = uiState.value.newProfileImage)
+            val updatedUser = user.copy(profileImage = uiState.value.currentUser.profileImage)
             profileRepository.updateImageUrl(
                 user = updatedUser,
                 onSuccess = onSuccess,
@@ -245,7 +244,7 @@ class ProfileViewModel @Inject constructor(
     fun getAllMentors() {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
-            val result = profileRepository.getAllMentors(uiState.value.selectedUser.userId)
+            val result = profileRepository.getRandomMentors(uiState.value.selectedUser.userId)
 
             withContext(Dispatchers.Main) {
                 if (result.data != null && result.exception == null && !result.loading!!) {
@@ -267,6 +266,25 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun getMentorTags(username: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = profileRepository.getMentorTags(username)
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
+                    uiState.update { it.copy(tags = result.data) }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     fun setUsername(username: String) {
         uiState.update { it.copy(currentUser = it.currentUser.copy(username = username)) }
     }
@@ -276,7 +294,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun setProfileImage(profileImage: String) {
-        uiState.update { it.copy(newProfileImage = profileImage) }
+        uiState.update { it.copy(currentUser = it.currentUser.copy(profileImage = profileImage)) }
     }
 
     fun setBio(bio: String) {

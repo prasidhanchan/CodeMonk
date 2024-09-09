@@ -16,8 +16,6 @@ package com.mca.codemonk.navigation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.post.navigation.postNavigation
+import com.mca.profile.UiState
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
 import com.mca.profile.navigation.editProfileNavigation
@@ -44,12 +43,12 @@ import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(
+    viewModelProfile: ProfileViewModel,
+    uiStateProfile: UiState,
     navigateToLogin: () -> Unit
 ) {
     composable<Route.InnerScreen> {
         val viewModelHome: HomeViewModel = hiltViewModel()
-        val viewModelProfile: ProfileViewModel = hiltViewModel()
-        val uiStateProfile by viewModelProfile.uiState.collectAsState()
 
         val navHostController = rememberNavController()
 
@@ -63,10 +62,6 @@ fun NavGraphBuilder.innerScreen(
             Route.Notification -> true
             Route.Profile -> true
             else -> false
-        }
-
-        LaunchedEffect(key1 = uiStateProfile.currentUser) {
-            viewModelProfile.getUser()
         }
 
         Scaffold(

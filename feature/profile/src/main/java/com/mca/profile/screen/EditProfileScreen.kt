@@ -68,6 +68,7 @@ import com.mca.ui.component.CMButton
 import com.mca.ui.component.CMIconButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
+import com.mca.ui.component.SearchedTags
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.Red
@@ -140,7 +141,7 @@ internal fun EditProfileScreen(
                     color = LightBlack,
                     content = {
                         AsyncImage(
-                            model = uiState.currentUser.profileImage.ifEmpty { uiState.newProfileImage },
+                            model = uiState.currentUser.profileImage,
                             contentDescription = stringResource(id = R.string.profile),
                             contentScale = ContentScale.Crop
                         )
@@ -258,6 +259,10 @@ internal fun EditProfileScreen(
                     },
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.None
+                )
+                SearchedTags(
+                    tags = uiState.tags,
+                    onClick = onMentorChange
                 )
             }
 

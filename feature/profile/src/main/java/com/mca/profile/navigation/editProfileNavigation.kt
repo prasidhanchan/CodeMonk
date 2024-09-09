@@ -18,6 +18,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -31,6 +32,8 @@ import com.mca.util.constant.getLinkDetail
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.editProfileNavigation(
     viewModel: ProfileViewModel,
@@ -46,6 +49,7 @@ fun NavGraphBuilder.editProfileNavigation(
     ) {
         val uiState by viewModel.uiState.collectAsState()
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
 
         EditProfileScreen(
             uiState = uiState,
@@ -54,7 +58,13 @@ fun NavGraphBuilder.editProfileNavigation(
             onProfileImageChange = viewModel::setProfileImage,
             onBioChange = viewModel::setBio,
             onCurrentProjectChange = viewModel::setCurrentProject,
-            onMentorChange = viewModel::setMentor,
+            onMentorChange = { mentor ->
+                scope.launch {
+                    viewModel.setMentor(mentor)
+                    viewModel.getMentorTags(mentor)
+                    delay(2000L)
+                }
+            },
             onAddLinkCLick = { link ->
                 if (link.startsWith("http://") || link.startsWith("https://")) {
                     when (link.getLinkDetail()) {
@@ -99,8 +109,9 @@ fun NavGraphBuilder.editProfileNavigation(
             },
             onBackClick = {
                 navHostController.popBackStack()
-                viewModel.setUsername(uiState.tempUsername) // Reset username if not updated
                 viewModel.setProfileImage("")
+                viewModel.getMentorTags(username = "") // Clear searched tags
+                viewModel.getUser() // Reset state for all fields if not updated
             }
         )
     }

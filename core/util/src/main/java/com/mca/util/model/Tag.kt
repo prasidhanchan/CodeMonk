@@ -11,18 +11,11 @@
  *
  */
 
-package com.mca.post
+package com.mca.util.model
 
-import com.mca.util.model.Tag
-
-data class UiState(
-    var currentProject: String = "",
-    var teamMembers: List<String> = emptyList(),
-    var tags: List<Tag>? = null,
-    var projectProgress: String = "",
-    var deadline: String = "",
-    var likes: List<String> = emptyList(),
-    var projectId: String = "",
-    var loading: Boolean = false,
-    var updating: Boolean = false
+data class Tag(
+    var username: String = "",
+    var profileImage: String = "",
+    var isVerified: Boolean = false,
+    var userType: String = ""
 )

@@ -181,3 +181,24 @@ fun User.matchUsernameAndName(search: String): Boolean {
         else -> false
     }
 }
+
+/**
+ * Function to check if a username of a [User] matches a search query.
+ */
+fun String.matchUsername(username: String): Boolean {
+    return when {
+        username.length >= 3 &&
+                startsWith(username, ignoreCase = true) &&
+                contains(username, ignoreCase = true) -> true
+
+        username.length >= 3 &&
+                substringAfter("_").startsWith(username, ignoreCase = true) &&
+                substringAfter("_").contains(username, ignoreCase = true) -> true
+
+        username.length >= 3 &&
+                substringAfterLast("_").startsWith(username, ignoreCase = true) &&
+                substringAfter("_").contains(username, ignoreCase = true) -> true
+
+        else -> false
+    }
+}

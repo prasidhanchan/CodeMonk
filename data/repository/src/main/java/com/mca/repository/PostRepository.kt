@@ -14,6 +14,7 @@
 package com.mca.repository
 
 import com.mca.util.model.Post
+import com.mca.util.model.Tag
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.Flow
 
@@ -22,4 +23,6 @@ interface PostRepository {
     suspend fun upsertPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
 
     suspend fun getPost(postId: String): Flow<DataOrException<Post, Boolean, Exception>>
+
+    suspend fun getTags(username: String): DataOrException<List<Tag>, Boolean, Exception>
 }

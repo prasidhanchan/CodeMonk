@@ -18,21 +18,27 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.toObject
 import com.mca.repository.PostRepository
 import com.mca.util.constant.Constant.DEADLINE_REGEX
 import com.mca.util.constant.convertToMap
+import com.mca.util.constant.matchUsername
 import com.mca.util.constant.toPostId
 import com.mca.util.model.Post
+import com.mca.util.model.Tag
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
-    val postDB: DatabaseReference
+    val postDB: DatabaseReference,
+    val userRef: CollectionReference
 ) : PostRepository {
 
     override suspend fun upsertPost(
@@ -86,5 +92,31 @@ class PostRepositoryImpl @Inject constructor(
             dataOrException.update { it.copy(loading = false) }
         }
         return dataOrException.asStateFlow()
+    }
+
+    override suspend fun getTags(username: String): DataOrException<List<Tag>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<Tag>, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            userRef.get()
+                .addOnSuccessListener { querySnap ->
+                    dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
+                        docSnap.toObject<Tag>()
+                    }
+                        .filter { tag -> tag.username.matchUsername(username) }
+                    if (username.isBlank()) dataOrException.data = emptyList()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+                .asFlow()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
     }
 }

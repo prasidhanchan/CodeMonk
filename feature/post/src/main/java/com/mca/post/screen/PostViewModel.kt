@@ -99,6 +99,27 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun getTags(username: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = postRepository.getTags(username)
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
+                    uiState.update {
+                        it.copy(tags = result.data)
+                    }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     fun setCurrentProject(currentProject: String) {
         uiState.update { it.copy(currentProject = currentProject) }
     }
@@ -108,16 +129,17 @@ class PostViewModel @Inject constructor(
     }
 
     fun setProjectProgress(projectProgress: String) {
-//        val value = projectProgress.toIntOrNull()
-//        if (value != null && projectProgress.isNotBlank()) {
-            uiState.update { it.copy(projectProgress = projectProgress) }
-//        } else {
-//            uiState.update { it.copy(projectProgress = 0) }
-//        }
+        uiState.update { it.copy(projectProgress = projectProgress) }
     }
 
     fun setDeadline(deadline: String) {
         uiState.update { it.copy(deadline = deadline) }
     }
 
+    private fun clearUiState() = uiState.update { UiState() }
+
+    override fun onCleared() {
+        super.onCleared()
+        clearUiState()
+    }
 }

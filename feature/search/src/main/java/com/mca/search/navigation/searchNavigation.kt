@@ -13,6 +13,9 @@
 
 package com.mca.search.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,7 +32,14 @@ import kotlinx.coroutines.launch
 fun NavGraphBuilder.searchNavigation(
     navHostController: NavHostController
 ) {
-    composable<Route.Search> {
+    composable<Route.Search>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 400))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 400))
+        }
+    ) {
         val viewModel: SearchViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsState()
 

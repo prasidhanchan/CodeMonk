@@ -13,7 +13,6 @@
 
 package com.mca.repository.impl
 
-import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -24,6 +23,8 @@ import com.mca.repository.BuildConfig.UPDATE_CHANNEL
 import com.mca.repository.ProfileRepository
 import com.mca.util.constant.Constant.USERNAME_REGEX
 import com.mca.util.constant.convertToMap
+import com.mca.util.constant.matchUsername
+import com.mca.util.model.Tag
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
@@ -70,7 +71,6 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
             }
 
-            Log.d("USERRR", "updateUser: ${user.userType}")
             when {
                 user.username.isEmpty() -> throw Exception("Username cannot be empty.")
                 !user.username.matches(USERNAME_REGEX) -> throw Exception("Invalid username.")
@@ -239,7 +239,7 @@ class ProfileRepositoryImpl @Inject constructor(
         return dataOrException
     }
 
-    override suspend fun getAllMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception> {
+    override suspend fun getRandomMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception> {
         val dataOrException: DataOrException<List<User>, Boolean, Exception> =
             DataOrException(loading = true)
 
@@ -261,8 +261,35 @@ class ProfileRepositoryImpl @Inject constructor(
                 .asFlow()
         } catch (e: Exception) {
             dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
         }
-        dataOrException.loading = false
+        return dataOrException
+    }
+
+    override suspend fun getMentorTags(username: String): DataOrException<List<Tag>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<Tag>, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            userRef.get()
+                .addOnSuccessListener { querySnap ->
+                    dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
+                        docSnap.toObject<Tag>()
+                    }
+                        .filter { tag -> tag.username.matchUsername(username) && tag.userType == "Admin" }
+                    if (username.isBlank()) dataOrException.data = emptyList()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+                .asFlow()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
         return dataOrException
     }
 }

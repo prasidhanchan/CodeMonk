@@ -13,6 +13,7 @@
 
 package com.mca.profile
 
+import com.mca.util.model.Tag
 import com.mca.util.model.Update
 import com.mca.util.model.User
 
@@ -21,8 +22,8 @@ data class UiState(
     var currentUser: User = User(),
     var selectedUser: User = User(),
     var otherMentors: List<User> = emptyList(),
+    var tags: List<Tag>? = null,
     var newProfileImage: String = "",
-    var tempUsername: String = "",
     var newPassword: String = "",
     var update: Update = Update(),
     var loading: Boolean = false

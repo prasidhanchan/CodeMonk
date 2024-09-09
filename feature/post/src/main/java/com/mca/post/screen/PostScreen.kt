@@ -59,6 +59,7 @@ import com.mca.ui.component.CMButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
 import com.mca.ui.component.Loader
+import com.mca.ui.component.SearchedTags
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
@@ -74,7 +75,8 @@ internal fun PostScreen(
     uiState: UiState,
     userType: String,
     onCurrentProjectChange: (String) -> Unit,
-    onTeamMemberChange: (List<String>) -> Unit,
+    onTeamMemberListChange: (List<String>) -> Unit,
+    onTeamMemberChange: (String) -> Unit,
     onProgressChange: (String) -> Unit,
     onDeadlineChange: (String) -> Unit,
     onPostClick: () -> Unit,
@@ -128,7 +130,10 @@ internal fun PostScreen(
             )
             CMTextBox(
                 value = newMember,
-                onValueChange = { newMember = it },
+                onValueChange = {
+                    newMember = it
+                    onTeamMemberChange(it)
+                },
                 placeHolder = stringResource(id = R.string.team_member),
                 leadingIcon = {
                     Icon(
@@ -146,7 +151,7 @@ internal fun PostScreen(
                             onClick = {
                                 if (newMember.isNotBlank() && !teamMembers.contains(newMember)) {
                                     teamMembers.add(newMember.trim())
-                                    onTeamMemberChange(teamMembers.toList())
+                                    onTeamMemberListChange(teamMembers.toList())
                                 }
                                 newMember = ""
                             },
@@ -158,6 +163,15 @@ internal fun PostScreen(
                 keyboardType = KeyboardType.Text,
                 capitalization = KeyboardCapitalization.None,
                 imeAction = ImeAction.Next
+            )
+            SearchedTags(
+                tags = uiState.tags,
+                onClick = { username ->
+                    teamMembers.add(username)
+                    onTeamMemberListChange(teamMembers.toList())
+                    newMember = "" // Clear TextBox
+                    onTeamMemberChange("") // Clear tags row
+                }
             )
             FlowRow(
                 modifier = Modifier
@@ -172,7 +186,7 @@ internal fun PostScreen(
                         member = member,
                         onRemove = { oldMember ->
                             teamMembers.remove(oldMember)
-                            onTeamMemberChange(teamMembers.toList())
+                            onTeamMemberListChange(teamMembers.toList())
                         }
                     )
                 }
@@ -295,6 +309,7 @@ private fun PostScreenPreview() {
         uiState = UiState(),
         userType = "student",
         onCurrentProjectChange = { },
+        onTeamMemberListChange = { },
         onTeamMemberChange = { },
         onProgressChange = { },
         onDeadlineChange = { },

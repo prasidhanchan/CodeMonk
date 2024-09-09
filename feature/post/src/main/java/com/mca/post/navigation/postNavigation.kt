@@ -19,6 +19,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -31,6 +32,8 @@ import com.mca.post.screen.PostScreen
 import com.mca.post.screen.PostViewModel
 import com.mca.util.model.Post
 import com.mca.util.navigation.Route
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 fun NavGraphBuilder.postNavigation(
@@ -49,6 +52,8 @@ fun NavGraphBuilder.postNavigation(
     ) { backStackEntry ->
         val viewModel: PostViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsState()
+
+        val scope = rememberCoroutineScope()
 
         val postId = backStackEntry.toRoute<Route.Post>().postId
         // If creating a new post, generate a new projectId
@@ -78,7 +83,13 @@ fun NavGraphBuilder.postNavigation(
             uiState = uiState,
             userType = userType,
             onCurrentProjectChange = viewModel::setCurrentProject,
-            onTeamMemberChange = viewModel::setTeamMembers,
+            onTeamMemberListChange = viewModel::setTeamMembers,
+            onTeamMemberChange = { member ->
+                scope.launch {
+                    viewModel.getTags(member)
+                    delay(2000L)
+                }
+            },
             onProgressChange = viewModel::setProjectProgress,
             onDeadlineChange = viewModel::setDeadline,
             onPostClick = {
