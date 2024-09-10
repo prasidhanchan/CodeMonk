@@ -13,8 +13,8 @@
 
 package com.mca.post.screen
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +25,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,7 +45,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -89,6 +97,8 @@ internal fun PostScreen(
     val teamMembers = remember { mutableStateListOf<String>() }
     var newMember by remember { mutableStateOf("") }
 
+    val state = rememberScrollState()
+
     LaunchedEffect(key1 = uiState.loading) {
         launch {
             if (postId.isBlank()) teamMembers.add(context.getString(R.string.me)) // If create new post add @me
@@ -98,6 +108,13 @@ internal fun PostScreen(
         }
     }
 
+    val focusManager = LocalFocusManager.current
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Black
@@ -105,7 +122,10 @@ internal fun PostScreen(
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .fillMaxSize(),
+                .navigationBarsPadding()
+                .imePadding()
+                .fillMaxSize()
+                .verticalScroll(state),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -114,7 +134,10 @@ internal fun PostScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .focusable(enabled = true)
+                    .focusRequester(focusRequester),
                 value = uiState.currentProject,
                 onValueChange = onCurrentProjectChange,
                 placeHolder = stringResource(id = R.string.current_project_placeholder),
@@ -125,8 +148,11 @@ internal fun PostScreen(
                         tint = tintColor
                     )
                 },
+                imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                )
             )
             CMTextBox(
                 value = newMember,
@@ -160,9 +186,19 @@ internal fun PostScreen(
                         tint = tintColor
                     )
                 },
+                imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.None,
-                imeAction = ImeAction.Next
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        if (userType == "Admin") {
+                            focusManager.moveFocus(FocusDirection.Next)
+                        } else {
+                            focusManager.clearFocus()
+                            onPostClick()
+                        }
+                    }
+                ),
+                capitalization = KeyboardCapitalization.None
             )
             SearchedTags(
                 tags = uiState.tags,
@@ -175,9 +211,8 @@ internal fun PostScreen(
             )
             FlowRow(
                 modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 10.dp)
-                    .fillMaxWidth()
-                    .animateContentSize(),
+                    .padding(bottom = 15.dp, start = 10.dp)
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -209,8 +244,8 @@ internal fun PostScreen(
                         tint = if (userType == "Admin") tintColor else tintColor.copy(alpha = 0.5f)
                     )
                 },
-                keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Number,
                 enabled = userType == "Admin"
             )
             CMTextBox(
@@ -225,15 +260,15 @@ internal fun PostScreen(
                         tint = if (userType == "Admin") tintColor else tintColor.copy(alpha = 0.5f)
                     )
                 },
-                keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Text,
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        localKeyboard?.hide()
+                        focusManager.clearFocus()
                         onPostClick()
                     }
                 ),
+                capitalization = KeyboardCapitalization.Sentences,
                 enabled = userType == "Admin"
             )
             CMButton(

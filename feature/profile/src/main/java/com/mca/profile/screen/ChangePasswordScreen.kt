@@ -14,6 +14,7 @@
 package com.mca.profile.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,8 +24,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +59,12 @@ fun ChangePasswordScreen(
     onBackClick: () -> Unit
 ) {
     val localKeyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -70,6 +82,9 @@ fun ChangePasswordScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
+                modifier = Modifier
+                    .focusable(enabled = true)
+                    .focusRequester(focusRequester),
                 value = uiState.newPassword,
                 onValueChange = onPasswordChange,
                 placeHolder = stringResource(id = R.string.password),
@@ -83,11 +98,12 @@ fun ChangePasswordScreen(
                 keyboardType = KeyboardType.Password,
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        localKeyboard?.hide()
+                        focusManager.clearFocus()
                         onChangePasswordClick()
                     }
                 ),
-                capitalization = KeyboardCapitalization.None
+                capitalization = KeyboardCapitalization.None,
+                enableHeader = false
             )
             CMButton(
                 text = stringResource(id = R.string.change_password),

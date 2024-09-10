@@ -134,46 +134,11 @@ internal fun ProfileScreen(
                 user = uiState.currentUser,
                 modifier = Modifier.padding(top = 10.dp)
             )
-            Surface(
-                modifier = Modifier
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .wrapContentSize(Alignment.Center),
-                shape = CircleShape,
-                color = LightBlack,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                        .wrapContentSize(Alignment.Center),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.username, uiState.currentUser.username),
-                        modifier = Modifier
-                            .padding(vertical = 5.dp, horizontal = 5.dp)
-                            .padding(bottom = 2.dp),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = dosis,
-                            color = fontColor,
-                            textAlign = TextAlign.Center
-                        ),
-                        maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    if (uiState.currentUser.isVerified || uiState.currentUser.userType == "Admin") {
-                        Icon(
-                            painter = painterResource(id = R.drawable.tick),
-                            contentDescription = stringResource(id = R.string.blue_tick),
-                            modifier = Modifier.padding(bottom = 1.dp),
-                            tint = LinkBlue
-                        )
-                    }
-                }
-            }
-
+            MyUsernameCard(
+                username = uiState.currentUser.username,
+                userType = uiState.currentUser.userType,
+                isVerified = uiState.currentUser.isVerified
+            )
             if (uiState.currentUser.userType == "Admin") {
                 Text(
                     text = stringResource(R.string.mentor_for, uiState.currentUser.mentorFor),
@@ -217,30 +182,9 @@ internal fun ProfileScreen(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
-//                Text(
-//                    text = buildAnnotatedString {
-//                        append(stringResource(R.string.mentor))
-//                        append(" ")
-//                        withStyle(
-//                            style = SpanStyle(color = LinkBlue)
-//                        ) {
-//                            append(stringResource(id = R.string.username, uiState.currentUser.mentor))
-//                        }
-//                    },
-////                    modifier = Modifier.padding(all = 8.dp),
-//                    style = TextStyle(
-//                        fontSize = 1.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        fontFamily = dosis,
-//                        color = fontColor,
-//                        textAlign = TextAlign.Center
-//                    ),
-//                    maxLines = 4,
-//                    overflow = TextOverflow.Ellipsis
-//                )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             if (uiState.currentUser.userType != "Admin") {
                 ProfileProgress(
@@ -298,6 +242,54 @@ internal fun ProfileScreen(
     Loader(loading = uiState.loading)
 }
 
+@Composable
+private fun MyUsernameCard(
+    username: String,
+    userType: String,
+    isVerified: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .padding(top = 10.dp, bottom = 10.dp)
+            .wrapContentSize(Alignment.Center),
+        shape = CircleShape,
+        color = LightBlack,
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .wrapContentSize(Alignment.Center),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(id = R.string.username, username),
+                modifier = Modifier
+                    .padding(vertical = 5.dp, horizontal = 5.dp)
+                    .padding(bottom = 2.dp),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor,
+                    textAlign = TextAlign.Center
+                ),
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (isVerified || userType == "Admin") {
+                Icon(
+                    painter = painterResource(id = R.drawable.tick),
+                    contentDescription = stringResource(id = R.string.blue_tick),
+                    modifier = Modifier.padding(bottom = 1.dp),
+                    tint = LinkBlue
+                )
+            }
+        }
+    }
+}
+
 @Preview(
     showBackground = true,
     backgroundColor = 0xFF000000
@@ -319,7 +311,8 @@ private fun ProfileScreenPreview() {
                 userType = "student",
                 mentor = "pra_sidh_22",
                 mentorFor = "Team Android"
-            )
+            ),
+            loading = false
         ),
         onEditProfileClick = { },
         onChangePasswordClick = { },

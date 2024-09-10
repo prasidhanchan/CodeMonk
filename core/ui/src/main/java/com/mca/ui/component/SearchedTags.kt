@@ -14,6 +14,7 @@
 package com.mca.ui.component
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -32,6 +33,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,22 +63,23 @@ fun SearchedTags(
     modifier: Modifier = Modifier,
     onClick: (username: String) -> Unit
 ) {
-    if (!tags.isNullOrEmpty()) {
-        Row(
-            modifier = modifier
-                .animateContentSize()
-                .padding(all = 10.dp)
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            tags.forEach { tag ->
-                TagCard(
-                    tag = tag,
-                    onClick = onClick
-                )
-            }
+    val visible by remember(tags) { mutableStateOf(!tags.isNullOrEmpty()) }
+
+    Row(
+        modifier = modifier
+            .padding(all = 10.dp)
+            .animateContentSize(animationSpec = tween(durationMillis = 600))
+            .height(if (visible) 78.dp else 0.dp)
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        tags?.forEach { tag ->
+            TagCard(
+                tag = tag,
+                onClick = onClick
+            )
         }
     }
 }
@@ -88,7 +92,7 @@ private fun TagCard(
 ) {
     Column(
         modifier = modifier
-            .padding(all = 5.dp)
+            .padding(all = 6.dp)
             .height(70.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
             .clickable(
@@ -145,6 +149,24 @@ private fun TagCardPreview() {
         tag = Tag(
             username = "pra_sidh_22",
             userType = "Admin"
+        ),
+        onClick = { }
+    )
+}
+
+@Preview
+@Composable
+private fun SearchedTagsPreview() {
+    SearchedTags(
+        tags = listOf(
+            Tag(
+                username = "pra_sidh_22",
+                userType = "Admin"
+            ),
+            Tag(
+                username = "pra_sidh_22",
+                userType = "Admin"
+            )
         ),
         onClick = { }
     )

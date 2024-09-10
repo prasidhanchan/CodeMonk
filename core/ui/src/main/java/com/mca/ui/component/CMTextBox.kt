@@ -13,10 +13,13 @@
 
 package com.mca.ui.component
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
@@ -61,65 +65,89 @@ fun CMTextBox(
     showPassword: Boolean = false,
     singleLine: Boolean = true,
     maxLines: Int = 1,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    enableHeader: Boolean = true
 ) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier
-            .animateContentSize()
-            .padding(vertical = 7.dp)
-            .height(52.dp)
-            .width(320.dp)
-            .semantics { contentDescription = placeHolder },
-        placeholder = {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 5.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (enableHeader) {
             Text(
                 text = placeHolder,
                 style = TextStyle(
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = dosis,
                     color = fontColor.copy(alpha = 0.5f)
-                )
+                ),
+                modifier = Modifier
+                    .padding(start = 20.dp)
+                    .fillMaxWidth()
             )
-        },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        singleLine = singleLine,
-        maxLines = maxLines,
-        enabled = enabled,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = LightBlack,
-            unfocusedContainerColor = LightBlack,
-            focusedTextColor = fontColor,
-            unfocusedTextColor = fontColor,
-            disabledContainerColor = LightBlack,
-            disabledTextColor = fontColor.copy(alpha = 0.5f),
-            disabledIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        shape = RoundedCornerShape(10.dp),
-        textStyle = TextStyle(
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = dosis
-        ),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction,
-            capitalization = capitalization
-        ),
-        keyboardActions = keyboardActions,
-        visualTransformation = if (isPassword && !showPassword) PasswordVisualTransformation() else VisualTransformation.None
-    )
+        }
+        TextField(
+            value = value,
+            onValueChange = { textValue -> onValueChange(textValue) },
+            modifier = modifier
+                .padding(vertical = 7.dp)
+                .wrapContentHeight(Alignment.CenterVertically)
+                .defaultMinSize(minHeight = 52.dp)
+                .width(320.dp)
+                .semantics { contentDescription = placeHolder },
+            placeholder = {
+                Text(
+                    text = placeHolder,
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = dosis,
+                        color = fontColor.copy(alpha = 0.5f)
+                    )
+                )
+            },
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            singleLine = singleLine,
+            maxLines = maxLines,
+            enabled = enabled,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = LightBlack,
+                unfocusedContainerColor = LightBlack,
+                focusedTextColor = fontColor,
+                unfocusedTextColor = fontColor,
+                disabledContainerColor = LightBlack,
+                disabledTextColor = fontColor.copy(alpha = 0.5f),
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(10.dp),
+            textStyle = TextStyle(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = dosis,
+                color = fontColor
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                imeAction = imeAction,
+                capitalization = capitalization
+            ),
+            keyboardActions = keyboardActions,
+            visualTransformation = if (isPassword && !showPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun CMTextBoxPreview() {
     CMTextBox(
-        value = "",
+        value = "Hello",
         onValueChange = { },
         placeHolder = "Email"
     )

@@ -50,6 +50,7 @@ class ProfileViewModel @Inject constructor(
         if (currentUser != null) {
             uiState.update { it.copy(loading = true) }
             viewModelScope.launch(Dispatchers.IO) {
+                delay(1000L)
                 val result = profileRepository.getUser(currentUser.uid)
 
                 withContext(Dispatchers.Main) {

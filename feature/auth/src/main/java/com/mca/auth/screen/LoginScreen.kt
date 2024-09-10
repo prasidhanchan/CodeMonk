@@ -15,6 +15,7 @@ package com.mca.auth.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,12 +30,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -68,6 +74,13 @@ internal fun LoginScreen(
 
     val interactionSource = remember { MutableInteractionSource() }
     val localKeyboard = LocalSoftwareKeyboardController.current
+
+    val focusManager = LocalFocusManager.current
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -113,6 +126,9 @@ internal fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CMTextBox(
+                    modifier = Modifier
+                        .focusable(enabled = true)
+                        .focusRequester(focusRequester),
                     value = uiState.email,
                     onValueChange = onEmailChange,
                     placeHolder = stringResource(id = R.string.email),
@@ -124,14 +140,15 @@ internal fun LoginScreen(
                         )
                     },
                     keyboardType = KeyboardType.Email,
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    ),
                     capitalization = KeyboardCapitalization.None
                 )
                 CMTextBox(
                     value = uiState.password,
                     onValueChange = onPasswordChange,
                     placeHolder = stringResource(id = R.string.password),
-                    isPassword = true,
-                    showPassword = showPassword,
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.password),
@@ -151,15 +168,17 @@ internal fun LoginScreen(
                             )
                         )
                     },
-                    keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password,
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            localKeyboard?.hide()
+                            focusManager.clearFocus()
                             onLoginClick ()
                         }
                     ),
-                    capitalization = KeyboardCapitalization.None
+                    capitalization = KeyboardCapitalization.None,
+                    isPassword = true,
+                    showPassword = showPassword
                 )
                 Text(
                     text = stringResource(id = R.string.forgot_password),

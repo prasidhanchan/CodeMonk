@@ -34,7 +34,7 @@ data class User(
     val attendance: Int = 0,
     val semester: String = "1",
     val isVerified: Boolean = false,
-    val userType: String = "student",
+    val userType: String = "",
     val mentor: String = "",
     val mentorFor: String = ""
 )

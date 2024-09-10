@@ -109,9 +109,8 @@ fun NavGraphBuilder.editProfileNavigation(
             },
             onBackClick = {
                 navHostController.popBackStack()
-                viewModel.setProfileImage("")
-                viewModel.getMentorTags(username = "") // Clear searched tags
                 viewModel.getUser() // Reset state for all fields if not updated
+                viewModel.getMentorTags(username = "") // Clear searched tags
             }
         )
     }

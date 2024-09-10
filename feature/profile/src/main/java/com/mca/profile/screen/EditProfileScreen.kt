@@ -19,15 +19,17 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -41,15 +43,20 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -77,6 +84,7 @@ import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.LinkType
 import com.mca.util.model.User
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun EditProfileScreen(
@@ -103,7 +111,13 @@ internal fun EditProfileScreen(
     var linkState by remember { mutableStateOf("") }
 
     val state = rememberScrollState()
-    val localKeyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val scope = rememberCoroutineScope()
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -112,6 +126,8 @@ internal fun EditProfileScreen(
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
+                .imePadding()
+                .navigationBarsPadding()
                 .fillMaxSize()
                 .verticalScroll(state),
             verticalArrangement = Arrangement.Top,
@@ -121,44 +137,14 @@ internal fun EditProfileScreen(
                 text = stringResource(id = R.string.edit_profile),
                 onBackClick = onBackClick
             )
-            Box(
-                modifier = Modifier
-                    .padding(bottom = 15.dp)
-                    .size(140.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Surface(
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clickable(
-                            onClick = {
-                                activityLauncher.launch(
-                                    PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                )
-                            }
-                        ),
-                    shape = CircleShape,
-                    color = LightBlack,
-                    content = {
-                        AsyncImage(
-                            model = uiState.currentUser.profileImage,
-                            contentDescription = stringResource(id = R.string.profile),
-                            contentScale = ContentScale.Crop
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = Black.copy(0.5f))
-                        )
-                    }
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.gallery),
-                    contentDescription = stringResource(id = R.string.edit_profile),
-                    tint = tintColor
-                )
-            }
-
+            SelectProfileImage(
+                profileImage = uiState.currentUser.profileImage,
+                onClick = {
+                    activityLauncher.launch(
+                        PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
             if (uiState.currentUser.profileImage.isNotEmpty()) {
                 CMButton(
                     text = stringResource(id = R.string.remove_profile),
@@ -173,7 +159,10 @@ internal fun EditProfileScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .focusable(enabled = true)
+                    .focusRequester(focusRequester),
                 value = uiState.currentUser.username,
                 onValueChange = onUsernameChange,
                 placeHolder = stringResource(id = R.string.username_placeholder),
@@ -185,6 +174,9 @@ internal fun EditProfileScreen(
                     )
                 },
                 keyboardType = KeyboardType.Text,
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                ),
                 capitalization = KeyboardCapitalization.None
             )
             CMTextBox(
@@ -200,51 +192,57 @@ internal fun EditProfileScreen(
                     )
                 },
                 keyboardType = KeyboardType.Text,
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                ),
                 capitalization = KeyboardCapitalization.Words
             )
             CMTextBox(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .height(100.dp),
+                    .padding(vertical = 8.dp),
                 value = uiState.currentUser.bio,
                 onValueChange = onBioChange,
                 placeHolder = stringResource(id = R.string.bio_placeholder),
                 leadingIcon = {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 15.dp)
-                            .fillMaxHeight(),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.bio),
-                            contentDescription = stringResource(id = R.string.bio_placeholder),
-                            tint = tintColor
-                        )
-                    }
-                },
-                singleLine = false,
-                maxLines = 4,
-                keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Sentences
-            )
-            CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
-                value = uiState.currentUser.currentProject,
-                onValueChange = onCurrentProjectChange,
-                placeHolder = stringResource(id = R.string.current_project_placeholder),
-                leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.working_on),
-                        contentDescription = stringResource(id = R.string.current_project_placeholder),
+                        painter = painterResource(id = R.drawable.bio),
+                        contentDescription = stringResource(id = R.string.bio_placeholder),
                         tint = tintColor
                     )
                 },
                 keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                ),
+                capitalization = KeyboardCapitalization.Sentences,
+                singleLine = false,
+                maxLines = 4
             )
             if (uiState.currentUser.userType != "Admin") {
+                CMTextBox(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    value = uiState.currentUser.currentProject,
+                    onValueChange = onCurrentProjectChange,
+                    placeHolder = stringResource(id = R.string.current_project_placeholder),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.working_on),
+                            contentDescription = stringResource(id = R.string.current_project_placeholder),
+                            tint = tintColor
+                        )
+                    },
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text,
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            scope.launch {
+                                state.animateScrollTo(state.maxValue)
+                                focusManager.moveFocus(FocusDirection.Next)
+                            }
+                        }
+                    ),
+                    capitalization = KeyboardCapitalization.Words
+                )
                 CMTextBox(
                     modifier = Modifier.padding(vertical = 8.dp),
                     value = uiState.currentUser.mentor,
@@ -258,6 +256,9 @@ internal fun EditProfileScreen(
                         )
                     },
                     keyboardType = KeyboardType.Text,
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                    ),
                     capitalization = KeyboardCapitalization.None
                 )
                 SearchedTags(
@@ -300,15 +301,15 @@ internal fun EditProfileScreen(
                         )
                     }
                 },
-                keyboardType = KeyboardType.Uri,
-                capitalization = KeyboardCapitalization.None,
                 imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Uri,
                 keyboardActions = KeyboardActions(
                     onDone = {
+                        focusManager.clearFocus()
                         onUpdateClick()
-                        localKeyboard?.hide()
                     }
-                )
+                ),
+                capitalization = KeyboardCapitalization.None
             )
             AddedLinksSection(
                 uiState = uiState,
@@ -326,6 +327,47 @@ internal fun EditProfileScreen(
     }
 
     BackHandler(onBack = onBackClick)
+}
+
+@Composable
+private fun SelectProfileImage(
+    profileImage: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .padding(bottom = 15.dp)
+            .size(140.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .size(140.dp)
+                .clickable(
+                    onClick = onClick
+                ),
+            shape = CircleShape,
+            color = LightBlack,
+            content = {
+                AsyncImage(
+                    model = profileImage,
+                    contentDescription = stringResource(id = R.string.profile),
+                    contentScale = ContentScale.Crop
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Black.copy(0.5f))
+                )
+            }
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.gallery),
+            contentDescription = stringResource(id = R.string.edit_profile),
+            tint = tintColor
+        )
+    }
 }
 
 @Composable

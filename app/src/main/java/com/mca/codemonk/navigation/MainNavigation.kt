@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -29,7 +28,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.auth.navigation.forgotPasswordNavigation
 import com.mca.auth.navigation.loginNavigation
 import com.mca.auth.screen.AuthViewModel
-import com.mca.profile.screen.ProfileViewModel
 import com.mca.splash.navigation.splashNavigation
 import com.mca.ui.component.CMSnackBar
 import com.mca.ui.theme.Black
@@ -43,20 +41,14 @@ import com.mca.util.warpper.ResponseType
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainNavigation(
-    viewModelAuth: AuthViewModel = hiltViewModel(),
-    viewModelProfile: ProfileViewModel = hiltViewModel()
+    viewModelAuth: AuthViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
 
-    val uiStateProfile by viewModelProfile.uiState.collectAsState()
+
 
     val currentUser = FirebaseAuth.getInstance().currentUser
     val snackBarResponse by messageState.collectAsState()
-
-    // Load user data when the app starts
-    LaunchedEffect(key1 = uiStateProfile.currentUser) {
-        viewModelProfile.getUser()
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -88,8 +80,8 @@ fun MainNavigation(
                 navController = navController
             )
             innerScreen(
-                viewModelProfile = viewModelProfile,
-                uiStateProfile = uiStateProfile,
+//                viewModelProfile = viewModelProfile,
+//                uiStateProfile = uiStateProfile,
                 navigateToLogin = {
                     navController.navigate(Route.Login) {
                         popUpTo(Route.InnerScreen) {

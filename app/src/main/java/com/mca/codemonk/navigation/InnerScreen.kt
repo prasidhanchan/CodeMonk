@@ -16,9 +16,11 @@ package com.mca.codemonk.navigation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,7 +30,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.post.navigation.postNavigation
-import com.mca.profile.UiState
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
 import com.mca.profile.navigation.editProfileNavigation
@@ -43,12 +44,14 @@ import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(
-    viewModelProfile: ProfileViewModel,
-    uiStateProfile: UiState,
+//    viewModelProfile: ProfileViewModel,
+//    uiStateProfile: UiState,
     navigateToLogin: () -> Unit
 ) {
     composable<Route.InnerScreen> {
         val viewModelHome: HomeViewModel = hiltViewModel()
+        val viewModelProfile: ProfileViewModel = hiltViewModel()
+        val uiStateProfile by viewModelProfile.uiState.collectAsStateWithLifecycle()
 
         val navHostController = rememberNavController()
 
@@ -62,6 +65,11 @@ fun NavGraphBuilder.innerScreen(
             Route.Notification -> true
             Route.Profile -> true
             else -> false
+        }
+
+        // Load user data when the app starts
+        LaunchedEffect(key1 = uiStateProfile.currentUser) {
+            if (uiStateProfile.currentUser.username.isEmpty()) viewModelProfile.getUser()
         }
 
         Scaffold(
