@@ -93,7 +93,7 @@ fun CMBottomBar(
 
     var isOpen by remember { mutableStateOf(false) }
     val animateHeight by animateDpAsState(
-        targetValue = if (isOpen) 185.dp else 85.dp,
+        targetValue = if (isOpen) 175.dp else 75.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -206,7 +206,7 @@ private fun BottomBarItem(
 
     Column(
         modifier = modifier
-            .height(55.dp)
+            .height(52.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
             .clickable(
                 indication = null,
@@ -287,7 +287,7 @@ private fun PostOptions(
                 )
             )
             .fillMaxWidth()
-            .height(if (visible) 145.dp else 0.dp)
+            .height(if (visible) 130.dp else 0.dp)
             .background(color = BottomBarBlack),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
