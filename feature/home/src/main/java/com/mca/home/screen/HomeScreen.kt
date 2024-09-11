@@ -31,10 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mca.home.UiState
 import com.mca.home.component.HomeAppBar
-import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.home.component.Post
 import com.mca.ui.R
 import com.mca.ui.component.CMAlertDialog
+import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.ui.theme.Black
 import com.mca.util.model.Post
 import com.mca.util.model.User

@@ -14,7 +14,6 @@
 package com.mca.post.screen
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
@@ -46,8 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -99,21 +95,18 @@ internal fun PostScreen(
 
     val state = rememberScrollState()
 
-    LaunchedEffect(key1 = uiState.loading) {
+    LaunchedEffect(key1 = uiState.teamMembers) {
         launch {
             if (postId.isBlank()) teamMembers.add(context.getString(R.string.me)) // If create new post add @me
-            uiState.teamMembers.forEach { member ->
-                teamMembers.add(member)
+            if (teamMembers.isEmpty()) {
+                uiState.teamMembers.forEach { member ->
+                    teamMembers.add(member)
+                }
             }
         }
     }
 
     val focusManager = LocalFocusManager.current
-
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
-    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -122,7 +115,6 @@ internal fun PostScreen(
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .navigationBarsPadding()
                 .imePadding()
                 .fillMaxSize()
                 .verticalScroll(state),
@@ -134,10 +126,7 @@ internal fun PostScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .focusable(enabled = true)
-                    .focusRequester(focusRequester),
+                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.currentProject,
                 onValueChange = onCurrentProjectChange,
                 placeHolder = stringResource(id = R.string.current_project_placeholder),
@@ -203,8 +192,10 @@ internal fun PostScreen(
             SearchedTags(
                 tags = uiState.tags,
                 onClick = { username ->
-                    teamMembers.add(username)
-                    onTeamMemberListChange(teamMembers.toList())
+                    if (!teamMembers.any { member -> member == username }) { // Avoid duplicates
+                        teamMembers.add(username)
+                        onTeamMemberListChange(teamMembers.toList())
+                    }
                     newMember = "" // Clear TextBox
                     onTeamMemberChange("") // Clear tags row
                 }

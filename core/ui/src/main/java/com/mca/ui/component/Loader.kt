@@ -13,6 +13,10 @@
 
 package com.mca.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,7 +37,15 @@ fun Loader(
     loading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    if (loading) {
+    AnimatedVisibility(
+        visible = loading,
+        enter = fadeIn(
+            animationSpec = tween(durationMillis = 400)
+        ),
+        exit = fadeOut(
+            animationSpec = tween(durationMillis = 400)
+        )
+    ) {
         Box(
             modifier = modifier
                 .fillMaxSize()

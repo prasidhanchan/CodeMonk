@@ -91,7 +91,7 @@ fun CMTextBox(
         }
         TextField(
             value = value,
-            onValueChange = { textValue -> onValueChange(textValue) },
+            onValueChange = onValueChange,
             modifier = modifier
                 .padding(vertical = 7.dp)
                 .wrapContentHeight(Alignment.CenterVertically)
@@ -138,7 +138,7 @@ fun CMTextBox(
                 capitalization = capitalization
             ),
             keyboardActions = keyboardActions,
-            visualTransformation = if (isPassword && !showPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = if (isPassword && !showPassword) PasswordVisualTransformation() else VisualTransformation.None
         )
     }
 }

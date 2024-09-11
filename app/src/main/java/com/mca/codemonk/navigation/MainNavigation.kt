@@ -45,8 +45,6 @@ fun MainNavigation(
 ) {
     val navController = rememberNavController()
 
-
-
     val currentUser = FirebaseAuth.getInstance().currentUser
     val snackBarResponse by messageState.collectAsState()
 
@@ -80,8 +78,6 @@ fun MainNavigation(
                 navController = navController
             )
             innerScreen(
-//                viewModelProfile = viewModelProfile,
-//                uiStateProfile = uiStateProfile,
                 navigateToLogin = {
                     navController.navigate(Route.Login) {
                         popUpTo(Route.InnerScreen) {

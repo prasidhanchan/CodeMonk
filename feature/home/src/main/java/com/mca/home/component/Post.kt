@@ -163,7 +163,8 @@ private fun PostCard(
 ) {
     Column(
         modifier
-            .padding(vertical = 20.dp)
+            .padding(vertical = 15.dp)
+            .animateContentSize(animationSpec = tween(durationMillis = 400))
             .wrapContentHeight(Alignment.CenterVertically)
             .width(350.dp),
         verticalArrangement = Arrangement.Top,
@@ -210,7 +211,6 @@ fun MainContent(
 
     Surface(
         modifier = modifier
-            .animateContentSize(animationSpec = tween(durationMillis = 800))
             .fillMaxWidth()
             .wrapContentHeight(Alignment.CenterVertically),
         shape = RoundedCornerShape(15.dp),

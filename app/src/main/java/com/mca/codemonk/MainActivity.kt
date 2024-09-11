@@ -21,6 +21,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
 import com.mca.codemonk.navigation.MainNavigation
 import com.mca.ui.theme.Black
+import com.mca.ui.theme.BottomBarBlack
 import com.mca.ui.theme.CodeMonkTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,7 +29,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Black.toArgb()))
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Black.toArgb()),
+            navigationBarStyle = SystemBarStyle.dark(BottomBarBlack.toArgb())
+        )
         setContent {
             CodeMonkTheme {
                 MainNavigation()

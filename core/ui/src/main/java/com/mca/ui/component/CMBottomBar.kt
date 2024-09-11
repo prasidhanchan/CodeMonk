@@ -233,7 +233,6 @@ private fun BottomBarItem(
                 color = if (selected) fontColor else OffWhite
             )
         )
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

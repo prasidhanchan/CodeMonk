@@ -44,8 +44,6 @@ import com.mca.util.navigation.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(
-//    viewModelProfile: ProfileViewModel,
-//    uiStateProfile: UiState,
     navigateToLogin: () -> Unit
 ) {
     composable<Route.InnerScreen> {
@@ -81,7 +79,8 @@ fun NavGraphBuilder.innerScreen(
                     isNewNotification = false,
                     navHostController = navHostController
                 )
-            }
+            },
+            contentColor = Black
         ) {
             NavHost(
                 navController = navHostController,
