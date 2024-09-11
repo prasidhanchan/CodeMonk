@@ -20,4 +20,7 @@ object Constant {
 
     /** Regex for deadline ex: 20 Apr 2024 */
     val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")
+
+    /** Admin role variable */
+    const val ADMIN = "Admin"
 }

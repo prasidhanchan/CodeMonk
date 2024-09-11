@@ -31,7 +31,7 @@ import com.mca.util.model.User
  * Link section for the profile and view profile screen to display the links.
  */
 @Composable
-fun LinkSection(
+internal fun LinkSection(
     user: User,
     modifier: Modifier = Modifier
 ) {

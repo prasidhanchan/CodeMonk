@@ -52,6 +52,7 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.model.Tag
 
 /**
@@ -130,7 +131,7 @@ private fun TagCard(
                 ),
                 modifier = Modifier.padding(bottom = 1.dp)
             )
-            if (tag.isVerified || tag.userType == "Admin") {
+            if (tag.isVerified || tag.userType == ADMIN) {
                 Icon(
                     painter = painterResource(id = R.drawable.tick),
                     contentDescription = stringResource(id = R.string.blue_tick),
@@ -148,7 +149,7 @@ private fun TagCardPreview() {
     TagCard(
         tag = Tag(
             username = "pra_sidh_22",
-            userType = "Admin"
+            userType = ADMIN
         ),
         onClick = { }
     )
@@ -161,11 +162,11 @@ private fun SearchedTagsPreview() {
         tags = listOf(
             Tag(
                 username = "pra_sidh_22",
-                userType = "Admin"
+                userType = ADMIN
             ),
             Tag(
                 username = "pra_sidh_22",
-                userType = "Admin"
+                userType = ADMIN
             )
         ),
         onClick = { }

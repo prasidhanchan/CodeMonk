@@ -21,6 +21,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.mca.repository.BuildConfig.UPDATE_CHANNEL
 import com.mca.repository.ProfileRepository
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.Constant.USERNAME_REGEX
 import com.mca.util.constant.convertToMap
 import com.mca.util.constant.matchUsername
@@ -76,7 +77,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 !user.username.matches(USERNAME_REGEX) -> throw Exception("Invalid username.")
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
-                user.mentor.isEmpty() && user.userType != "Admin" -> throw Exception("Please add a mentor.")
+                user.mentor.isEmpty() && user.userType != ADMIN -> throw Exception("Please add a mentor.")
                 else -> {
                     userRef.document(user.userId).update(user.convertToMap())
                         .addOnSuccessListener {
@@ -245,7 +246,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
         try {
             userRef
-                .whereEqualTo("userType", "Admin").get()
+                .whereEqualTo("userType", ADMIN).get()
                 .addOnSuccessListener { querySnap ->
                     dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
                         docSnap.toObject<User>()
@@ -277,7 +278,7 @@ class ProfileRepositoryImpl @Inject constructor(
                     dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
                         docSnap.toObject<Tag>()
                     }
-                        .filter { tag -> tag.username.matchUsername(username) && tag.userType == "Admin" }
+                        .filter { tag -> tag.username.matchUsername(username) && tag.userType == ADMIN }
                     if (username.isBlank()) dataOrException.data = emptyList()
                 }
                 .addOnFailureListener { error ->

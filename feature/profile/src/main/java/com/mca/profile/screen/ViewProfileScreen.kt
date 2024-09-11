@@ -60,6 +60,7 @@ import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.model.User
 
 @Composable
@@ -171,7 +172,7 @@ internal fun ViewProfileScreen(
                 )
             }
             Spacer(modifier = Modifier.height(40.dp))
-            if (uiState.selectedUser.userType != "Admin") {
+            if (uiState.selectedUser.userType != ADMIN) {
                 ProfileProgress(
                     progress = uiState.selectedUser.xp,
                     progressType = ProgressType.XP,

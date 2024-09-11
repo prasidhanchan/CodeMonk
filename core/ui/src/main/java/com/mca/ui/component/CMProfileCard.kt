@@ -57,6 +57,7 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.model.User
 import kotlinx.coroutines.delay
 
@@ -152,7 +153,7 @@ fun CMProfileCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(vertical = 5.dp)
                     )
-                    if (user.isVerified || user.userType == "Admin") {
+                    if (user.isVerified || user.userType == ADMIN) {
                         Spacer(modifier = Modifier.width(5.dp))
                         Icon(
                             painter = painterResource(id = R.drawable.tick),
@@ -185,7 +186,7 @@ private fun CMProfileCardPreview() {
             username = "pra_sidh_22",
             name = "Prasidh Gopal Anchan",
             bio = "Android Developer | Kotlin | Compose",
-            userType = "Admin"
+            userType = ADMIN
         ),
         onClick = { }
     )

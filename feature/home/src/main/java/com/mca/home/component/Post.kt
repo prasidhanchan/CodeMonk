@@ -84,6 +84,7 @@ import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.toLikedBy
 import com.mca.util.constant.toLikes
 import com.mca.util.constant.toPostId
@@ -247,7 +248,7 @@ fun MainContent(
                         color = fontColor
                     )
                 )
-                if (post.userId == currentUserId || currentUserType == "Admin") {
+                if (post.userId == currentUserId || currentUserType == ADMIN) {
                     Icon(
                         painter = painterResource(id = R.drawable.edit_post),
                         contentDescription = stringResource(id = R.string.edit_post),
@@ -410,7 +411,7 @@ private fun PostTopBar(
             ),
             modifier = Modifier.padding(end = 5.dp)
         )
-        if (user.isVerified || user.userType == "Admin") {
+        if (user.isVerified || user.userType == ADMIN) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),

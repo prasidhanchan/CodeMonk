@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
+import com.mca.util.constant.Constant.ADMIN
 
 /**
  * Loading indicator for Profile Screen.
@@ -128,7 +129,7 @@ internal fun ProfileScreenLoader(
                     content = { }
                 )
                 // Progress Bar
-                if (userType != "Admin") {
+                if (userType != ADMIN) {
                     Spacer(modifier = Modifier.height(10.dp))
                     repeat(2) {
                         Surface(
@@ -206,6 +207,6 @@ internal fun ProfileScreenLoader(
 private fun ProfileScreenLoaderPreview() {
     ProfileScreenLoader(
         visible = true,
-        userType = "Admin"
+        userType = ADMIN
     )
 }

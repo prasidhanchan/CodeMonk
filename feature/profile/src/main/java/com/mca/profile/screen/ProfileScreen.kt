@@ -64,6 +64,7 @@ import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.model.User
 
 @Composable
@@ -139,7 +140,7 @@ internal fun ProfileScreen(
                 userType = uiState.currentUser.userType,
                 isVerified = uiState.currentUser.isVerified
             )
-            if (uiState.currentUser.userType == "Admin") {
+            if (uiState.currentUser.userType == ADMIN) {
                 Text(
                     text = stringResource(R.string.mentor_for, uiState.currentUser.mentorFor),
                     modifier = Modifier.padding(all = 8.dp),
@@ -186,7 +187,7 @@ internal fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            if (uiState.currentUser.userType != "Admin") {
+            if (uiState.currentUser.userType != ADMIN) {
                 ProfileProgress(
                     icon = painterResource(id = R.drawable.xp_icon),
                     tint = Yellow,
@@ -278,7 +279,7 @@ private fun MyUsernameCard(
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
-            if (isVerified || userType == "Admin") {
+            if (isVerified || userType == ADMIN) {
                 Icon(
                     painter = painterResource(id = R.drawable.tick),
                     contentDescription = stringResource(id = R.string.blue_tick),

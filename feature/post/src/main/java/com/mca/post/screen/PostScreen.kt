@@ -70,6 +70,7 @@ import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.tintColor
+import com.mca.util.constant.Constant.ADMIN
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -179,7 +180,7 @@ internal fun PostScreen(
                 keyboardType = KeyboardType.Text,
                 keyboardActions = KeyboardActions(
                     onNext = {
-                        if (userType == "Admin") {
+                        if (userType == ADMIN) {
                             focusManager.moveFocus(FocusDirection.Next)
                         } else {
                             focusManager.clearFocus()
@@ -225,7 +226,7 @@ internal fun PostScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.progress),
                         contentDescription = stringResource(id = R.string.progress),
-                        tint = if (userType == "Admin") tintColor else tintColor.copy(alpha = 0.5f)
+                        tint = if (userType == ADMIN) tintColor else tintColor.copy(alpha = 0.5f)
                     )
                 },
                 trailingIcon = {
@@ -237,7 +238,7 @@ internal fun PostScreen(
                 },
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number,
-                enabled = userType == "Admin"
+                enabled = userType == ADMIN
             )
             CMTextBox(
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -248,7 +249,7 @@ internal fun PostScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.deadline),
                         contentDescription = stringResource(id = R.string.deadline_placeholder),
-                        tint = if (userType == "Admin") tintColor else tintColor.copy(alpha = 0.5f)
+                        tint = if (userType == ADMIN) tintColor else tintColor.copy(alpha = 0.5f)
                     )
                 },
                 imeAction = ImeAction.Done,
@@ -260,7 +261,7 @@ internal fun PostScreen(
                     }
                 ),
                 capitalization = KeyboardCapitalization.Sentences,
-                enabled = userType == "Admin"
+                enabled = userType == ADMIN
             )
             CMButton(
                 text = stringResource(id = if (postId.isBlank()) R.string.post else R.string.update),
