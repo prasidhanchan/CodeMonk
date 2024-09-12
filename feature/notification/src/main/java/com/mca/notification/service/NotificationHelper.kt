@@ -11,21 +11,27 @@
  *
  */
 
-package com.mca.util.constant
+package com.mca.notification.service
 
-object Constant {
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
-    /** Regex for username ex: pra_sidh_22 */
-    val USERNAME_REGEX = Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")
+class NotificationHelper {
 
-    /** Regex for deadline ex: 20 Apr 2024 */
-    val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")
+    companion object {
 
-    /** Admin role variable */
-    const val ADMIN = "Admin"
+        /** Firebase token */
+        private val token: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    const val REMAINDER_CHANNEL_ID = "Remainder"
-    const val POST_CHANNEL_ID = "Post"
-    const val ANNOUNCEMENT_CHANNEL_ID = "Announcement"
-    const val LIKE_CHANNEL_ID = "Like"
+        /** Function to set new token */
+        fun setToken(newToken: String) {
+            token.update { newToken }
+        }
+
+        /** Function to get new token */
+        fun getToken(): String? = token.value
+
+        /** Function to clear */
+        fun clearToken() = token.update { null }
+    }
 }

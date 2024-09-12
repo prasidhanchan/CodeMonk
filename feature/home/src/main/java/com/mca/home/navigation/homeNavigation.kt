@@ -13,17 +13,29 @@
 
 package com.mca.home.navigation
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.mca.home.screen.HomeScreen
 import com.mca.home.screen.HomeViewModel
+import com.mca.ui.R
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.navigation.Route
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
 
 fun NavGraphBuilder.homeNavigation(
     viewModel: HomeViewModel,
@@ -44,6 +56,32 @@ fun NavGraphBuilder.homeNavigation(
     ) {
         val uiState by viewModel.uiState.collectAsState()
 
+        val context = LocalContext.current
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { result ->
+                if (!result) {
+                    showSnackBar(
+                        response = Response(
+                            message = context.getString(R.string.notification_permission_denied),
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                }
+            }
+        )
+
+        LaunchedEffect(key1 = Unit) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_DENIED &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+            ) {
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
         HomeScreen(
             uiState = uiState,
             profileImage = profileImage,
@@ -57,7 +95,7 @@ fun NavGraphBuilder.homeNavigation(
             },
             onEditPostClick = { postId ->
                 navHostController.navigate(Route.Post(postId))
-                              },
+            },
             onLikeClick = { postId ->
                 viewModel.like(
                     postId = postId,

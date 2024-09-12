@@ -13,11 +13,15 @@
 
 package com.mca.home.screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.UiState
+import com.mca.notification.service.NotificationHelper.Companion.clearToken
+import com.mca.notification.service.NotificationHelper.Companion.getToken
 import com.mca.repository.HomeRepository
+import com.mca.repository.NotificationRepository
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.model.User
 import com.mca.util.warpper.Response
@@ -34,7 +38,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     var uiState = MutableStateFlow(UiState())
@@ -44,6 +49,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getPosts()
+        upsertToken()
     }
 
     private fun getPosts() {
@@ -131,6 +137,28 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             )
+        }
+    }
+
+    private fun upsertToken() {
+        val newToken = getToken()
+        if (newToken != null) {
+            Log.d("TOKENNN", "upsertToken: $newToken")
+            viewModelScope.launch(Dispatchers.IO) {
+                notificationRepository.upsertToken(
+                    newToken = newToken,
+                    userId = currentUser?.uid!!,
+                    onSuccess = { clearToken() },
+                    onError = { error ->
+                        showSnackBar(
+                            response = Response(
+                                message = error,
+                                responseType = ResponseType.ERROR
+                            )
+                        )
+                    }
+                )
+            }
         }
     }
 

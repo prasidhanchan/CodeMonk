@@ -55,6 +55,48 @@ fun Long.toTimeStamp(): String {
 }
 
 /**
+ * Function to get the notification time stamp.
+ * Ex: Just now, 1 minute ago, 2 hours ago, etc.
+ */
+fun Long.toNotificationTimeStamp(): String {
+    val currentTime = System.currentTimeMillis()
+    val diff = currentTime - this
+
+    return when {
+        diff <= 60_000 -> "Just now"
+        diff <= 3_600_000 -> {
+            val minutes = diff / 60_000
+            if (minutes == 1L) "$minutes minute ago" else "$minutes minutes ago"
+        }
+
+        diff <= 86_400_000 -> {
+            val hours = diff / 3_600_000
+            if (hours == 1L) "$$hours hour ago" else "$hours hours ago"
+        }
+
+        diff <= 2_592_000_000 -> {
+            val days = diff / 86_400_000
+            if (days == 1L) "$days day ago" else "$days days ago"
+        }
+
+        diff <= 31_104_000_000 -> {
+            val weeks = diff / 2_592_000_000
+            if (weeks == 1L) "$weeks week ago" else "$weeks weeks ago"
+        }
+
+        diff <= 31_104_000_000_000 -> {
+            val months = diff / 31_104_000_000
+            if (months == 1L) "$months month ago" else "$months months ago"
+        }
+
+        else -> {
+            val years = diff / 31_104_000_000_000
+            if (years == 1L) "$years year ago" else "$years years ago"
+        }
+    }
+}
+
+/**
  * Function to get the currently selected route.
  * @return Returns [Route] of the selected type.
  */
@@ -108,6 +150,7 @@ fun User.convertToMap(): HashMap<String, Any> {
     return hashMapOf(
         "username" to username,
         "name" to name,
+        "token" to token,
         "bio" to bio,
         "profileImage" to profileImage,
         "email" to email,

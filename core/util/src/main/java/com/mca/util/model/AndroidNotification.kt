@@ -11,21 +11,11 @@
  *
  */
 
-package com.mca.util.constant
+package com.mca.util.model
 
-object Constant {
+import androidx.compose.runtime.Stable
 
-    /** Regex for username ex: pra_sidh_22 */
-    val USERNAME_REGEX = Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")
-
-    /** Regex for deadline ex: 20 Apr 2024 */
-    val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")
-
-    /** Admin role variable */
-    const val ADMIN = "Admin"
-
-    const val REMAINDER_CHANNEL_ID = "Remainder"
-    const val POST_CHANNEL_ID = "Post"
-    const val ANNOUNCEMENT_CHANNEL_ID = "Announcement"
-    const val LIKE_CHANNEL_ID = "Like"
-}
+@Stable
+data class AndroidNotification(
+    val channel_id: String
+)

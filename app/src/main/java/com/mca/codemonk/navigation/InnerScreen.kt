@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.leaderboard.navigation.leaderBoardNavigation
+import com.mca.notification.navigation.notificationNavigation
 import com.mca.post.navigation.postNavigation
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
@@ -126,6 +127,7 @@ fun NavGraphBuilder.innerScreen(
                 )
                 searchNavigation(navHostController)
                 leaderBoardNavigation(navHostController)
+                notificationNavigation(navHostController)
             }
         }
     }

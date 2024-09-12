@@ -22,6 +22,7 @@ data class User(
     val username: String = "",
     val name: String = "",
     val userId: String = "",
+    val token: String = "",
     val bio: String = "",
     val profileImage: String = "",
     val email: String = "",

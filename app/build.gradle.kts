@@ -122,4 +122,5 @@ dependencies {
     implementation(project(":feature:post"))
     implementation(project(":feature:search"))
     implementation(project(":feature:leaderboard"))
+    implementation(project(":feature:notification"))
 }

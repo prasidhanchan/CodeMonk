@@ -96,4 +96,6 @@
     <string name="mentor">Mentor:</string>
     <string name="monk_not_found">Monk not found!</string>
     <string name="leaderboard">LeaderBoard</string>
+    <string name="notification">Notification</string>
+    <string name="notification_permission_denied">Please enable the notification permission.</string>
 </resources>
