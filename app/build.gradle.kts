@@ -121,4 +121,5 @@ dependencies {
     implementation(project(":feature:profile"))
     implementation(project(":feature:post"))
     implementation(project(":feature:search"))
+    implementation(project(":feature:leaderboard"))
 }

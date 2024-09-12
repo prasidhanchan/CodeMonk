@@ -18,11 +18,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mca.repository.AuthRepository
 import com.mca.repository.HomeRepository
+import com.mca.repository.LeaderBoardRepository
 import com.mca.repository.PostRepository
 import com.mca.repository.ProfileRepository
 import com.mca.repository.SearchRepository
 import com.mca.repository.impl.AuthRepositoryImpl
 import com.mca.repository.impl.HomeRepositoryImpl
+import com.mca.repository.impl.LeaderBoardRepositoryImpl
 import com.mca.repository.impl.PostRepositoryImpl
 import com.mca.repository.impl.ProfileRepositoryImpl
 import com.mca.repository.impl.SearchRepositoryImpl
@@ -69,4 +71,9 @@ object TestAppModule {
     @Provides
     fun provideSearchRepository(): SearchRepository =
         SearchRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
+
+    @Singleton
+    @Provides
+    fun provideLeaderBoardRepository(): LeaderBoardRepository =
+        LeaderBoardRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
 }

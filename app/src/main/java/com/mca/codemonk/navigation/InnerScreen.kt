@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
+import com.mca.leaderboard.navigation.leaderBoardNavigation
 import com.mca.post.navigation.postNavigation
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
@@ -124,6 +125,7 @@ fun NavGraphBuilder.innerScreen(
                     navHostController = navHostController
                 )
                 searchNavigation(navHostController)
+                leaderBoardNavigation(navHostController)
             }
         }
     }
