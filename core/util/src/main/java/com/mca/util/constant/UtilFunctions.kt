@@ -74,6 +74,7 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.EditProfile::class.java.simpleName -> Route.EditProfile
                 Route.ChangePassword::class.java.simpleName -> Route.ChangePassword
                 Route.Post::class.java.simpleName -> Route.Post()
+                Route.Search::class.java.simpleName -> Route.Search
                 else -> Route.About
             }
         }
