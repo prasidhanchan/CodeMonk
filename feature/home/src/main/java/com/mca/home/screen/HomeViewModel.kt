@@ -13,7 +13,6 @@
 
 package com.mca.home.screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -143,7 +142,6 @@ class HomeViewModel @Inject constructor(
     private fun upsertToken() {
         val newToken = getToken()
         if (newToken != null) {
-            Log.d("TOKENNN", "upsertToken: $newToken")
             viewModelScope.launch(Dispatchers.IO) {
                 notificationRepository.upsertToken(
                     newToken = newToken,

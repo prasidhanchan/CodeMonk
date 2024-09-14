@@ -11,14 +11,24 @@
  *
  */
 
-package com.mca.util.model
+package com.mca.remote
 
-import androidx.compose.runtime.Stable
+import com.mca.remote.BuildConfig.PROJECT_ID
+import com.mca.util.model.PushNotification
+import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.HeaderMap
+import retrofit2.http.POST
 
-@Stable
-data class Message(
-    val topic: String,
-    val notification: Notification,
-    val data: Data,
-    val android: Android
-)
+interface NotificationApi {
+
+    /**
+     * Send notification to a topic with [PushNotification] as the body.
+     */
+    @POST("$PROJECT_ID/messages:send")
+    suspend fun postNotification(
+        @HeaderMap headers: HashMap<String, String>,
+        @Body pushNotification: PushNotification
+    ): Response<ResponseBody>
+}

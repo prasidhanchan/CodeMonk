@@ -24,8 +24,18 @@ object Constant {
     /** Admin role variable */
     const val ADMIN = "Admin"
 
-    const val REMAINDER_CHANNEL_ID = "Remainder"
-    const val POST_CHANNEL_ID = "Post"
+    /** Base url for http v1 */
+    const val BASE_URL = "https://fcm.googleapis.com/v1/projects/"
+
+    /** Firebase scope variable */
+    const val SCOPE = "https://www.googleapis.com/auth/firebase.messaging"
+
+    const val EVENT_CHANNEL_ID = "EventChannel"
+    const val EVENT_TOPIC = "Event"
+    const val POST_CHANNEL_ID = "PostChannel"
+    const val POST_TOPIC = "Post"
     const val ANNOUNCEMENT_CHANNEL_ID = "Announcement"
+    const val ANNOUNCEMENT_TOPIC = "AnnouncementChannel"
     const val LIKE_CHANNEL_ID = "Like"
+    const val LIKE_TOPIC = "LikeChannel"
 }

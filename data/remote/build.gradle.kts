@@ -2,17 +2,15 @@ import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
 import AndroidConfig.JVM_TARGET
 import AndroidConfig.MIN_SDK
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.ksp)
-    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.mca.leaderboard"
+    namespace = "com.mca.remote"
     compileSdk = COMPILE_SDK
 
     defaultConfig {
@@ -20,6 +18,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("gradle.properties").inputStream())
+
+        buildConfigField("String", "PROJECT_ID", "\"${properties.getProperty("PROJECT_ID")}\"")
     }
 
     buildTypes {
@@ -39,41 +42,19 @@ android {
         jvmTarget = JVM_TARGET
     }
     buildFeatures {
-        compose = true
+        buildConfig = true
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
 
 dependencies {
 
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    implementation(libs.retrofit)
+    implementation(libs.gson.converter)
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-
-    // Coil
-    implementation(libs.coil.compose)
-
-    // Navigation Compose
-    implementation(libs.navigation.compose)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.material3)
-
-    implementation(project(":core:ui"))
     implementation(project(":core:util"))
-    implementation(project(":data:repository"))
 }

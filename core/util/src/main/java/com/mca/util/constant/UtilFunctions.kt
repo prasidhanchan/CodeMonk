@@ -17,7 +17,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.navigation.NavBackStackEntry
+import com.mca.util.model.NotificationData
 import com.mca.util.model.Post
+import com.mca.util.model.PushNotification
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
 import java.text.SimpleDateFormat
@@ -117,6 +119,7 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.ChangePassword::class.java.simpleName -> Route.ChangePassword
                 Route.Post::class.java.simpleName -> Route.Post()
                 Route.Search::class.java.simpleName -> Route.Search
+                Route.SendNotification::class.java.simpleName -> Route.SendNotification
                 else -> Route.About
             }
         }
@@ -245,4 +248,16 @@ fun String.matchUsername(username: String): Boolean {
 
         else -> false
     }
+}
+
+/**
+ * Function to convert a [PushNotification] to a [NotificationData].
+ */
+fun PushNotification.toNotification(): HashMap<String, Any> {
+    return hashMapOf(
+        "id" to message.data.id,
+        "title" to message.notification.title,
+        "body" to message.notification.body,
+        "timeStamp" to message.data.time_stamp.toLong()
+    )
 }

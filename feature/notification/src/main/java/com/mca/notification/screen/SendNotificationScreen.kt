@@ -11,7 +11,7 @@
  *
  */
 
-package com.mca.search.screen
+package com.mca.notification.screen
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,16 +20,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
@@ -38,28 +36,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mca.search.UiState
 import com.mca.ui.R
-import com.mca.ui.component.CMProfileCard
+import com.mca.notification.UiState
+import com.mca.ui.component.CMButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
-import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.tintColor
 
 @Composable
-internal fun SearchScreen(
+internal fun SendNotificationScreen(
     uiState: UiState,
-    onProfileClick: (username: String) -> Unit,
-    onSearchChange: (String) -> Unit,
+    onSendClick: () -> Unit,
+    onTitleChange: (String) -> Unit,
+    onMessageChange: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
-
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
-    }
+    val focusManager = LocalFocusManager.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -73,69 +67,78 @@ internal fun SearchScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CMRegularAppBar(
-                text = stringResource(id = R.string.search),
+                text = stringResource(id = R.string.send_notification),
                 onBackClick = onBackClick
             )
             CMTextBox(
                 modifier = Modifier
                     .focusable(enabled = true)
                     .focusRequester(focusRequester),
-                value = uiState.search,
-                onValueChange = onSearchChange,
-                placeHolder = stringResource(id = R.string.search),
+                value = uiState.title,
+                onValueChange = onTitleChange,
+                placeHolder = stringResource(id = R.string.title),
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.search),
-                        contentDescription = stringResource(id = R.string.search),
+                        painter = painterResource(id = R.drawable.title),
+                        contentDescription = stringResource(id = R.string.title),
                         tint = tintColor
                     )
                 },
-                imeAction = ImeAction.Search,
                 keyboardActions = KeyboardActions(
-                    onSearch = {
-                        if (uiState.search.isNotBlank()) focusManager.clearFocus()
-                        onSearchChange(uiState.search)
-                    }
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 ),
                 enableHeader = false
             )
-            Spacer(modifier = Modifier.height(20.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (!uiState.users.isNullOrEmpty()) {
-                    itemsIndexed(
-                        key = { _, user -> user.userId },
-                        items = uiState.users!!
-                    ) { index, user ->
-                        CMProfileCard(
-                            user = user,
-                            delay = index * 100,
-                            onClick = onProfileClick
-                        )
+            CMTextBox(
+                value = uiState.message,
+                onValueChange = onMessageChange,
+                placeHolder = stringResource(id = R.string.body),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.body),
+                        contentDescription = stringResource(id = R.string.body),
+                        tint = tintColor
+                    )
+                },
+                imeAction = ImeAction.Send,
+                keyboardActions = KeyboardActions(
+                    onSend = {
+                        if (uiState.title.isNotBlank() &&
+                            uiState.message.isNotBlank()
+                        ) {
+                            focusManager.clearFocus()
+                        }
+                        onSendClick()
                     }
+                ),
+                singleLine = false,
+                maxLines = Int.MAX_VALUE,
+                enableHeader = false
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            CMButton(
+                text = stringResource(id = R.string.send),
+                onClick = {
+                    if (uiState.title.isNotBlank() &&
+                        uiState.message.isNotBlank()
+                    ) {
+                        focusManager.clearFocus()
+                    }
+                    onSendClick()
                 }
-            }
+            )
         }
     }
-
-    EmptyResponseIndicator(
-        visible = uiState.users == null,
-        message = stringResource(id = R.string.monk_not_found)
-    )
 }
 
 @Preview
 @Composable
-private fun SearchScreenPreview() {
-    SearchScreen(
-        uiState = UiState(
-            users = null
-        ),
-        onProfileClick = { },
-        onSearchChange = { },
+private fun SendNotificationScreenPreview() {
+    SendNotificationScreen(
+        uiState = UiState(),
+        onSendClick = { },
+        onTitleChange = { },
+        onMessageChange = { },
         onBackClick = { }
     )
 }

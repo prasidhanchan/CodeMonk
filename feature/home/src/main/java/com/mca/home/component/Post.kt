@@ -14,9 +14,6 @@
 package com.mca.home.component
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,16 +44,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -85,6 +79,7 @@ import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
+import com.mca.util.constant.animatedLike
 import com.mca.util.constant.toLikedBy
 import com.mca.util.constant.toLikes
 import com.mca.util.constant.toPostId
@@ -655,28 +650,6 @@ private fun PostCardLoader(
             content = { }
         )
     }
-}
-
-private fun Modifier.animatedLike(onClick: () -> Unit) = composed {
-    var scale by remember { mutableFloatStateOf(1f) }
-    val animatedLike by animateFloatAsState(
-        targetValue = scale,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
-        label = "animatedLike",
-        finishedListener = { scale = 1f }
-    )
-    scale(animatedLike)
-        .clickable(
-            indication = null,
-            interactionSource = remember(::MutableInteractionSource),
-            onClick = {
-                scale = 1.2f
-                onClick()
-            }
-        )
 }
 
 @Preview

@@ -24,7 +24,7 @@ class NotificationHelper {
         private val token: MutableStateFlow<String?> = MutableStateFlow(null)
 
         /** Function to set new token */
-        fun setToken(newToken: String) {
+        fun setToken(newToken: String?) {
             token.update { newToken }
         }
 

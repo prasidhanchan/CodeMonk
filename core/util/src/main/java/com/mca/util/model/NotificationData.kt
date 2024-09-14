@@ -13,12 +13,9 @@
 
 package com.mca.util.model
 
-import androidx.compose.runtime.Stable
-
-@Stable
-data class Message(
-    val topic: String,
-    val notification: Notification,
-    val data: Data,
-    val android: Android
+data class NotificationData(
+    var id: String = "",
+    var title: String = "",
+    var body: String = "",
+    var timeStamp: Long = 0L
 )

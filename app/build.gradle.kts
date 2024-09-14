@@ -65,6 +65,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
@@ -81,9 +82,14 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
     implementation(libs.firebase.realtime.database)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.gson.converter)
 
     // Navigation Compose
     implementation(libs.navigation.compose)
@@ -114,6 +120,7 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":core:util"))
+    implementation(project(":data:remote"))
     implementation(project(":data:repository"))
     implementation(project(":feature:splash"))
     implementation(project(":feature:auth"))

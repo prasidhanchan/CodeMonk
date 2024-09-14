@@ -98,4 +98,9 @@
     <string name="leaderboard">LeaderBoard</string>
     <string name="notification">Notification</string>
     <string name="notification_permission_denied">Please enable the notification permission.</string>
+    <string name="send_notification">Send Notification</string>
+    <string name="send">Send</string>
+    <string name="title">Notification title</string>
+    <string name="body">Notification message</string>
+    <string name="notification_sent">Notification sent</string>
 </resources>

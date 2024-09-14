@@ -13,14 +13,21 @@
 
 package com.mca.notification.screen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,14 +35,18 @@ import com.mca.notification.UiState
 import com.mca.notification.component.NotificationCard
 import com.mca.ui.R
 import com.mca.ui.component.CMRegularAppBar
-import com.mca.util.model.Notification
+import com.mca.ui.theme.tintColor
+import com.mca.util.constant.Constant.ADMIN
+import com.mca.util.model.NotificationData
 
 @Composable
 internal fun NotificationScreen(
-    uiState: UiState
+    uiState: UiState,
+    userType: String,
+    onSendNotificationClick: () -> Unit
 ) {
     LazyColumn(
-        modifier= Modifier
+        modifier = Modifier
             .padding(horizontal = 20.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -44,15 +55,36 @@ internal fun NotificationScreen(
         item {
             CMRegularAppBar(
                 text = stringResource(id = R.string.notification),
-                enableBackButton = false
+                enableBackButton = false,
+                trailingIcon = {
+                    if (userType == ADMIN) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.body),
+                            contentDescription = stringResource(id = R.string.send),
+                            modifier = Modifier.clickable(
+                                indication = null,
+                                interactionSource = remember(::MutableInteractionSource),
+                                onClick = onSendNotificationClick
+                            ),
+                            tint = tintColor
+                        )
+                    }
+                }
             )
         }
 
-        items(
-            key = { notification -> notification.id },
+        itemsIndexed(
+            key = { _, notification -> notification.id },
             items = uiState.notifications
-        ) { notification ->
-            NotificationCard(notification = notification)
+        ) { index, notification ->
+            NotificationCard(
+                notification = notification,
+                delay = index * 100
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
@@ -63,19 +95,21 @@ private fun NotificationScreenPreview() {
     NotificationScreen(
         uiState = UiState(
             notifications = listOf(
-                Notification(
+                NotificationData(
                     id = "1",
                     title = "New event",
                     body = "There will be a hackathon this saturday, interested can register @codemonk.club",
                     timeStamp = 1794092800000L
                 ),
-                Notification(
+                NotificationData(
                     id = "2",
                     title = "Laptop remainder",
                     body = "Don't forget to bring your laptop this saturday",
                     timeStamp = 1694092800000L
                 )
             )
-        )
+        ),
+        userType = ADMIN,
+        onSendNotificationClick = { }
     )
 }

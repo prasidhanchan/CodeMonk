@@ -19,6 +19,7 @@ import AndroidConfig.MIN_SDK
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -49,6 +50,11 @@ android {
     kotlinOptions {
         jvmTarget = JVM_TARGET
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
@@ -57,6 +63,8 @@ dependencies {
     implementation(libs.kotlinx.serialization)
 
     implementation(libs.androidx.core.ktx)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.navigation.compose)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.material3)
 }

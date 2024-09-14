@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mca.notification.service.NotificationHelper.Companion.setToken
@@ -47,15 +48,19 @@ class NotificationService : FirebaseMessagingService() {
         notificationChannel.importance = NotificationManager.IMPORTANCE_HIGH
         notificationChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
 
-        val notification = Notification.Builder(this, message.notification?.channelId)
-            .setContentTitle(message.notification?.title)
-            .setContentText(message.notification?.body)
-            .setChannelId(message.notification?.channelId)
-            .setSmallIcon(R.drawable.notification)
-            .setColor(Color.White.toArgb())
-            .setAutoCancel(true)
-            .build()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (message.data["user_id"] != currentUser?.uid) { // notifications not shown for current user
+            val notification = Notification.Builder(this, message.notification?.channelId)
+                .setContentTitle(message.notification?.title)
+                .setContentText(message.notification?.body)
+                .setChannelId(message.notification?.channelId)
+                .setSmallIcon(R.drawable.notification)
+                .setColor(Color.White.toArgb())
+                .setAutoCancel(true)
+                .build()
 
-        notificationManager.notify(message.data["id"]?.toInt() ?: 1, notification)
+            val id = message.data["id"]?.substringAfter("-")?.toInt()
+            notificationManager.notify(id ?: 1, notification)
+        }
     }
 }

@@ -13,6 +13,12 @@
 
 package com.mca.repository
 
+import android.content.Context
+import com.mca.util.model.NotificationData
+import com.mca.util.model.PushNotification
+import com.mca.util.warpper.DataOrException
+import kotlinx.coroutines.flow.Flow
+
 interface NotificationRepository {
 
     suspend fun upsertToken(
@@ -21,4 +27,15 @@ interface NotificationRepository {
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )
+
+    suspend fun getAccessToken(context: Context): DataOrException<String, Boolean, Exception>
+
+    suspend fun sendNotification(
+        pushNotification: PushNotification,
+        accessToken: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    )
+
+    suspend fun getNotifications(): Flow<DataOrException<List<NotificationData>, Boolean, Exception>>
 }

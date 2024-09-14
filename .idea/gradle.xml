@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/util" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/remote" />
             <option value="$PROJECT_DIR$/data/repository" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/auth" />

@@ -13,9 +13,12 @@
 
 package com.mca.notification
 
-import com.mca.util.model.Notification
+import com.mca.util.model.NotificationData
 
 data class UiState(
-    var notifications: List<Notification> = emptyList(),
+    var title: String = "",
+    var message: String = "",
+    var accessToken: String? = null,
+    var notifications: List<NotificationData> = emptyList(),
     var loading: Boolean = false
 )

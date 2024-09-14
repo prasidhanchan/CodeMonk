@@ -42,19 +42,22 @@ import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.util.R
+import com.mca.util.constant.animateAlpha
 import com.mca.util.constant.toNotificationTimeStamp
-import com.mca.util.model.Notification
+import com.mca.util.model.NotificationData
 
 @Composable
-fun NotificationCard(
-    notification: Notification,
-    modifier: Modifier = Modifier
+internal fun NotificationCard(
+    notification: NotificationData,
+    modifier: Modifier = Modifier,
+    delay: Int = 200
 ) {
     Surface(
         modifier = modifier
             .padding(vertical = 10.dp)
             .wrapContentHeight(Alignment.CenterVertically)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .animateAlpha(delay),
         shape = RoundedCornerShape(10.dp),
         color = LightBlack
     ) {
@@ -82,7 +85,7 @@ fun NotificationCard(
                 Text(
                     text = notification.title,
                     style = TextStyle(
-                        fontSize = 14.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
                         fontFamily = dosis,
                         color = fontColor
@@ -95,7 +98,7 @@ fun NotificationCard(
             Text(
                 text = notification.body,
                 style = TextStyle(
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = dosis,
                     color = fontColor
@@ -121,7 +124,7 @@ fun NotificationCard(
 @Composable
 private fun NotificationCardPreview() {
     NotificationCard(
-        notification = Notification(
+        notification = NotificationData(
             id = "1",
             title = "New event",
             body = "There will be a hackathon this saturday, interested can register @codemonk.club",

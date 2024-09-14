@@ -16,6 +16,7 @@ package com.mca.codemonk.di
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.mca.remote.NotificationApi
 import com.mca.repository.AuthRepository
 import com.mca.repository.HomeRepository
 import com.mca.repository.LeaderBoardRepository
@@ -34,6 +35,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -81,6 +85,20 @@ object TestAppModule {
 
     @Singleton
     @Provides
-    fun provideNotificationRepository(): NotificationRepository =
-        NotificationRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
+    fun provideNotificationRepository(notificationApi: NotificationApi): NotificationRepository =
+        NotificationRepositoryImpl(
+            userRef = FirebaseFirestore.getInstance().collection("users"),
+            notificationRef = FirebaseDatabase.getInstance().getReference("notifications"),
+            notificationApi = notificationApi
+        )
+
+    @Singleton
+    @Provides
+    fun provideNotificationApi(): NotificationApi {
+        return Retrofit.Builder()
+            .baseUrl("https://fcm.googleapis.com/v1/projects/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create()
+    }
 }

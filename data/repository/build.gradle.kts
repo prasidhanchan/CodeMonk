@@ -61,6 +61,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
@@ -76,8 +77,15 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
     implementation(libs.firebase.realtime.database)
     implementation(libs.firebase.storage)
+
+    // Retrofit
+    implementation(libs.retrofit)
+
+    // OAuth
+    implementation(libs.google.oauth)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -92,4 +100,5 @@ dependencies {
     testImplementation(libs.junit)
 
     implementation(project(":core:util"))
+    implementation(project(":data:remote"))
 }

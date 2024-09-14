@@ -17,8 +17,6 @@ import androidx.compose.runtime.Stable
 
 @Stable
 data class Notification(
-    val id: String,
     val title: String,
-    val body: String,
-    val timeStamp: Long = 0L
+    val body: String
 )

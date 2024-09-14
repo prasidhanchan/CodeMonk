@@ -27,10 +27,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.leaderboard.navigation.leaderBoardNavigation
 import com.mca.notification.navigation.notificationNavigation
+import com.mca.notification.navigation.sendNotificationNavigation
+import com.mca.notification.screen.NotificationViewModel
 import com.mca.post.navigation.postNavigation
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
@@ -41,6 +44,10 @@ import com.mca.profile.screen.ProfileViewModel
 import com.mca.search.navigation.searchNavigation
 import com.mca.ui.component.CMBottomBar
 import com.mca.ui.theme.Black
+import com.mca.util.constant.Constant.ANNOUNCEMENT_TOPIC
+import com.mca.util.constant.Constant.EVENT_TOPIC
+import com.mca.util.constant.Constant.LIKE_TOPIC
+import com.mca.util.constant.Constant.POST_TOPIC
 import com.mca.util.constant.getCurrentRoute
 import com.mca.util.navigation.Route
 
@@ -51,6 +58,7 @@ fun NavGraphBuilder.innerScreen(
     composable<Route.InnerScreen> {
         val viewModelHome: HomeViewModel = hiltViewModel()
         val viewModelProfile: ProfileViewModel = hiltViewModel()
+        val viewModelNotification: NotificationViewModel = hiltViewModel()
         val uiStateProfile by viewModelProfile.uiState.collectAsStateWithLifecycle()
 
         val navHostController = rememberNavController()
@@ -70,6 +78,17 @@ fun NavGraphBuilder.innerScreen(
         // Load user data when the app starts
         LaunchedEffect(key1 = uiStateProfile.currentUser) {
             if (uiStateProfile.currentUser.username.isEmpty()) viewModelProfile.getUser()
+
+            // Subscribe to topics
+            FirebaseMessaging.getInstance().apply {
+                subscribeToTopic(EVENT_TOPIC)
+                subscribeToTopic(POST_TOPIC)
+                subscribeToTopic(ANNOUNCEMENT_TOPIC)
+                subscribeToTopic(LIKE_TOPIC)
+            }
+
+            // Get firebase token
+//            viewModelNotification.getMyToken()
         }
 
         Scaffold(
@@ -127,7 +146,15 @@ fun NavGraphBuilder.innerScreen(
                 )
                 searchNavigation(navHostController)
                 leaderBoardNavigation(navHostController)
-                notificationNavigation(navHostController)
+                notificationNavigation(
+                    viewModel = viewModelNotification,
+                    userType = uiStateProfile.currentUser.userType,
+                    navHostController = navHostController
+                )
+                sendNotificationNavigation(
+                    viewModel = viewModelNotification,
+                    navHostController = navHostController
+                )
             }
         }
     }

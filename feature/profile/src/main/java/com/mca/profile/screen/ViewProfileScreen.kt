@@ -234,7 +234,7 @@ private fun OtherMentorsSection(
             mentors.forEachIndexed { index, mentor ->
                 CMProfileCard(
                     user = mentor,
-                    delay = 200 * index,
+                    delay = index * 100,
                     onClick = onProfileCardClick
                 )
             }

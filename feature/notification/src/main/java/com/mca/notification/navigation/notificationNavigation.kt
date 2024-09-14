@@ -13,35 +13,33 @@
 
 package com.mca.notification.navigation
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.mca.notification.UiState
 import com.mca.notification.screen.NotificationScreen
-import com.mca.util.model.Notification
+import com.mca.notification.screen.NotificationViewModel
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.notificationNavigation(
+    viewModel: NotificationViewModel,
+    userType: String,
     navHostController: NavHostController
 ) {
     composable<Route.Notification> {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val context = LocalContext.current
+        LaunchedEffect(key1 = Unit) {
+            viewModel.getAccessToken(context)
+        }
+
         NotificationScreen(
-            uiState = UiState(
-                notifications = listOf(
-                    Notification(
-                        id = "1",
-                        title = "New event",
-                        body = "There will be a hackathon this saturday, interested can register @codemonk.club",
-                        timeStamp = 1726143652651L
-                    ),
-                    Notification(
-                        id = "2",
-                        title = "Laptop remainder",
-                        body = "Don't forget to bring your laptop this saturday",
-                        timeStamp = 1694092800000L
-                    )
-                )
-            )
+            uiState = uiState,
+            userType = userType,
+            onSendNotificationClick = { navHostController.navigate(Route.SendNotification) }
         )
     }
 }
