@@ -29,9 +29,9 @@ import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.model.Android
 import com.mca.util.model.AndroidNotification
 import com.mca.util.model.Data
-import com.mca.util.model.Message
+import com.mca.util.model.MessageToTopic
 import com.mca.util.model.Notification
-import com.mca.util.model.PushNotification
+import com.mca.util.model.PushNotificationTopic
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
@@ -48,8 +48,8 @@ fun NavGraphBuilder.sendNotificationNavigation(
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        val pushNotification = PushNotification(
-            message = Message(
+        val pushNotification = PushNotificationTopic(
+            message = MessageToTopic(
                 topic = EVENT_TOPIC,
                 notification = Notification(
                     title = uiState.title,
@@ -70,7 +70,7 @@ fun NavGraphBuilder.sendNotificationNavigation(
         SendNotificationScreen(
             uiState = uiState,
             onSendClick = {
-                viewModel.sendNotification(
+                viewModel.sendNotificationToTopic(
                     pushNotification = pushNotification,
                     accessToken = uiState.accessToken ?: "",
                     onSuccess = {

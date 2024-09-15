@@ -22,22 +22,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mca.ui.R
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
-import com.mca.ui.theme.tintColor
 
 /**
  * Regular AppBAr composable for all screens.
@@ -79,16 +75,26 @@ fun CMRegularAppBar(
             ),
             modifier = Modifier.weight(1f)
         )
-        Box(
-            modifier = Modifier.size(36.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            when {
-                enableBackButton && trailingIcon != null -> trailingIcon()
-                !enableBackButton && trailingIcon == null -> Unit
-                trailingIcon != null -> trailingIcon()
-                else -> Spacer(modifier = Modifier.width(36.dp))
+        when {
+            enableBackButton && trailingIcon != null -> {
+                Box(
+                    modifier = Modifier.size(36.dp),
+                    contentAlignment = Alignment.Center,
+                    content = { trailingIcon() }
+                )
             }
+
+            !enableBackButton && trailingIcon == null -> Unit
+
+            trailingIcon != null -> {
+                Box(
+                    modifier = Modifier.size(36.dp),
+                    contentAlignment = Alignment.Center,
+                    content = { trailingIcon() }
+                )
+            }
+
+            else -> Spacer(modifier = Modifier.width(36.dp))
         }
     }
 }
@@ -96,9 +102,8 @@ fun CMRegularAppBar(
 @Preview
 @Composable
 private fun CmRegularAppbarPreview() {
-    CMRegularAppBar(text = "Forgot Password", enableBackButton = false, trailingIcon = { Icon(
-        painter = painterResource(id = R.drawable.body),
-        contentDescription = "",
-        tint = tintColor
-    ) })
+    CMRegularAppBar(
+        text = "Forgot Password",
+        enableBackButton = false
+    )
 }

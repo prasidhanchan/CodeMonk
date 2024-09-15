@@ -50,7 +50,7 @@ internal fun HomeScreen(
     onSearchClick: () -> Unit,
     onUsernameClick: (String) -> Unit,
     onEditPostClick: (postId: String) -> Unit,
-    onLikeClick: (postId: String) -> Unit,
+    onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit,
     onDeletedClick: (postId: String) -> Unit
 ) {
@@ -159,7 +159,7 @@ private fun HomeScreenPreview() {
         onSearchClick = { },
         onUsernameClick = { },
         onEditPostClick = { },
-        onLikeClick = { },
+        onLikeClick = { _, _ -> },
         onUnlikeClick = { },
         onDeletedClick = { }
     )

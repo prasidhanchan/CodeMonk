@@ -14,7 +14,8 @@
 package com.mca.remote
 
 import com.mca.remote.BuildConfig.PROJECT_ID
-import com.mca.util.model.PushNotification
+import com.mca.util.model.PushNotificationToken
+import com.mca.util.model.PushNotificationTopic
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -24,11 +25,20 @@ import retrofit2.http.POST
 interface NotificationApi {
 
     /**
-     * Send notification to a topic with [PushNotification] as the body.
+     * Send notification to a topic with [PushNotificationTopic] as the body.
      */
     @POST("$PROJECT_ID/messages:send")
-    suspend fun postNotification(
+    suspend fun postNotificationToTopic(
         @HeaderMap headers: HashMap<String, String>,
-        @Body pushNotification: PushNotification
+        @Body pushNotification: PushNotificationTopic
+    ): Response<ResponseBody>
+
+    /**
+     * Send notification to a token with [PushNotificationToken] as the body.
+     */
+    @POST("$PROJECT_ID/messages:send")
+    suspend fun postNotificationToToken(
+        @HeaderMap headers: HashMap<String, String>,
+        @Body pushNotification: PushNotificationToken
     ): Response<ResponseBody>
 }

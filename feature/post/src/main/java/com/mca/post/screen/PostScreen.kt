@@ -46,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -87,7 +86,6 @@ internal fun PostScreen(
     onPostClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    val localKeyboard = LocalSoftwareKeyboardController.current
     val interactionSource = remember { MutableInteractionSource() }
     val context = LocalContext.current
 
@@ -98,7 +96,7 @@ internal fun PostScreen(
 
     LaunchedEffect(key1 = uiState.teamMembers) {
         launch {
-            if (postId.isBlank()) teamMembers.add(context.getString(R.string.me)) // If create new post add @me
+            if (postId.isBlank() && teamMembers.isEmpty()) teamMembers.add(context.getString(R.string.me)) // If create new post add @me
             if (teamMembers.isEmpty()) {
                 uiState.teamMembers.forEach { member ->
                     teamMembers.add(member)
@@ -268,7 +266,9 @@ internal fun PostScreen(
                 modifier = Modifier.padding(vertical = 20.dp),
                 loading = uiState.updating,
                 onClick = {
-                    localKeyboard?.hide()
+                    if (uiState.currentProject.isNotBlank() && uiState.teamMembers.size > 1) {
+                        focusManager.clearFocus()
+                    }
                     onPostClick()
                 }
             )

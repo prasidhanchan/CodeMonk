@@ -100,6 +100,7 @@ class HomeRepositoryImpl @Inject constructor(
     override suspend fun like(
         postId: String,
         currentUsername: String,
+        onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         var likes = mutableListOf<String>()
@@ -112,7 +113,9 @@ class HomeRepositoryImpl @Inject constructor(
                         likes = snap.getValue<List<String>>()?.toMutableList()!!
                     }
                     likes.add(currentUsername)
-                    postDB.child(postId).updateChildren(mapOf("likes" to likes))
+                    postDB.child(postId)
+                        .updateChildren(mapOf("likes" to likes))
+                        .addOnSuccessListener { onSuccess() }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

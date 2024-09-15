@@ -17,7 +17,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -50,8 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -73,6 +71,7 @@ import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.constant.getCurrentRoute
+import com.mca.util.constant.rotateIcon
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
@@ -138,25 +137,27 @@ fun CMBottomBar(
                     Row(
                         modifier = Modifier
                             .padding(all = 10.dp)
-                            .height(80.dp)
+                            .height(85.dp)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.Bottom,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         routes.forEach { route ->
                             if (route != Route.Post()) {
-                                BottomBarItem(
-                                    route = route,
-                                    selected = currentScreen == route,
-                                    isNewNotification = isNewNotification,
-                                    onClick = {
-                                        navHostController.navigate(route) {
-                                            popUpTo<Route.Home>()
-                                            launchSingleTop = true
-                                            restoreState = true
+                                if (!isOpen) {
+                                    BottomBarItem(
+                                        route = route,
+                                        selected = currentScreen == route,
+                                        isNewNotification = isNewNotification,
+                                        onClick = {
+                                            navHostController.navigate(route) {
+                                                popUpTo<Route.Home>()
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             } else {
                                 Spacer(modifier = Modifier.width(5.dp))
                             }
@@ -206,14 +207,14 @@ private fun BottomBarItem(
 
     Column(
         modifier = modifier
-            .height(52.dp)
+            .height(45.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
             .clickable(
                 indication = null,
                 interactionSource = interactionSource,
                 onClick = onClick
             ),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -221,9 +222,8 @@ private fun BottomBarItem(
                 id = if (route == Route.Notification && isNewNotification) route.notificationIcon else route.icon
             ),
             contentDescription = route.javaClass.simpleName,
-            tint = if (selected) tintColor else OffWhite,
+            tint = if (selected) tintColor else Color.Unspecified,
         )
-        Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = route.javaClass.simpleName,
             style = TextStyle(
@@ -304,19 +304,6 @@ private fun PostOptions(
         )
         Spacer(modifier = Modifier.height(20.dp))
     }
-}
-
-
-/**
- * Function to rotate an icon 45 degrees.
- */
-private fun Modifier.rotateIcon(isOpen: Boolean) = composed {
-    val rotation by animateFloatAsState(
-        targetValue = if (isOpen) 45f else 0f,
-        animationSpec = tween(durationMillis = 400),
-        label = "rotationBottomBar"
-    )
-    this.rotate(rotation)
 }
 
 @Preview

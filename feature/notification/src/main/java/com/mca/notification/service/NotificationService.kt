@@ -13,7 +13,6 @@
 
 package com.mca.notification.service
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -50,10 +49,11 @@ class NotificationService : FirebaseMessagingService() {
 
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (message.data["user_id"] != currentUser?.uid) { // notifications not shown for current user
-            val notification = Notification.Builder(this, message.notification?.channelId)
+            val notification = NotificationCompat.Builder(this, message.notification?.channelId ?: "")
                 .setContentTitle(message.notification?.title)
                 .setContentText(message.notification?.body)
-                .setChannelId(message.notification?.channelId)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setChannelId(message.notification?.channelId ?: "")
                 .setSmallIcon(R.drawable.notification)
                 .setColor(Color.White.toArgb())
                 .setAutoCancel(true)

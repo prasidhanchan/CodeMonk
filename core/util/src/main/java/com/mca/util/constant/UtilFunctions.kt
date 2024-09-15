@@ -19,7 +19,7 @@ import android.os.Build
 import androidx.navigation.NavBackStackEntry
 import com.mca.util.model.NotificationData
 import com.mca.util.model.Post
-import com.mca.util.model.PushNotification
+import com.mca.util.model.PushNotificationTopic
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
 import java.text.SimpleDateFormat
@@ -181,7 +181,8 @@ fun Post.convertToMap(): HashMap<String, Any> {
         "teamMembers" to teamMembers,
         "projectProgress" to projectProgress,
         "deadline" to deadline,
-        "timeStamp" to timeStamp
+        "timeStamp" to timeStamp,
+        "token" to token
     )
 }
 
@@ -251,9 +252,9 @@ fun String.matchUsername(username: String): Boolean {
 }
 
 /**
- * Function to convert a [PushNotification] to a [NotificationData].
+ * Function to convert a [PushNotificationTopic] to a [NotificationData].
  */
-fun PushNotification.toNotification(): HashMap<String, Any> {
+fun PushNotificationTopic.toNotification(): HashMap<String, Any> {
     return hashMapOf(
         "id" to message.data.id,
         "title" to message.notification.title,

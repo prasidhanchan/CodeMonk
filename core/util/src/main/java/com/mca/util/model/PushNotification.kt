@@ -16,6 +16,11 @@ package com.mca.util.model
 import androidx.compose.runtime.Stable
 
 @Stable
-data class PushNotification(
-    val message: Message
+data class PushNotificationTopic(
+    val message: MessageToTopic
+)
+
+@Stable
+data class PushNotificationToken(
+    val message: MessageToToken
 )

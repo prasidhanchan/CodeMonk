@@ -16,8 +16,16 @@ package com.mca.util.model
 import androidx.compose.runtime.Stable
 
 @Stable
-data class Message(
+data class MessageToTopic(
     val topic: String,
+    val notification: Notification,
+    val data: Data,
+    val android: Android
+)
+
+@Stable
+data class MessageToToken(
+    val token: String,
     val notification: Notification,
     val data: Data,
     val android: Android

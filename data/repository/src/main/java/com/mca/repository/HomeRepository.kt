@@ -26,7 +26,7 @@ interface HomeRepository {
 
     suspend fun deletePost(postId: String, onError: (String) -> Unit)
 
-    suspend fun like(postId: String, currentUsername: String, onError: (String) -> Unit)
+    suspend fun like(postId: String, currentUsername: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 
     suspend fun unLike(postId: String, currentUsername: String, onError: (String) -> Unit)
 }

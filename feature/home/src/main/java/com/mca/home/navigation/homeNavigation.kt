@@ -44,7 +44,8 @@ fun NavGraphBuilder.homeNavigation(
     currentUserId: String,
     currentUsername: String,
     currentUserType: String,
-    onDeletedClick: (postId: String) -> Unit
+    onDeletedClick: (postId: String) -> Unit,
+    sendLikeNotification: (token: String) -> Unit
 ) {
     composable<Route.Home>(
         enterTransition = {
@@ -96,10 +97,11 @@ fun NavGraphBuilder.homeNavigation(
             onEditPostClick = { postId ->
                 navHostController.navigate(Route.Post(postId))
             },
-            onLikeClick = { postId ->
+            onLikeClick = { postId, token ->
                 viewModel.like(
                     postId = postId,
-                    currentUsername = currentUsername
+                    currentUsername = currentUsername,
+                    onSuccess = { sendLikeNotification(token) }
                 )
             },
             onUnlikeClick = { postId ->

@@ -105,11 +105,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun like(postId: String, currentUsername: String) {
+    fun like(
+        postId: String,
+        onSuccess: () -> Unit,
+        currentUsername: String
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             homeRepository.like(
                 postId = postId,
                 currentUsername = currentUsername,
+                onSuccess = onSuccess,
                 onError = { error ->
                     showSnackBar(
                         response = Response(

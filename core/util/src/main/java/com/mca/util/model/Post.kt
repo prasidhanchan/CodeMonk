@@ -21,5 +21,6 @@ data class Post(
     var projectProgress: Int = 0,
     var deadline: String = "",
     var likes: List<String> = emptyList(),
-    var timeStamp: Long = 0L
+    var timeStamp: Long = 0L,
+    var token: String = ""
 )

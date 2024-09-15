@@ -102,7 +102,8 @@ internal fun NotificationCard(
                     fontWeight = FontWeight.Bold,
                     fontFamily = dosis,
                     color = fontColor
-                )
+                ),
+                modifier  = Modifier.padding(start = 2.dp)
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(

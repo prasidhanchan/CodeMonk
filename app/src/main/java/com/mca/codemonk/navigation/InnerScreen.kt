@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -42,14 +43,26 @@ import com.mca.profile.navigation.profileNavigation
 import com.mca.profile.navigation.viewProfileNavigation
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.search.navigation.searchNavigation
+import com.mca.ui.R
 import com.mca.ui.component.CMBottomBar
 import com.mca.ui.theme.Black
 import com.mca.util.constant.Constant.ANNOUNCEMENT_TOPIC
 import com.mca.util.constant.Constant.EVENT_TOPIC
+import com.mca.util.constant.Constant.LIKE_CHANNEL_ID
 import com.mca.util.constant.Constant.LIKE_TOPIC
+import com.mca.util.constant.Constant.POST_CHANNEL_ID
 import com.mca.util.constant.Constant.POST_TOPIC
 import com.mca.util.constant.getCurrentRoute
+import com.mca.util.model.Android
+import com.mca.util.model.AndroidNotification
+import com.mca.util.model.Data
+import com.mca.util.model.MessageToToken
+import com.mca.util.model.MessageToTopic
+import com.mca.util.model.Notification
+import com.mca.util.model.PushNotificationToken
+import com.mca.util.model.PushNotificationTopic
 import com.mca.util.navigation.Route
+import kotlin.random.Random
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.innerScreen(
@@ -60,6 +73,7 @@ fun NavGraphBuilder.innerScreen(
         val viewModelProfile: ProfileViewModel = hiltViewModel()
         val viewModelNotification: NotificationViewModel = hiltViewModel()
         val uiStateProfile by viewModelProfile.uiState.collectAsStateWithLifecycle()
+        val uiStateNotify by viewModelNotification.uiState.collectAsStateWithLifecycle()
 
         val navHostController = rememberNavController()
 
@@ -75,6 +89,7 @@ fun NavGraphBuilder.innerScreen(
             else -> false
         }
 
+        val context = LocalContext.current
         // Load user data when the app starts
         LaunchedEffect(key1 = uiStateProfile.currentUser) {
             if (uiStateProfile.currentUser.username.isEmpty()) viewModelProfile.getUser()
@@ -87,9 +102,33 @@ fun NavGraphBuilder.innerScreen(
                 subscribeToTopic(LIKE_TOPIC)
             }
 
-            // Get firebase token
-//            viewModelNotification.getMyToken()
+            // get Access token for notification
+            viewModelNotification.getAccessToken(context)
         }
+
+
+
+        val pushNotification = PushNotificationTopic(
+            message = MessageToTopic(
+                topic = POST_TOPIC,
+                notification = Notification(
+                    title = context.getString(R.string.new_post),
+                    body = context.getString(
+                        R.string.new_post_body,
+                        uiStateProfile.currentUser.username
+                    )
+                ),
+                data = Data(
+                    id = "$POST_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
+                    channel_name = POST_TOPIC,
+                    time_stamp = System.currentTimeMillis().toString(),
+                    user_id = currentUser?.uid ?: ""
+                ),
+                android = Android(
+                    notification = AndroidNotification(channel_id = POST_CHANNEL_ID)
+                )
+            )
+        )
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -97,7 +136,9 @@ fun NavGraphBuilder.innerScreen(
             bottomBar = {
                 CMBottomBar(
                     visible = showBottomBar,
-                    isNewNotification = false,
+                    isNewNotification = if (uiStateNotify.notifications.isNotEmpty())
+                        uiStateNotify.notifications[0].timeStamp > uiStateProfile.currentUser.lastSeen
+                    else false,
                     navHostController = navHostController
                 )
             },
@@ -114,7 +155,34 @@ fun NavGraphBuilder.innerScreen(
                     currentUserId = currentUser?.uid ?: "",
                     currentUsername = uiStateProfile.currentUser.username,
                     currentUserType = uiStateProfile.currentUser.userType,
-                    onDeletedClick = viewModelHome::deletePost
+                    onDeletedClick = viewModelHome::deletePost,
+                    sendLikeNotification = { token ->
+                        viewModelNotification.sendNotificationToToken(
+                            pushNotification = PushNotificationToken(
+                                message = MessageToToken(
+                                    token = token,
+                                    notification = Notification(
+                                        title = context.getString(R.string.liked, uiStateProfile.currentUser.name),
+                                        body = context.getString(
+                                            R.string.new_like_body,
+                                            uiStateProfile.currentUser.username
+                                        )
+                                    ),
+                                    data = Data(
+                                        id = "$LIKE_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
+                                        channel_name = LIKE_TOPIC,
+                                        time_stamp = System.currentTimeMillis().toString(),
+                                        user_id = currentUser?.uid ?: ""
+                                    ),
+                                    android = Android(
+                                        notification = AndroidNotification(channel_id = LIKE_CHANNEL_ID)
+                                    )
+                                )
+                            ),
+                            accessToken = uiStateNotify.accessToken ?: "",
+                            onSuccess = { }
+                        )
+                    }
                 )
                 profileNavigation(
                     viewModel = viewModelProfile,
@@ -138,7 +206,15 @@ fun NavGraphBuilder.innerScreen(
                 )
                 postNavigation(
                     userType = uiStateProfile.currentUser.userType,
-                    navHostController = navHostController
+                    token = uiStateProfile.currentUser.token,
+                    navHostController = navHostController,
+                    sendPostNotification = {
+                        viewModelNotification.sendNotificationToTopic(
+                            pushNotification = pushNotification,
+                            accessToken = uiStateNotify.accessToken ?: "",
+                            onSuccess = { }
+                        )
+                    }
                 )
                 viewProfileNavigation(
                     viewModel = viewModelProfile,
@@ -149,7 +225,8 @@ fun NavGraphBuilder.innerScreen(
                 notificationNavigation(
                     viewModel = viewModelNotification,
                     userType = uiStateProfile.currentUser.userType,
-                    navHostController = navHostController
+                    navHostController = navHostController,
+                    refreshUser = viewModelProfile::getUser
                 )
                 sendNotificationNavigation(
                     viewModel = viewModelNotification,

@@ -13,9 +13,7 @@
 
 package com.mca.notification.navigation
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -27,19 +25,24 @@ import com.mca.util.navigation.Route
 fun NavGraphBuilder.notificationNavigation(
     viewModel: NotificationViewModel,
     userType: String,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    refreshUser: () -> Unit
 ) {
     composable<Route.Notification> {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        val context = LocalContext.current
-        LaunchedEffect(key1 = Unit) {
-            viewModel.getAccessToken(context)
-        }
+
+        val lastSeen = System.currentTimeMillis()
 
         NotificationScreen(
             uiState = uiState,
             userType = userType,
-            onSendNotificationClick = { navHostController.navigate(Route.SendNotification) }
+            onSendNotificationClick = { navHostController.navigate(Route.SendNotification) },
+            updateLastSeen = {
+                viewModel.updateLastSeen(
+                    lastSeen = lastSeen,
+                    onSuccess = refreshUser
+                )
+            }
         )
     }
 }

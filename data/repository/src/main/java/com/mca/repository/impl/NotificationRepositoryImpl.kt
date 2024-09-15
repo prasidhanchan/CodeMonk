@@ -24,10 +24,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.mca.remote.NotificationApi
 import com.mca.repository.NotificationRepository
 import com.mca.util.R
+import com.mca.util.constant.Constant.ANNOUNCEMENT_TOPIC
+import com.mca.util.constant.Constant.EVENT_TOPIC
 import com.mca.util.constant.Constant.SCOPE
 import com.mca.util.constant.toNotification
 import com.mca.util.model.NotificationData
-import com.mca.util.model.PushNotification
+import com.mca.util.model.PushNotificationToken
+import com.mca.util.model.PushNotificationTopic
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,33 +87,51 @@ class NotificationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendNotification(
-        pushNotification: PushNotification,
+        pushNotificationTopic: PushNotificationTopic?,
+        pushNotificationToken: PushNotificationToken?,
         accessToken: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         try {
-            if (pushNotification.message.notification.title.isEmpty()) throw Exception("Title cannot be empty.")
-            if (pushNotification.message.notification.body.isEmpty()) throw Exception("Message cannot be empty.")
+            if (pushNotificationTopic != null && pushNotificationTopic.message.notification.title.isEmpty())
+                throw Exception("Title cannot be empty.")
+            if (pushNotificationTopic != null && pushNotificationTopic.message.notification.body.isEmpty())
+                throw Exception("Message cannot be empty.")
 
-            val response = notificationApi.postNotification(
-                headers = hashMapOf(
-                    "Authorization" to "Bearer $accessToken",
-                    "Content-Type" to "application/json"
-                ),
-                pushNotification = pushNotification
-            )
+            val response = if (pushNotificationTopic != null) {
+                notificationApi.postNotificationToTopic(
+                    headers = hashMapOf(
+                        "Authorization" to "Bearer $accessToken",
+                        "Content-Type" to "application/json"
+                    ),
+                    pushNotification = pushNotificationTopic
+                )
+            } else {
+                notificationApi.postNotificationToToken(
+                    headers = hashMapOf(
+                        "Authorization" to "Bearer $accessToken",
+                        "Content-Type" to "application/json"
+                    ),
+                    pushNotification = pushNotificationToken!!
+                )
+            }
+
             if (response.isSuccessful) {
-                // Add notification data to firebase database
-                notificationRef.child(pushNotification.message.data.id)
-                    .setValue(pushNotification.toNotification())
-                    .addOnSuccessListener {
-                        onSuccess()
-                    }
-                    .addOnFailureListener { error ->
-                        error.localizedMessage?.let(onError)
-                    }
-                    .await()
+                if (pushNotificationTopic?.message?.data?.channel_name == EVENT_TOPIC ||
+                    pushNotificationTopic?.message?.data?.channel_name == ANNOUNCEMENT_TOPIC
+                ) {
+                    // Add notification data to firebase database
+                    notificationRef.child(pushNotificationTopic.message.data.id)
+                        .setValue(pushNotificationTopic.toNotification())
+                        .addOnSuccessListener {
+                            onSuccess()
+                        }
+                        .addOnFailureListener { error ->
+                            error.localizedMessage?.let(onError)
+                        }
+                        .await()
+                }
             } else {
                 onError("Something went wrong! ${response.code()}")
             }
@@ -146,5 +167,22 @@ class NotificationRepositoryImpl @Inject constructor(
             dataOrException.update { it.copy(exception = e) }
         }
         return dataOrException.asStateFlow()
+    }
+
+    override suspend fun updateLastSeen(
+        lastSeen: Long,
+        userId: String,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        try {
+            userRef.document(userId)
+                .update(mapOf("lastSeen" to lastSeen))
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { onError() }
+                .await()
+        } catch (e: Exception) {
+            onError()
+        }
     }
 }

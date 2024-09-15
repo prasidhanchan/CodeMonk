@@ -16,10 +16,12 @@ package com.mca.notification.screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.mca.notification.UiState
 import com.mca.repository.NotificationRepository
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
-import com.mca.util.model.PushNotification
+import com.mca.util.model.PushNotificationToken
+import com.mca.util.model.PushNotificationTopic
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +41,8 @@ class NotificationViewModel @Inject constructor(
 
     var uiState = MutableStateFlow(UiState())
         private set
+
+    private val currentUser = FirebaseAuth.getInstance().currentUser
 
     init {
         getNotifications()
@@ -63,14 +67,38 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    fun sendNotification(
-        pushNotification: PushNotification,
+    fun sendNotificationToTopic(
+        pushNotification: PushNotificationTopic,
         accessToken: String,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             notificationRepository.sendNotification(
-                pushNotification = pushNotification,
+                pushNotificationTopic = pushNotification,
+                pushNotificationToken = null,
+                accessToken = accessToken,
+                onSuccess = onSuccess,
+                onError = { error ->
+                    showSnackBar(
+                        response = Response(
+                            message = error,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                }
+            )
+        }
+    }
+
+    fun sendNotificationToToken(
+        pushNotification: PushNotificationToken,
+        accessToken: String,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            notificationRepository.sendNotification(
+                pushNotificationTopic = null,
+                pushNotificationToken = pushNotification,
                 accessToken = accessToken,
                 onSuccess = onSuccess,
                 onError = { error ->
@@ -109,6 +137,21 @@ class NotificationViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    fun updateLastSeen(
+        lastSeen: Long,
+        onSuccess: () -> Unit,
+        onError: () -> Unit = { }
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            notificationRepository.updateLastSeen(
+                lastSeen = lastSeen,
+                userId = currentUser?.uid ?: "",
+                onSuccess = onSuccess,
+                onError = onError
+            )
         }
     }
 

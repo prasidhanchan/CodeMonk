@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
 
@@ -72,4 +73,16 @@ fun Modifier.animateAlpha(delay: Int) = composed {
     )
     alpha(animatedAlpha)
         .onGloballyPositioned { alpha = 1f }
+}
+
+/**
+ * Function to rotate an icon 45 degrees.
+ */
+fun Modifier.rotateIcon(isOpen: Boolean) = composed {
+    val rotation by animateFloatAsState(
+        targetValue = if (isOpen) 45f else 0f,
+        animationSpec = tween(durationMillis = 400),
+        label = "rotationBottomBar"
+    )
+    rotate(rotation)
 }

@@ -99,7 +99,7 @@ internal fun Post(
     loading: Boolean,
     modifier: Modifier = Modifier,
     state: LazyListState,
-    onLikeClick: (postId: String) -> Unit,
+    onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit,
     onUsernameClick: (String) -> Unit,
     onEditPostClick: (postId: String) -> Unit,
@@ -151,7 +151,7 @@ private fun PostCard(
     currentUsername: String,
     currentUserType: String,
     modifier: Modifier = Modifier,
-    onLikeClick: (postId: String) -> Unit,
+    onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit,
     onUsernameClick: (String) -> Unit,
     onEditPostClick: (postId: String) -> Unit,
@@ -199,7 +199,7 @@ fun MainContent(
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit,
     onEditPostClick: (postId: String) -> Unit,
-    onLikeClick: (postId: String) -> Unit,
+    onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit
 ) {
     var isLiked by remember(post.likes) { mutableStateOf(post.likes.contains(currentUsername)) }
@@ -334,7 +334,7 @@ fun MainContent(
                                 } else {
                                     isLiked = true
                                     likes += 1
-                                    onLikeClick(post.toPostId())
+                                    onLikeClick(post.toPostId(), post.token)
                                 }
                             }
                         )
@@ -686,7 +686,7 @@ private fun PostCardPreview() {
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
         currentUserType = "student",
-        onLikeClick = { },
+        onLikeClick = { _, _ -> },
         onUnlikeClick = { },
         onUsernameClick = { },
         onEditPostClick = { },

@@ -26,6 +26,7 @@ data class User(
     val bio: String = "",
     val profileImage: String = "",
     val email: String = "",
+    val lastSeen: Long = 0L,
     val currentProject: String = "",
     val currentProjectProgress: Int = 0,
     val gitHubLink: String = "",

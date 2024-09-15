@@ -22,10 +22,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -89,14 +93,15 @@ internal fun LoginScreen(
         Column(
             modifier = Modifier
                 .padding(all = 20.dp)
-                .fillMaxSize(),
+                .imePadding()
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Image(
@@ -121,7 +126,8 @@ internal fun LoginScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(2f),
+                    .fillMaxWidth()
+                    .height(300.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -172,7 +178,9 @@ internal fun LoginScreen(
                     keyboardType = KeyboardType.Password,
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            focusManager.clearFocus()
+                            if (uiState.email.isNotBlank() && uiState.password.isNotBlank()) {
+                                focusManager.clearFocus()
+                            }
                             onLoginClick ()
                         }
                     ),

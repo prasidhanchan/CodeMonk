@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +32,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.mca.notification.UiState
 import com.mca.notification.component.NotificationCard
 import com.mca.ui.R
 import com.mca.ui.component.CMRegularAppBar
+import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.model.NotificationData
@@ -43,8 +48,11 @@ import com.mca.util.model.NotificationData
 internal fun NotificationScreen(
     uiState: UiState,
     userType: String,
-    onSendNotificationClick: () -> Unit
+    onSendNotificationClick: () -> Unit,
+    updateLastSeen: () -> Unit
 ) {
+    val lifeCycleOwner = LocalLifecycleOwner.current
+
     LazyColumn(
         modifier = Modifier
             .padding(horizontal = 20.dp)
@@ -73,18 +81,42 @@ internal fun NotificationScreen(
             )
         }
 
-        itemsIndexed(
-            key = { _, notification -> notification.id },
-            items = uiState.notifications
-        ) { index, notification ->
-            NotificationCard(
-                notification = notification,
-                delay = index * 100
-            )
+        if (uiState.notifications.isNotEmpty() && !uiState.loading) {
+            itemsIndexed(
+                key = { _, notification -> notification.id },
+                items = uiState.notifications
+            ) { index, notification ->
+                NotificationCard(
+                    notification = notification,
+                    delay = index * 100
+                )
+            }
         }
 
         item {
             Spacer(modifier = Modifier.height(100.dp))
+        }
+    }
+
+    EmptyResponseIndicator(
+        visible = uiState.notifications.isEmpty(),
+        message = stringResource(id = R.string.no_notifications)
+    )
+
+    DisposableEffect(key1 = lifeCycleOwner) {
+
+        val observer = LifecycleEventObserver { _, event ->
+            when(event) {
+                Lifecycle.Event.ON_START -> { updateLastSeen() }
+                Lifecycle.Event.ON_DESTROY -> { updateLastSeen() }
+                else -> Unit
+            }
+        }
+
+        lifeCycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifeCycleOwner.lifecycle.removeObserver(observer)
         }
     }
 }
@@ -110,6 +142,7 @@ private fun NotificationScreenPreview() {
             )
         ),
         userType = ADMIN,
-        onSendNotificationClick = { }
+        onSendNotificationClick = { },
+        updateLastSeen = { }
     )
 }

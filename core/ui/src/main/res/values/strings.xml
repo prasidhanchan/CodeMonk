@@ -103,4 +103,9 @@
     <string name="title">Notification title</string>
     <string name="body">Notification message</string>
     <string name="notification_sent">Notification sent</string>
+    <string name="no_notifications">No notifications</string>
+    <string name="new_post">New Post</string>
+    <string name="new_post_body">%1$s has posted a new project</string>
+    <string name="liked">%1$s Liked</string>
+    <string name="new_like_body">%1$s has liked your post</string>
 </resources>

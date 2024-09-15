@@ -38,7 +38,9 @@ import kotlin.random.Random
 
 fun NavGraphBuilder.postNavigation(
     userType: String,
-    navHostController: NavHostController
+    token: String,
+    navHostController: NavHostController,
+    sendPostNotification: () -> Unit
 ) {
     val currentUser = FirebaseAuth.getInstance().currentUser
 
@@ -75,7 +77,8 @@ fun NavGraphBuilder.postNavigation(
             projectProgress = uiState.projectProgress.toIntOrNull() ?: 0,
             deadline = uiState.deadline.trim(),
             likes = uiState.likes,
-            timeStamp = System.currentTimeMillis()
+            timeStamp = System.currentTimeMillis(),
+            token = token
         )
 
         PostScreen(
@@ -95,7 +98,10 @@ fun NavGraphBuilder.postNavigation(
             onPostClick = {
                 viewModel.upsertPost(
                     post = post,
-                    onSuccess = { navHostController.popBackStack() },
+                    onSuccess = {
+                        sendPostNotification()
+                        navHostController.popBackStack()
+                    },
                 )
             },
             onBackClick = { navHostController.popBackStack() }
