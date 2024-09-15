@@ -78,6 +78,7 @@ class PostViewModel @Inject constructor(
                                 it.copy(
                                     currentProject = result.data?.currentProject!!,
                                     teamMembers = result.data?.teamMembers!!,
+                                    description = result.data?.description!!,
                                     projectProgress = result.data?.projectProgress.toString(),
                                     deadline = result.data?.deadline!!,
                                     projectId = result.data?.projectId!!,
@@ -126,6 +127,10 @@ class PostViewModel @Inject constructor(
 
     fun setTeamMembers(teamMembers: List<String>) {
         uiState.update { it.copy(teamMembers = teamMembers) }
+    }
+
+    fun setDescription(description: String) {
+        uiState.update { it.copy(description = description) }
     }
 
     fun setProjectProgress(projectProgress: String) {

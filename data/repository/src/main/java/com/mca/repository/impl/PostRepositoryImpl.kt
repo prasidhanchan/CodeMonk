@@ -50,6 +50,7 @@ class PostRepositoryImpl @Inject constructor(
             if (post.currentProject.isBlank()) throw Exception("Current project cannot be empty.")
             if (post.teamMembers.size == 1) throw Exception("Team members cannot be empty")
             if (post.projectProgress > 100) throw Exception("Project progress cannot be more than 100.")
+            if (post.description.length > 200) throw  Exception("Description cannot be more than 200 characters.")
             if (post.deadline.isNotBlank() && !post.deadline.matches(DEADLINE_REGEX))
                 throw Exception("Deadline should be of format dd MMM yyyy.")
 

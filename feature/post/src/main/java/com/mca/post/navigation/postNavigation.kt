@@ -72,6 +72,7 @@ fun NavGraphBuilder.postNavigation(
         val post = Post(
             userId = currentUser?.uid!!,
             currentProject = uiState.currentProject.trim(),
+            description = uiState.description.trim(),
             projectId = projectId,
             teamMembers = uiState.teamMembers,
             projectProgress = uiState.projectProgress.toIntOrNull() ?: 0,
@@ -93,6 +94,7 @@ fun NavGraphBuilder.postNavigation(
                     delay(2000L)
                 }
             },
+            onDescriptionChange = viewModel::setDescription,
             onProgressChange = viewModel::setProjectProgress,
             onDeadlineChange = viewModel::setDeadline,
             onPostClick = {

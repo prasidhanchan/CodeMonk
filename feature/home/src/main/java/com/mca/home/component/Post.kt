@@ -184,6 +184,10 @@ private fun PostCard(
             onLikeClick = onLikeClick,
             onUnlikeClick = onUnlikeClick
         )
+        PostDescription(
+            description = post.description,
+            username = user.username
+        )
         if (post.likes.isNotEmpty()) PostBottomBar(post = post)
     }
 }
@@ -215,7 +219,7 @@ fun MainContent(
         Column(
             modifier = modifier
                 .padding(all = 15.dp)
-                .fillMaxSize(),
+                .wrapContentHeight(Alignment.CenterVertically),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -312,7 +316,6 @@ fun MainContent(
                     color = fontColor
                 )
             )
-
             Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -602,7 +605,7 @@ private fun PostCardLoader(
     Column(
         modifier
             .padding(vertical = 10.dp)
-            .height(360.dp)
+            .height(465.dp)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
@@ -634,8 +637,9 @@ private fun PostCardLoader(
 
         Surface(
             modifier = modifier
+                .padding(bottom = 5.dp)
                 .fillMaxWidth()
-                .height(270.dp),
+                .height(320.dp),
             shape = RoundedCornerShape(15.dp),
             color = LightBlack,
             content = { }
@@ -643,12 +647,66 @@ private fun PostCardLoader(
         Surface(
             modifier = modifier
                 .padding(vertical = 10.dp)
-                .width(300.dp)
+                .fillMaxWidth(0.9f)
                 .height(20.dp),
             shape = CircleShape,
             color = LightBlack,
             content = { }
         )
+        Surface(
+            modifier = modifier
+                .padding(vertical = 10.dp)
+                .width(250.dp)
+                .height(15.dp),
+            shape = CircleShape,
+            color = LightBlack,
+            content = { }
+        )
+    }
+}
+
+@Composable
+private fun PostDescription(
+    description: String,
+    username: String,
+    modifier: Modifier = Modifier
+) {
+    if (description.isNotBlank()) {
+        var isOpen by remember { mutableStateOf(false) }
+
+        Row(
+            modifier = modifier
+                .padding(vertical = 10.dp, horizontal = 5.dp)
+                .fillMaxWidth()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember(::MutableInteractionSource),
+                    onClick = { isOpen = !isOpen }
+                ),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.Top
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.ExtraBold)
+                    ) {
+                        append(username)
+                    }
+                    append("  ")
+                    append(description)
+                },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                maxLines = if (!isOpen) 2 else Int.MAX_VALUE,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -671,6 +729,7 @@ private fun PostCardPreview() {
                 "uchiha_sasuke",
                 "kakashi"
             ),
+            description = "TaskBuddy helps you stay organized and productive by managing your to-do lists, setting reminders.",
             projectProgress = 20,
             deadline = "30 Nov, 2024",
             likes = listOf(
@@ -682,7 +741,9 @@ private fun PostCardPreview() {
             ),
             timeStamp = 1690885200000L
         ),
-        user = User(mentor = "pra_sidh_22"),
+        user = User(
+            username = "pra_sidh_22"
+        ),
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
         currentUserType = "student",

@@ -30,6 +30,9 @@
     <string name="team_members">Team members:</string>
     <string name="progress_header">Project progress:</string>
     <string name="progress_progress">Project progress</string>
+    <string name="description_header">Project description:</string>
+    <string name="description">Project description</string>
+    <string name="short_description">Enter a short description</string>
     <string name="progress_percentage">%1$s%%</string>
     <string name="deadline">"Deadline: "</string>
     <string name="not_set">"Not set"</string>

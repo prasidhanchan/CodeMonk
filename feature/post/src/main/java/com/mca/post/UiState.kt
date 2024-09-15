@@ -20,6 +20,7 @@ data class UiState(
     var teamMembers: List<String> = emptyList(),
     var tags: List<Tag>? = null,
     var projectProgress: String = "",
+    var description: String = "",
     var deadline: String = "",
     var likes: List<String> = emptyList(),
     var projectId: String = "",

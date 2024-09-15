@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +45,7 @@ fun CMProgressBar(
     modifier: Modifier = Modifier,
     color: Color = BrandColor
 ) {
-    var postProgress by remember { mutableFloatStateOf(0f) }
+    var postProgress by rememberSaveable { mutableFloatStateOf(0f) }
     LaunchedEffect(key1 = progress) {
         delay(800L)
         postProgress = progress

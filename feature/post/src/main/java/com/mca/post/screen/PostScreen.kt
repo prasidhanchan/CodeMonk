@@ -81,6 +81,7 @@ internal fun PostScreen(
     onCurrentProjectChange: (String) -> Unit,
     onTeamMemberListChange: (List<String>) -> Unit,
     onTeamMemberChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
     onProgressChange: (String) -> Unit,
     onDeadlineChange: (String) -> Unit,
     onPostClick: () -> Unit,
@@ -177,14 +178,7 @@ internal fun PostScreen(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text,
                 keyboardActions = KeyboardActions(
-                    onNext = {
-                        if (userType == ADMIN) {
-                            focusManager.moveFocus(FocusDirection.Next)
-                        } else {
-                            focusManager.clearFocus()
-                            onPostClick()
-                        }
-                    }
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 ),
                 capitalization = KeyboardCapitalization.None
             )
@@ -216,6 +210,34 @@ internal fun PostScreen(
                     )
                 }
             }
+            CMTextBox(
+                value = uiState.description,
+                onValueChange = onDescriptionChange,
+                placeHolder = stringResource(id = R.string.short_description),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.title),
+                        contentDescription = stringResource(id = R.string.description),
+                        tint = tintColor
+                    )
+                },
+                imeAction = if (userType == ADMIN) ImeAction.Next else ImeAction.Done,
+                keyboardType = KeyboardType.Text,
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        if (userType == ADMIN) {
+                            focusManager.moveFocus(FocusDirection.Next)
+                        } else {
+                            focusManager.clearFocus()
+                            onPostClick()
+                        }
+                    }
+                ),
+                singleLine = false,
+                maxLines = Int.MAX_VALUE,
+                capitalization = KeyboardCapitalization.None,
+                headerTitle = stringResource(id = R.string.description)
+            )
             CMTextBox(
                 value = uiState.projectProgress,
                 onValueChange = onProgressChange,
@@ -338,6 +360,7 @@ private fun PostScreenPreview() {
         onCurrentProjectChange = { },
         onTeamMemberListChange = { },
         onTeamMemberChange = { },
+        onDescriptionChange = { },
         onProgressChange = { },
         onDeadlineChange = { },
         onPostClick = { },

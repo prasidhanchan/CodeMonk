@@ -65,6 +65,7 @@ fun CMTextBox(
     singleLine: Boolean = true,
     maxLines: Int = 1,
     enabled: Boolean = true,
+    headerTitle: String = "",
     enableHeader: Boolean = true
 ) {
     Column(
@@ -76,7 +77,7 @@ fun CMTextBox(
     ) {
         if (enableHeader) {
             Text(
-                text = placeHolder,
+                text = headerTitle.ifEmpty { placeHolder },
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,

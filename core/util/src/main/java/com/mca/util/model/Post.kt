@@ -19,6 +19,7 @@ data class Post(
     var projectId: String = "",
     var teamMembers: List<String> = emptyList(),
     var projectProgress: Int = 0,
+    var description: String = "",
     var deadline: String = "",
     var likes: List<String> = emptyList(),
     var timeStamp: Long = 0L,
