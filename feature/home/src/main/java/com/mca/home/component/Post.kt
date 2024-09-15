@@ -162,7 +162,7 @@ private fun PostCard(
             .padding(vertical = 15.dp)
             .animateContentSize(animationSpec = tween(durationMillis = 400))
             .wrapContentHeight(Alignment.CenterVertically)
-            .width(350.dp),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -603,7 +603,7 @@ private fun PostCardLoader(
         modifier
             .padding(vertical = 10.dp)
             .height(360.dp)
-            .width(350.dp),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {

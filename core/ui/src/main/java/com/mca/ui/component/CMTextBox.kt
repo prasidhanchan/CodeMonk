@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -71,7 +70,7 @@ fun CMTextBox(
     Column(
         modifier = Modifier
             .padding(vertical = 5.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth(0.9f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -84,9 +83,7 @@ fun CMTextBox(
                     fontFamily = dosis,
                     color = fontColor.copy(alpha = 0.5f)
                 ),
-                modifier = Modifier
-                    .padding(start = 20.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             )
         }
         TextField(
@@ -96,7 +93,7 @@ fun CMTextBox(
                 .padding(vertical = 7.dp)
                 .wrapContentHeight(Alignment.CenterVertically)
                 .defaultMinSize(minHeight = 52.dp)
-                .width(320.dp)
+                .fillMaxWidth()
                 .semantics { contentDescription = placeHolder },
             placeholder = {
                 Text(
