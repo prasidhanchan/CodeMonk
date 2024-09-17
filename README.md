@@ -1,4 +1,10 @@
+<div align="center">
+
+<img scr="https://github.com/user-attachments/assets/0effbc55-8425-4f46-af6b-ced26d22c924" width=160 height=160 align="center">
+  
 # Code Monk
+
+</div>
 
 **Code Monk** is an Android application designed for the MCA coding club to enhance collaboration and track project progress among members. The app provides a platform for members to share updates, track their achievements, and engage with the club community.
 
