@@ -28,9 +28,13 @@ Before you start, You nedd to know the following technologies.
 
 # Forks
 
-Forks are allowed so long as they abide by [the project's LICENSE](https://github.com/prasidhanchan/CodeMonk/blob/master/LICENSE.md).
+- Forks are allowed so long as they abide by [the project's LICENSE](https://github.com/prasidhanchan/CodeMonk/blob/master/LICENSE.md).
 
-When working on afeature or a bug, remember:
+- Your working branch should have a name like:
+  - fix-issue-<issue_number>/<issue_name>
+  - feature-<issue_number>/<feature_added>
+
+When working on a feature or a bug, remember:
 
 - To avoid confusion with the main app (Optional):
     - Change the app name
