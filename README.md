@@ -1,6 +1,6 @@
 <div align="center">
 
-<img scr="https://github.com/user-attachments/assets/0effbc55-8425-4f46-af6b-ced26d22c924" width=160 height=160 align="center">
+<img width="" scr="https://github.com/user-attachments/assets/0effbc55-8425-4f46-af6b-ced26d22c924" width=160 height=160 align="center">
   
 # Code Monk
 
