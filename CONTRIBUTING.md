@@ -28,7 +28,7 @@ Before you start, You nedd to know the following technologies.
 
 # Forks
 
-Forks are allowed so long as they abide by [the project's LICENSE](https://github.com/prasidhanchan/CodeMonk/blob/master/LICENSE).
+Forks are allowed so long as they abide by [the project's LICENSE](https://github.com/prasidhanchan/CodeMonk/blob/master/LICENSE.md).
 
 When working on afeature or a bug, remember:
 
