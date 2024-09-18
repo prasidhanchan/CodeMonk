@@ -1,15 +1,68 @@
 [versions]
 agp = "8.5.2"
+ksp = "2.0.0-1.0.24"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.4"
-activityCompose = "1.9.1"
-composeBom = "2024.08.00"
+lifecycleRuntimeKtx = "2.8.5"
+activityCompose = "1.9.2"
+composeBom = "2024.09.01"
+appcompat = "1.7.0"
+hiltAndroid = "2.52"
+hiltAndroidCompiler = "2.52"
+hiltCompiler = "1.2.0"
+firebaseBom = "33.3.0"
+firebaseMessaging = "24.0.1"
+googleServices = "4.4.2"
+retrofit = "2.11.0"
+oauthVersion = "1.19.0"
+coil = "2.6.0"
+navigationCompose = "2.8.0"
+kotlinxSerializationVersion = "1.6.3"
+truth = "1.4.2"
+coreTest = "2.2.0"
+hiltTest = "2.44"
+testRunner = "1.6.2"
+mockito = "1.10.5"
 
 [libraries]
+# Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompiler" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompiler" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidCompiler" }
+# Firebase
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+firebase-realtime-database = { module = "com.google.firebase:firebase-database" }
+firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+# Retrofit
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+# OAuth
+google-oauth = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "oauthVersion" }
+# Coil
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+# Navigation
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+# Serialization
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationVersion" }
+# Truth
+google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
+# Test Core
+core-test = { module = "androidx.arch.core:core-testing", version.ref = "coreTest" }
+# Hilt Test
+hilt-test = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltTest" }
+# Test Runner
+test-runner = { module = "androidx.test:runner", version.ref = "testRunner" }
+# Mockito
+mockito = { module = "io.mockk:mockk", version.ref = "mockito" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -24,9 +77,13 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

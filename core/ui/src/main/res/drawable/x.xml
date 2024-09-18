@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M4.5,1.75C2.981,1.75 1.75,2.981 1.75,4.5V19.5C1.75,21.019 2.981,22.25 4.5,22.25H19.5C21.019,22.25 22.25,21.019 22.25,19.5V4.5C22.25,2.981 21.019,1.75 19.5,1.75H4.5ZM7,6.25C6.718,6.25 6.46,6.408 6.332,6.659C6.204,6.909 6.227,7.211 6.392,7.439L10.212,12.728L6.47,16.47C6.177,16.763 6.177,17.237 6.47,17.53C6.763,17.823 7.237,17.823 7.53,17.53L11.101,13.96L13.614,17.439C13.755,17.634 13.981,17.75 14.222,17.75H17C17.282,17.75 17.54,17.592 17.668,17.341C17.796,17.091 17.773,16.789 17.608,16.561L13.788,11.272L17.53,7.53C17.823,7.237 17.823,6.763 17.53,6.47C17.237,6.177 16.763,6.177 16.47,6.47L12.899,10.04L10.386,6.561C10.245,6.366 10.019,6.25 9.778,6.25H7Z" />
+</vector>

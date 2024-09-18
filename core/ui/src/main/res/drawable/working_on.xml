@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,7C12.552,7 13,7.448 13,8L13,9.036V9.04C13,9.499 13.001,9.791 13.019,10.015C13.036,10.232 13.065,10.303 13.078,10.33C13.187,10.555 13.42,10.779 13.775,10.905C13.862,10.936 13.999,10.966 14.282,10.983C14.571,11 14.945,11 15.5,11L15.529,11H15.529C16.048,11 16.48,11 16.835,11.021C17.203,11.042 17.552,11.089 17.894,11.21C18.683,11.49 19.358,12.044 19.723,12.8C19.887,13.14 19.948,13.486 19.975,13.826C20,14.145 20,14.529 20,14.964L20,16C20,16.552 19.552,17 19,17C18.448,17 18,16.552 18,16V15C18,14.518 17.999,14.215 17.981,13.985C17.964,13.768 17.935,13.697 17.922,13.67C17.813,13.445 17.58,13.221 17.225,13.095C17.138,13.064 17.001,13.034 16.718,13.017C16.429,13 16.055,13 15.5,13H15.471H15.471C14.952,13 14.52,13 14.165,12.979C13.797,12.958 13.448,12.911 13.106,12.79C12.698,12.645 12.32,12.427 12,12.145C11.68,12.427 11.302,12.645 10.894,12.79C10.552,12.911 10.203,12.958 9.835,12.979C9.48,13 9.048,13 8.529,13H8.529H8.5C7.945,13 7.571,13 7.282,13.017C6.999,13.034 6.862,13.064 6.775,13.095C6.42,13.221 6.187,13.445 6.078,13.67C6.065,13.697 6.036,13.768 6.019,13.985C6.001,14.215 6,14.518 6,15V16C6,16.552 5.552,17 5,17C4.448,17 4,16.552 4,16L4,14.964V14.964C4,14.529 4,14.145 4.025,13.826C4.052,13.486 4.113,13.14 4.277,12.8C4.642,12.044 5.317,11.49 6.106,11.21C6.448,11.089 6.797,11.042 7.165,11.021C7.52,11 7.952,11 8.471,11H8.471L8.5,11C9.055,11 9.429,11 9.718,10.983C10.001,10.966 10.138,10.936 10.225,10.905C10.58,10.779 10.813,10.555 10.922,10.33C10.935,10.303 10.964,10.232 10.981,10.015C10.999,9.788 11,9.491 11,9.022L11,9V8C11,7.448 11.448,7 12,7Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8.25,5C8.25,2.929 9.929,1.25 12,1.25C14.071,1.25 15.75,2.929 15.75,5C15.75,7.071 14.071,8.75 12,8.75C9.929,8.75 8.25,7.071 8.25,5Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M1.25,19C1.25,16.929 2.929,15.25 5,15.25C7.071,15.25 8.75,16.929 8.75,19C8.75,21.071 7.071,22.75 5,22.75C2.929,22.75 1.25,21.071 1.25,19Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15.25,19C15.25,16.929 16.929,15.25 19,15.25C21.071,15.25 22.75,16.929 22.75,19C22.75,21.071 21.071,22.75 19,22.75C16.929,22.75 15.25,21.071 15.25,19Z" />
+</vector>

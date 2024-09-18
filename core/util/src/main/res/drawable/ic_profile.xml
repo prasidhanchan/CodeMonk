@@ -1,0 +1,25 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#D1BDBD"
+        android:pathData="M17.806,14.837C17.922,14.906 18.066,14.988 18.229,15.079C18.941,15.481 20.019,16.089 20.757,16.812C21.219,17.264 21.657,17.859 21.737,18.589C21.822,19.365 21.483,20.093 20.805,20.74C19.633,21.856 18.227,22.75 16.409,22.75H7.591C5.772,22.75 4.367,21.856 3.195,20.74C2.516,20.093 2.178,19.365 2.262,18.589C2.342,17.859 2.781,17.264 3.243,16.812C3.981,16.089 5.058,15.481 5.771,15.079C5.934,14.988 6.077,14.906 6.194,14.837C9.748,12.721 14.252,12.721 17.806,14.837Z" />
+    <path
+        android:fillColor="#D1BDBD"
+        android:pathData="M6.75,6.5C6.75,3.601 9.1,1.25 12,1.25C14.899,1.25 17.25,3.601 17.25,6.5C17.25,9.399 14.899,11.75 12,11.75C9.1,11.75 6.75,9.399 6.75,6.5Z" />
+</vector>

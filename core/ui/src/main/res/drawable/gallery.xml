@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M17.998,1.008C18.55,1.008 18.998,1.456 18.998,2.008V4.992L22.001,4.987C22.554,4.986 23.002,5.433 23.003,5.985C23.004,6.537 22.558,6.986 22.005,6.987L18.998,6.992V10.016C18.998,10.568 18.55,11.016 17.998,11.016C17.445,11.016 16.998,10.568 16.998,10.016V6.996L13.994,7.002C13.442,7.003 12.993,6.556 12.992,6.004C12.991,5.451 13.438,5.003 13.99,5.002L16.998,4.996V2.008C16.998,1.456 17.445,1.008 17.998,1.008Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M15.698,2.636C15.698,2.369 15.698,2.235 15.614,2.148C15.531,2.061 15.399,2.055 15.136,2.044C14.108,2 12.927,2 11.575,2H11.426C9.25,2 7.515,2 6.155,2.183C4.75,2.372 3.597,2.772 2.684,3.684C1.772,4.597 1.372,5.75 1.183,7.155C1,8.515 1,10.25 1,12.425V12.575C1,14.75 1,16.485 1.183,17.845C1.372,19.25 1.772,20.403 2.684,21.316C3.597,22.228 4.75,22.628 6.155,22.817C7.515,23 9.25,23 11.426,23H11.574C13.75,23 15.485,23 16.845,22.817C18.25,22.628 19.403,22.228 20.316,21.316C21.228,20.403 21.628,19.25 21.817,17.845C22,16.485 22,14.75 22,12.574V12.426C22,11.067 22,9.88 21.955,8.85C21.944,8.586 21.938,8.454 21.851,8.371C21.764,8.287 21.63,8.288 21.362,8.288L20.897,8.289C20.614,8.289 20.473,8.29 20.385,8.377C20.298,8.465 20.298,8.606 20.298,8.889V10.016C20.298,11.286 19.268,12.316 17.998,12.316C16.728,12.316 15.698,11.286 15.698,10.016V8.9C15.698,8.616 15.698,8.475 15.61,8.387C15.522,8.299 15.38,8.299 15.097,8.3L13.997,8.302C12.726,8.304 11.695,7.276 11.692,6.006C11.69,4.736 12.718,3.704 13.988,3.702L15.099,3.7C15.381,3.699 15.523,3.699 15.61,3.611C15.698,3.523 15.698,3.382 15.698,3.1V2.636ZM6.422,20.835C6.338,20.824 6.256,20.812 6.177,20.799L6.403,20.54C8.277,18.4 10.176,16.231 12.323,14.923C13.534,14.185 14.785,13.75 16.115,13.75C17.282,13.75 18.565,14.084 19.989,14.923C19.973,15.988 19.933,16.853 19.836,17.579C19.677,18.761 19.381,19.423 18.902,19.902C18.423,20.381 17.762,20.676 16.579,20.835C15.368,20.998 13.768,21 11.501,21C9.233,21 7.633,20.998 6.422,20.835Z" />
+</vector>

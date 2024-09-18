@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M11.943,1.75H12.057C14.248,1.75 15.969,1.75 17.312,1.931C18.689,2.116 19.781,2.503 20.639,3.361C21.497,4.219 21.884,5.311 22.069,6.688C22.25,8.031 22.25,9.752 22.25,11.943V12.057C22.25,14.248 22.25,15.969 22.069,17.312C21.884,18.689 21.497,19.781 20.639,20.639C19.781,21.497 18.689,21.884 17.312,22.069C15.969,22.25 14.248,22.25 12.057,22.25H11.943C9.752,22.25 8.031,22.25 6.688,22.069C5.311,21.884 4.219,21.497 3.361,20.639C2.503,19.781 2.116,18.689 1.931,17.312C1.75,15.969 1.75,14.248 1.75,12.057V12.057V11.943V11.943C1.75,9.752 1.75,8.031 1.931,6.688C2.116,5.311 2.503,4.219 3.361,3.361C4.219,2.503 5.311,2.116 6.688,1.931C8.031,1.75 9.752,1.75 11.943,1.75ZM8.002,10.5C8.002,9.948 7.554,9.5 7.002,9.5C6.45,9.5 6.002,9.948 6.002,10.5L6.002,17C6.002,17.552 6.45,18 7.002,18C7.554,18 8.002,17.552 8.002,17L8.002,10.5ZM11.002,9C11.407,9 11.756,9.241 11.913,9.588C12.521,9.215 13.236,9 14.002,9C16.211,9 18.002,10.791 18.002,13V17C18.002,17.552 17.554,18 17.002,18C16.45,18 16.002,17.552 16.002,17V13C16.002,11.895 15.106,11 14.002,11C12.897,11 12.002,11.895 12.002,13L12.002,17C12.002,17.552 11.554,18 11.002,18C10.45,18 10.002,17.552 10.002,17L10.002,10C10.002,9.448 10.45,9 11.002,9ZM8.26,7C8.26,7.69 7.7,8.25 7.01,8.25H7.001C6.31,8.25 5.751,7.69 5.751,7C5.751,6.31 6.31,5.75 7.001,5.75H7.01C7.7,5.75 8.26,6.31 8.26,7Z" />
+</vector>

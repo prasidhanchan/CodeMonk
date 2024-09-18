@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M10,2H14C17.279,2 18.919,2 20.081,2.814C20.511,3.115 20.885,3.489 21.186,3.919C22,5.081 22,6.721 22,10C22,13.279 22,14.919 21.186,16.081C20.885,16.511 20.511,16.885 20.081,17.186C18.919,18 17.279,18 14,18H10C6.721,18 5.081,18 3.919,17.186C3.489,16.885 3.115,16.511 2.814,16.081C2,14.919 2,13.279 2,10C2,6.721 2,5.081 2.814,3.919C3.115,3.489 3.489,3.115 3.919,2.814C5.081,2 6.721,2 10,2ZM11,14.25C10.586,14.25 10.25,14.586 10.25,15C10.25,15.414 10.586,15.75 11,15.75H13C13.414,15.75 13.75,15.414 13.75,15C13.75,14.586 13.414,14.25 13,14.25H11Z" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M14.5,22L14.184,21.581C13.473,20.637 13.297,19.194 13.747,18M9.5,22L9.816,21.581C10.527,20.637 10.703,19.194 10.253,18"
+        android:strokeWidth="1.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M7,22H17"
+        android:strokeWidth="1.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+</vector>

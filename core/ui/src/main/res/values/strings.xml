@@ -1,0 +1,114 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="app_name">Code Monk</string>
+    <string name="dept_of_mca">Dept of MCA</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="show_hide_password">Show/Hide Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password_heading">Forgot Password</string>
+    <string name="login_success">Login Success</string>
+    <string name="back">Back</string>
+    <string name="find_account">Find account</string>
+    <string name="blue_tick">Blue Tick</string>
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="currently_working_on">"Currently working on "</string>
+    <string name="team_members">Team members:</string>
+    <string name="progress_header">Project progress:</string>
+    <string name="progress_progress">Project progress</string>
+    <string name="description_header">Project description:</string>
+    <string name="description">Project description</string>
+    <string name="short_description">Enter a short description</string>
+    <string name="progress_percentage">%1$s%%</string>
+    <string name="deadline">"Deadline: "</string>
+    <string name="not_set">"Not set"</string>
+    <string name="username">\@%1$s</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="delete">Delete Post</string>
+    <string name="add_post">Add Post</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="github">GitHub</string>
+    <string name="x">X</string>
+    <string name="website">Website</string>
+    <string name="more_link">Portfolio</string>
+    <string name="working_on">Working on</string>
+    <string name="not_working_on_project">Not working on any project</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="confirm_logout">Are you sure you want to logout?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove_profile">Remove Profile</string>
+    <string name="username_placeholder">Username</string>
+    <string name="name_placeholder">Name</string>
+    <string name="bio_placeholder">Bio</string>
+    <string name="current_project_placeholder">Current Project</string>
+    <string name="add_a_link_placeholder">Add a link</string>
+    <string name="update">Update</string>
+    <string name="tap_to_remove">Tap to remove a link</string>
+    <string name="invalid_link">Link should start with http:// or https://</string>
+    <string name="mentor_for">Mentor for %1$s</string>
+    <string name="mentor_username">Your mentor\'s username</string>
+    <string name="recent_login_note">This action requires you to be recently logged in.</string>
+    <string name="password_updated">Password updated successfully.</string>
+    <string name="current_version">Version: %1$s (%2$s)</string>
+    <string name="whats_new">What\'s new</string>
+    <string name="download">Download latest update</string>
+    <string name="report">Report an issue</string>
+    <string name="github_link">https://github.com/prasidhanchan/</string>
+    <string name="x_link">https://github.com/prasidhanchan/</string>
+    <string name="website_link">https://codemonk.club/</string>
+    <string name="remove_member">Remove Member</string>
+    <string name="add_member">Add Member</string>
+    <string name="team_member">Team Member</string>
+    <string name="me">me</string>
+    <string name="deadline_placeholder">Deadline</string>
+    <string name="progress">Progress</string>
+    <string name="percent">Percentage</string>
+    <string name="post">Post</string>
+    <string name="no_posts_yet">No posts yet!</string>
+    <string name="project_post">Project Post</string>
+    <string name="announcement">Announcement</string>
+    <string name="feature_not_available">Feature not available yet!</string>
+    <string name="dev_experience">Dev experience:</string>
+    <string name="xp_points">%1$s pts</string>
+    <string name="current_project_progress">Current project progress:</string>
+    <string name="other_mentors">Other mentors:</string>
+    <string name="delete_post">Delete Post</string>
+    <string name="delete_post_message">Are you sure you want to delete this post?</string>
+    <string name="link">Link</string>
+    <string name="edit_post">Edit Post</string>
+    <string name="my_project_id">Project%1$s</string>
+    <string name="mentor">Mentor:</string>
+    <string name="monk_not_found">Monk not found!</string>
+    <string name="leaderboard">LeaderBoard</string>
+    <string name="notification">Notification</string>
+    <string name="notification_permission_denied">Please enable the notification permission.</string>
+    <string name="send_notification">Send Notification</string>
+    <string name="send">Send</string>
+    <string name="title">Notification title</string>
+    <string name="body">Notification message</string>
+    <string name="notification_sent">Notification sent</string>
+    <string name="no_notifications">No notifications</string>
+    <string name="new_post">New Post</string>
+    <string name="new_post_body">%1$s has posted a new project</string>
+    <string name="liked">%1$s Liked</string>
+    <string name="new_like_body">%1$s has liked your post</string>
+</resources>

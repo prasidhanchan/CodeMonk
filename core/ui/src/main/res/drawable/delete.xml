@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M19.583,15.656C19.506,16.91 19.445,17.904 19.32,18.698C19.192,19.513 18.987,20.191 18.578,20.785C18.203,21.328 17.72,21.786 17.161,22.13C16.549,22.507 15.866,22.671 15.053,22.75L8.927,22.75C8.113,22.671 7.43,22.506 6.818,22.129C6.258,21.784 5.775,21.325 5.4,20.781C4.991,20.187 4.787,19.507 4.66,18.692C4.536,17.896 4.476,16.9 4.401,15.645L3.75,4.75H20.25L19.583,15.656Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M13.347,1.283C13.912,1.333 14.443,1.506 14.9,1.846C15.237,2.097 15.471,2.405 15.671,2.739C15.857,3.048 16.044,3.433 16.256,3.87L16.682,4.751H21C21.552,4.751 22,5.198 22,5.751C22,6.303 21.552,6.751 21,6.751C15,6.751 9,6.751 3,6.751C2.448,6.751 2,6.303 2,5.751C2,5.198 2.448,4.751 3,4.751H7.41L7.766,3.97C7.972,3.517 8.154,3.118 8.337,2.798C8.534,2.452 8.767,2.132 9.109,1.87C9.57,1.516 10.112,1.337 10.69,1.284C11.125,1.244 11.563,1.25 12,1.251C12.511,1.251 12.97,1.249 13.347,1.283ZM9.608,4.751H14.46C14.233,4.283 14.088,3.987 13.957,3.768C13.764,3.448 13.534,3.307 13.169,3.275C12.91,3.252 12.572,3.251 12.035,3.251C11.484,3.251 11.137,3.252 10.871,3.276C10.497,3.31 10.264,3.456 10.074,3.789C9.949,4.007 9.814,4.299 9.608,4.751Z" />
+</vector>

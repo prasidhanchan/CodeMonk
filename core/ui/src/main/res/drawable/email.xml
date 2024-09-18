@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M3.75,3C2.231,3 1,4.231 1,5.75V17.75C1,19.269 2.231,20.5 3.75,20.5H19.75C21.269,20.5 22.5,19.269 22.5,17.75V5.75C22.5,4.231 21.269,3 19.75,3H3.75ZM6.128,7.102C5.77,6.894 5.311,7.014 5.102,7.372C4.894,7.73 5.014,8.189 5.372,8.398L10.365,11.31C11.221,11.81 12.28,11.81 13.136,11.31L18.128,8.398C18.486,8.189 18.607,7.73 18.398,7.372C18.189,7.014 17.73,6.894 17.372,7.102L12.38,10.014C11.991,10.241 11.509,10.241 11.12,10.014L6.128,7.102Z" />
+</vector>
