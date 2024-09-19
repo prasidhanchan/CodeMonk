@@ -44,10 +44,11 @@ class HomeRepositoryImpl @Inject constructor(
             val valueEventListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     dataOrException.update {
-                        it.copy(data = snapshot.children.map { dataSnap ->
-                            dataSnap.getValue<Post>()!!
-                        }
-                            .sortedByDescending { post -> post.timeStamp }
+                        it.copy(
+                            data = snapshot.children.mapNotNull { dataSnap ->
+                                dataSnap.getValue<Post>()
+                            }
+                                .sortedByDescending { post -> post.timeStamp }
                         )
                     }
                     dataOrException.update { it.copy(loading = false) }

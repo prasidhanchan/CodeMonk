@@ -14,7 +14,7 @@
 package com.mca.util.model
 
 data class Post(
-    var userId:String = "",
+    var userId: String = "",
     var currentProject: String = "",
     var projectId: String = "",
     var teamMembers: List<String> = emptyList(),
@@ -25,3 +25,4 @@ data class Post(
     var timeStamp: Long = 0L,
     var token: String = ""
 )
+

@@ -133,7 +133,7 @@ class NotificationRepositoryImpl @Inject constructor(
                         .await()
                 }
             } else {
-                onError("Something went wrong! ${response.code()}")
+                onError("Something went wrong! Http: ${response.code()}")
             }
         } catch (e: Exception) {
             e.localizedMessage?.let(onError)

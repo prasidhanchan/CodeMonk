@@ -13,6 +13,9 @@
 
 package com.mca.leaderboard.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,7 +29,14 @@ import com.mca.util.navigation.Route
 fun NavGraphBuilder.leaderBoardNavigation(
     navHostController: NavHostController
 ){
-    composable<Route.LeaderBoard> {
+    composable<Route.LeaderBoard>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 400))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 400))
+        }
+    ) {
         val viewModel: LeaderBoardViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

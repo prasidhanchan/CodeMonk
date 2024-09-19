@@ -36,7 +36,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -66,6 +66,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.android.gms.ads.nativead.NativeAd
 import com.mca.ui.R
 import com.mca.ui.component.CMProgressBar
 import com.mca.ui.theme.Blue
@@ -79,6 +80,7 @@ import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
+import com.mca.util.constant.Constant.MAX_POST_ADS
 import com.mca.util.constant.animatedLike
 import com.mca.util.constant.toLikedBy
 import com.mca.util.constant.toLikes
@@ -104,6 +106,7 @@ internal fun Post(
     onUsernameClick: (String) -> Unit,
     onEditPostClick: (postId: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit,
+    nativeAds: List<NativeAd?>,
     appBar: @Composable () -> Unit = { }
 ) {
     LazyColumn(
@@ -117,7 +120,7 @@ internal fun Post(
         }
 
         if (posts().isNotEmpty() && !loading) {
-            items(items = posts()) { (post, user) ->
+            itemsIndexed(items = posts()) { index, (post, user) ->
                 PostCard(
                     post = post,
                     user = user,
@@ -130,6 +133,9 @@ internal fun Post(
                     onEditPostClick = onEditPostClick,
                     onDeleteClick = onDeleteClick
                 )
+                if (index < MAX_POST_ADS && nativeAds.size == MAX_POST_ADS) {
+                    PostNativeAd(nativeAd = nativeAds[index])
+                }
             }
         } else if (posts().isEmpty() && loading) {
             items(count = 2) {
@@ -194,7 +200,7 @@ private fun PostCard(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MainContent(
+private fun MainContent(
     post: Post,
     mentor: String,
     currentUserId: String,
@@ -442,7 +448,7 @@ private fun PostBottomBar(
 ) {
     Row(
         modifier = modifier
-            .padding(vertical = 10.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start

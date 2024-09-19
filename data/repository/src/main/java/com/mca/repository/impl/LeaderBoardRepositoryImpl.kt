@@ -13,7 +13,6 @@
 
 package com.mca.repository.impl
 
-import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
@@ -44,13 +43,11 @@ class LeaderBoardRepositoryImpl @Inject constructor(
                 }
                 .addOnFailureListener { error ->
                     dataOrException.exception = error
-                    Log.d("ERORRR", "getTopMembers: ${error.localizedMessage}")
                 }
                 .await()
                 .asFlow()
         } catch (e: Exception) {
             dataOrException.exception = e
-            Log.d("ERORRR", "getTopMembers2: ${e.localizedMessage}")
         } finally {
             dataOrException.loading = false
         }

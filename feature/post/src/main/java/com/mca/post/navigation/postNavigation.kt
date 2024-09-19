@@ -27,9 +27,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.google.firebase.auth.FirebaseAuth
-import com.mca.ui.R
 import com.mca.post.screen.PostScreen
 import com.mca.post.screen.PostViewModel
+import com.mca.ui.R
 import com.mca.util.model.Post
 import com.mca.util.navigation.Route
 import kotlinx.coroutines.delay

@@ -13,6 +13,9 @@
 
 package com.mca.notification.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,7 +44,14 @@ fun NavGraphBuilder.sendNotificationNavigation(
     viewModel: NotificationViewModel,
     navHostController: NavHostController
 ) {
-    composable<Route.SendNotification> {
+    composable<Route.SendNotification>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 400))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 400))
+        }
+    ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         val context = LocalContext.current

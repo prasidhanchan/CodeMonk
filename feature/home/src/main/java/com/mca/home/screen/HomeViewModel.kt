@@ -71,8 +71,8 @@ class HomeViewModel @Inject constructor(
                                             } else {
                                                 post to User()
                                             }
-                                        } ?: emptyList(),
-                                        loading = result.loading!!
+                                        }.orEmpty(),
+                                        loading = false
                                     )
                                 }
                             } else {
