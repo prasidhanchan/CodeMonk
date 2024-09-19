@@ -182,7 +182,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun getUpdate() {
+    private fun getUpdate() {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getUpdate()
