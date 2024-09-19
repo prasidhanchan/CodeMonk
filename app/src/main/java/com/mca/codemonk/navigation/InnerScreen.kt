@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,8 +29,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.ads.nativead.NativeAd
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mca.home.BuildConfig.NATIVE_AD_ID_POST
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.leaderboard.navigation.leaderBoardNavigation
@@ -50,9 +54,11 @@ import com.mca.util.constant.Constant.ANNOUNCEMENT_TOPIC
 import com.mca.util.constant.Constant.EVENT_TOPIC
 import com.mca.util.constant.Constant.LIKE_CHANNEL_ID
 import com.mca.util.constant.Constant.LIKE_TOPIC
+import com.mca.util.constant.Constant.MAX_POST_ADS
 import com.mca.util.constant.Constant.POST_CHANNEL_ID
 import com.mca.util.constant.Constant.POST_TOPIC
 import com.mca.util.constant.getCurrentRoute
+import com.mca.util.constant.loadNativeAds
 import com.mca.util.model.Android
 import com.mca.util.model.AndroidNotification
 import com.mca.util.model.Data
@@ -106,7 +112,17 @@ fun NavGraphBuilder.innerScreen(
             viewModelNotification.getAccessToken(context)
         }
 
-
+        val nativeAds = remember { mutableStateListOf<NativeAd?>() }
+        LaunchedEffect(key1 = Unit) {
+            loadNativeAds(
+                context = context,
+                adUnitId = NATIVE_AD_ID_POST,
+                onAdLoaded = { ad ->
+                    nativeAds.add(ad)
+                },
+                maxAds = MAX_POST_ADS
+            )
+        }
 
         val pushNotification = PushNotificationTopic(
             message = MessageToTopic(
@@ -182,7 +198,8 @@ fun NavGraphBuilder.innerScreen(
                             accessToken = uiStateNotify.accessToken ?: "",
                             onSuccess = { }
                         )
-                    }
+                    },
+                    nativeAds = nativeAds
                 )
                 profileNavigation(
                     viewModel = viewModelProfile,

@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.google.android.gms.ads.nativead.NativeAd
 import com.mca.home.screen.HomeScreen
 import com.mca.home.screen.HomeViewModel
 import com.mca.ui.R
@@ -45,7 +46,8 @@ fun NavGraphBuilder.homeNavigation(
     currentUsername: String,
     currentUserType: String,
     onDeletedClick: (postId: String) -> Unit,
-    sendLikeNotification: (token: String) -> Unit
+    sendLikeNotification: (token: String) -> Unit,
+    nativeAds: List<NativeAd?>
 ) {
     composable<Route.Home>(
         enterTransition = {
@@ -110,7 +112,8 @@ fun NavGraphBuilder.homeNavigation(
                     currentUsername = currentUsername
                 )
             },
-            onDeletedClick = onDeletedClick
+            onDeletedClick = onDeletedClick,
+            nativeAds = nativeAds
         )
     }
 }

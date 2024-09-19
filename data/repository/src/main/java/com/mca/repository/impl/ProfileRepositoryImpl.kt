@@ -32,6 +32,7 @@ import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlin.random.Random
 
 class ProfileRepositoryImpl @Inject constructor(
     val userRef: CollectionReference,
@@ -47,6 +48,10 @@ class ProfileRepositoryImpl @Inject constructor(
             userRef.document(currentUserId).get()
                 .addOnSuccessListener { docSnap ->
                     dataOrException.data = docSnap.toObject<User>()
+                    if (dataOrException.data?.username?.isBlank() == true) {
+                        userRef.document(currentUserId)
+                            .update("username", "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}") // Generate a random username if empty
+                    }
                 }
                 .addOnFailureListener { error ->
                     dataOrException.exception = error

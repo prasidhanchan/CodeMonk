@@ -35,10 +35,7 @@ class AuthRepositoryImpl : AuthRepository {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     onSuccess(
-                        Response(
-                            message = "Login Success",
-                            responseType = ResponseType.SUCCESS
-                        )
+                        Response(responseType = ResponseType.SUCCESS)
                     )
                 }
                 .addOnFailureListener { error ->

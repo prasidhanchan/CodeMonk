@@ -16,6 +16,7 @@ hiltCompiler = "1.2.0"
 firebaseBom = "33.3.0"
 firebaseMessaging = "24.0.1"
 googleServices = "4.4.2"
+playServicesAds = "23.3.0"
 retrofit = "2.11.0"
 oauthVersion = "1.19.0"
 coil = "2.6.0"
@@ -42,6 +43,8 @@ firebase-realtime-database = { module = "com.google.firebase:firebase-database" 
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+# Admob
+play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 # Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }

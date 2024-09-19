@@ -17,8 +17,14 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.navigation.NavBackStackEntry
-import com.mca.util.model.NotificationData
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.mca.util.model.Post
+import com.mca.util.model.NotificationData
 import com.mca.util.model.PushNotificationTopic
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
@@ -262,4 +268,42 @@ fun PushNotificationTopic.toNotification(): HashMap<String, Any> {
         "body" to message.notification.body,
         "timeStamp" to message.data.time_stamp.toLong()
     )
+}
+
+/**
+ * Function to load native ads
+ * @param context Requires a [Context].
+ * @param adUnitId requires a unique Ad unit ID.
+ * @param isLoading Indicator if the ad is being loaded.
+ * @param onAdLoaded The lambda triggered when the ads are loaded.
+ * @param maxAds The max number of ads that are to be loaded. Can only load max 5 ads
+ */
+fun loadNativeAds(
+    context: Context,
+    adUnitId: String,
+    isLoading: (Boolean) -> Unit = { },
+    onAdLoaded: (NativeAd?) -> Unit,
+    maxAds: Int = 5
+) {
+    lateinit var adLoader: AdLoader
+
+    val builder = AdLoader.Builder(context, adUnitId)
+        .forNativeAd { nativeAd ->
+            onAdLoaded(nativeAd)
+            isLoading(adLoader.isLoading)
+        }
+
+    adLoader = builder.withAdListener(object : AdListener() {
+        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+            super.onAdFailedToLoad(loadAdError)
+            onAdLoaded(null)
+        }
+    })
+        .withNativeAdOptions(
+            NativeAdOptions.Builder()
+                .setAdChoicesPlacement(0)
+                .build()
+        )
+        .build()
+    adLoader.loadAds(AdRequest.Builder().build(), maxAds)
 }

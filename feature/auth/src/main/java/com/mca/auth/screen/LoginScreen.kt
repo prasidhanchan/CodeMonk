@@ -45,7 +45,6 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -77,7 +76,6 @@ internal fun LoginScreen(
     var showPassword by remember { mutableStateOf(false) }
 
     val interactionSource = remember { MutableInteractionSource() }
-    val localKeyboard = LocalSoftwareKeyboardController.current
 
     val focusManager = LocalFocusManager.current
 
@@ -206,7 +204,7 @@ internal fun LoginScreen(
                     enabled = !uiState.loading,
                     loading = uiState.loading,
                     onClick = {
-                        localKeyboard?.hide()
+                        focusManager.clearFocus()
                         onLoginClick()
                     }
                 )

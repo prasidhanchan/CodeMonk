@@ -13,6 +13,9 @@
 
 package com.mca.profile.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,7 +31,14 @@ fun NavGraphBuilder.viewProfileNavigation(
     viewModel: ProfileViewModel,
     navHostController: NavHostController
 ) {
-    composable<Route.ViewProfile> { backStackEntry ->
+    composable<Route.ViewProfile>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 400))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 400))
+        }
+    ) { backStackEntry ->
         val username = backStackEntry.toRoute<Route.ViewProfile>().username
         val uiState by viewModel.uiState.collectAsState()
 

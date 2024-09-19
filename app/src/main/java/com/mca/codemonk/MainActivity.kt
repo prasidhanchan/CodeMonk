@@ -19,16 +19,24 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
+import com.google.android.gms.ads.MobileAds
 import com.mca.codemonk.navigation.MainNavigation
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.BottomBarBlack
 import com.mca.ui.theme.CodeMonkTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CoroutineScope(Dispatchers.IO).launch {
+            MobileAds.initialize(this@MainActivity)
+        }
+
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Black.toArgb()),
             navigationBarStyle = SystemBarStyle.dark(BottomBarBlack.toArgb())

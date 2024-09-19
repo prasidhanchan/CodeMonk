@@ -111,4 +111,7 @@
     <string name="new_post_body">%1$s has posted a new project</string>
     <string name="liked">%1$s Liked</string>
     <string name="new_like_body">%1$s has liked your post</string>
+    <string name="sponsored">Sponsored</string>
+    <string name="ad_description">Sponsored content that you might find interesting.</string>
+    <string name="install">Install</string>
 </resources>

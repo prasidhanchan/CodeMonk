@@ -38,7 +38,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.ads.nativead.NativeAd
 import com.mca.search.UiState
+import com.mca.search.component.ProfileCardNativeAd
 import com.mca.ui.R
 import com.mca.ui.component.CMProfileCard
 import com.mca.ui.component.CMRegularAppBar
@@ -46,13 +48,15 @@ import com.mca.ui.component.CMTextBox
 import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.tintColor
+import com.mca.util.constant.Constant.MAX_SEARCH_ADS
 
 @Composable
 internal fun SearchScreen(
     uiState: UiState,
     onProfileClick: (username: String) -> Unit,
     onSearchChange: (String) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    nativeAds: List<NativeAd?>
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -115,6 +119,12 @@ internal fun SearchScreen(
                             delay = index * 100,
                             onClick = onProfileClick
                         )
+                        if (index < MAX_SEARCH_ADS && nativeAds.size == MAX_SEARCH_ADS) {
+                            ProfileCardNativeAd(
+                                nativeAd = nativeAds[index],
+                                delay = index * 100
+                            )
+                        }
                     }
                 }
             }
@@ -136,6 +146,7 @@ private fun SearchScreenPreview() {
         ),
         onProfileClick = { },
         onSearchChange = { },
-        onBackClick = { }
+        onBackClick = { },
+        nativeAds = listOf()
     )
 }

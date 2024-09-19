@@ -15,6 +15,7 @@ import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
 import AndroidConfig.JVM_TARGET
 import AndroidConfig.MIN_SDK
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
@@ -33,6 +34,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("gradle.properties").inputStream())
+
+        buildConfigField("String", "NATIVE_AD_ID_SEARCH", "\"${properties.getProperty("NATIVE_AD_ID_SEARCH")}\"")
     }
 
     buildTypes {
@@ -53,6 +59,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -73,6 +80,9 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
+
+    // AdMob
+    implementation(libs.play.services.ads)
 
     // Coil
     implementation(libs.coil.compose)

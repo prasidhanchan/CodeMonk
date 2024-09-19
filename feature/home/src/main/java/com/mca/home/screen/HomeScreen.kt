@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.ads.nativead.NativeAd
 import com.mca.home.UiState
 import com.mca.home.component.HomeAppBar
 import com.mca.home.component.Post
@@ -52,7 +53,8 @@ internal fun HomeScreen(
     onEditPostClick: (postId: String) -> Unit,
     onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit,
-    onDeletedClick: (postId: String) -> Unit
+    onDeletedClick: (postId: String) -> Unit,
+    nativeAds: List<NativeAd?>
 ) {
     val state = rememberLazyListState()
 
@@ -85,6 +87,7 @@ internal fun HomeScreen(
                     postId = id
                     visible = true
                 },
+                nativeAds = nativeAds,
                 appBar = {
                     HomeAppBar(
                         userImage = profileImage,
@@ -161,6 +164,7 @@ private fun HomeScreenPreview() {
         onEditPostClick = { },
         onLikeClick = { _, _ -> },
         onUnlikeClick = { },
-        onDeletedClick = { }
+        onDeletedClick = { },
+        nativeAds = listOf()
     )
 }

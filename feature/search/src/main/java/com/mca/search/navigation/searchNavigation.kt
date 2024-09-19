@@ -16,15 +16,23 @@ package com.mca.search.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.google.android.gms.ads.nativead.NativeAd
+import com.mca.search.BuildConfig.NATIVE_AD_ID_SEARCH
 import com.mca.search.screen.SearchScreen
 import com.mca.search.screen.SearchViewModel
+import com.mca.util.constant.Constant.MAX_SEARCH_ADS
+import com.mca.util.constant.loadNativeAds
 import com.mca.util.navigation.Route
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -43,7 +51,20 @@ fun NavGraphBuilder.searchNavigation(
         val viewModel: SearchViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsState()
 
+        val context = LocalContext.current
         val scope = rememberCoroutineScope()
+
+        val nativeAds = remember { mutableStateListOf<NativeAd?>() }
+        LaunchedEffect(key1 = Unit) {
+            loadNativeAds(
+                context = context,
+                adUnitId = NATIVE_AD_ID_SEARCH,
+                onAdLoaded = { ad ->
+                    nativeAds.add(ad)
+                },
+                maxAds = MAX_SEARCH_ADS
+            )
+        }
 
         SearchScreen(
             uiState = uiState,
@@ -57,7 +78,8 @@ fun NavGraphBuilder.searchNavigation(
                     delay(2000L)
                 }
             },
-            onBackClick = { navHostController.popBackStack() }
+            onBackClick = { navHostController.popBackStack() },
+            nativeAds = nativeAds
         )
     }
 }

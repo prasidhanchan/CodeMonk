@@ -87,6 +87,9 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
 
+    // Admob
+    implementation(libs.play.services.ads)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.gson.converter)

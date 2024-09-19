@@ -38,4 +38,7 @@ object Constant {
     const val ANNOUNCEMENT_TOPIC = "AnnouncementChannel"
     const val LIKE_CHANNEL_ID = "Like"
     const val LIKE_TOPIC = "LikeChannel"
+
+    const val MAX_POST_ADS = 3
+    const val MAX_SEARCH_ADS = 2
 }

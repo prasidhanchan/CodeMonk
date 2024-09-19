@@ -62,6 +62,9 @@ dependencies {
     // Serialization
     implementation(libs.kotlinx.serialization)
 
+    // Admob
+    implementation(libs.play.services.ads)
+
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.navigation.compose)
