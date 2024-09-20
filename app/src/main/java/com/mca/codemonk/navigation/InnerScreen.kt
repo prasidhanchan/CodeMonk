@@ -14,6 +14,7 @@
 package com.mca.codemonk.navigation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
@@ -119,6 +120,7 @@ fun NavGraphBuilder.innerScreen(
                 adUnitId = NATIVE_AD_ID_POST,
                 onAdLoaded = { ad ->
                     nativeAds.add(ad)
+                    Log.d("ADDDDAD", "innerScreen: $ad")
                 },
                 maxAds = MAX_POST_ADS
             )

@@ -16,6 +16,7 @@ package com.mca.util.constant
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.navigation.NavBackStackEntry
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -297,13 +298,10 @@ fun loadNativeAds(
         override fun onAdFailedToLoad(loadAdError: LoadAdError) {
             super.onAdFailedToLoad(loadAdError)
             onAdLoaded(null)
+            Log.d("ADDDDAD", "innerScreen: ${loadAdError.message}")
         }
     })
-        .withNativeAdOptions(
-            NativeAdOptions.Builder()
-                .setAdChoicesPlacement(0)
-                .build()
-        )
+        .withNativeAdOptions(NativeAdOptions.Builder().build())
         .build()
     adLoader.loadAds(AdRequest.Builder().build(), maxAds)
 }
