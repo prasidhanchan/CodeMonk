@@ -145,7 +145,7 @@ private fun SearchAd(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = headLine,
+                        text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
                         style = TextStyle(
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
@@ -164,7 +164,7 @@ private fun SearchAd(
                     )
                 }
                 Text(
-                    text = body,
+                    text = body.ifEmpty { stringResource(id = R.string.ad_body) },
                     style = TextStyle(
                         fontSize = 10.sp,
                         fontWeight = FontWeight.ExtraBold,

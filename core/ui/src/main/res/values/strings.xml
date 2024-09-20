@@ -114,4 +114,6 @@
     <string name="sponsored">Sponsored</string>
     <string name="ad_description">Sponsored content that you might find interesting.</string>
     <string name="install">Install</string>
+    <string name="ad_username">google_ad</string>
+    <string name="ad_body">Stay up to date with your Ads Check how your ads are performing</string>
 </resources>

@@ -40,10 +40,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -59,7 +60,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
-import com.google.android.gms.ads.nativead.AdChoicesView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.mca.ui.R
@@ -67,7 +67,6 @@ import com.mca.ui.component.CMButton
 import com.mca.ui.theme.ExtraLightBlack
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
-import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 
@@ -146,7 +145,7 @@ private fun PostAdTopBar(
                 .size(30.dp)
         )
         Text(
-            text = headLine,
+            text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
@@ -211,7 +210,7 @@ private fun MainContent(
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 fontFamily = dosis,
-                                color = Yellow
+                                color = Color.White
                             ),
                             modifier = Modifier.padding(
                                 top = 5.dp,
@@ -223,13 +222,14 @@ private fun MainContent(
                     }
                 }
                 Text(
-                    text = body,
+                    text = body.ifEmpty { stringResource(id = R.string.ad_body) },
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = dosis,
                         color = fontColor
-                    )
+                    ),
+                    modifier = Modifier.weight(1f)
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -265,7 +265,7 @@ private fun ImageContent(
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopEnd
         ) {
             AsyncImage(
                 model = mediaImage,
@@ -320,33 +320,26 @@ private fun NativeAdView(
     modifier: Modifier = Modifier,
     content: @Composable (nativeAd: NativeAd?, view: View) -> Unit
 ) {
-    val contentViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
-    val adViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
-    val adChoicesViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
+    val adViewId by remember { mutableIntStateOf(View.generateViewId()) }
+    val contentViewId by remember { mutableIntStateOf(View.generateViewId()) }
 
     AndroidView(
         factory = { context ->
             val contentView = ComposeView(context).apply {
                 id = contentViewId
             }
-            val adChoicesView = AdChoicesView(context).apply {
-                id = adChoicesViewId
-            }
             NativeAdView(context).apply {
                 id = adViewId
                 addView(contentView)
-                addView(adChoicesView)
             }
         },
         modifier = modifier,
         update = { view ->
             val adView = view.findViewById<NativeAdView>(adViewId)
             val composeView = view.findViewById<ComposeView>(contentViewId)
-            val adChoicesView = view.findViewById<AdChoicesView>(adChoicesViewId)
 
             if (nativeAd != null) adView.setNativeAd(nativeAd)
             adView.callToActionView = composeView
-            adView.adChoicesView = adChoicesView
             composeView.setContent { content(nativeAd, composeView) }
         }
     )
