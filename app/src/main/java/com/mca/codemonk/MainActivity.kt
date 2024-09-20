@@ -25,17 +25,12 @@ import com.mca.ui.theme.Black
 import com.mca.ui.theme.BottomBarBlack
 import com.mca.ui.theme.CodeMonkTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CoroutineScope(Dispatchers.IO).launch {
-            MobileAds.initialize(this@MainActivity)
-        }
+        MobileAds.initialize(this@MainActivity)
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Black.toArgb()),
