@@ -117,7 +117,7 @@ private fun PostAd(
         )
         PostAdDescription(
             description = stringResource(id = R.string.ad_description),
-            username = headline
+            username = headline.ifEmpty { stringResource(id = R.string.ad_username) }
         )
     }
 }
@@ -136,7 +136,7 @@ private fun PostAdTopBar(
         horizontalArrangement = Arrangement.Start
     ) {
         AsyncImage(
-            model = image,
+            model = image.ifEmpty { R.drawable.user },
             contentDescription = headLine,
             modifier = Modifier
                 .padding(end = 8.dp)

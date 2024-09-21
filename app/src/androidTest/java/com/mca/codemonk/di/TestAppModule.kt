@@ -31,6 +31,7 @@ import com.mca.repository.impl.NotificationRepositoryImpl
 import com.mca.repository.impl.PostRepositoryImpl
 import com.mca.repository.impl.ProfileRepositoryImpl
 import com.mca.repository.impl.SearchRepositoryImpl
+import com.mca.util.constant.Constant.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -46,7 +47,7 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl()
+    fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl(testRef = FirebaseFirestore.getInstance().collection("testing"))
 
     @Provides
     @Singleton
@@ -96,7 +97,7 @@ object TestAppModule {
     @Provides
     fun provideNotificationApi(): NotificationApi {
         return Retrofit.Builder()
-            .baseUrl("https://fcm.googleapis.com/v1/projects/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create()

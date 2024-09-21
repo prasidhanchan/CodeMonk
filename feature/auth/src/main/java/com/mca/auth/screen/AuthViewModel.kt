@@ -18,12 +18,15 @@ import androidx.lifecycle.viewModelScope
 import com.mca.auth.UiState
 import com.mca.repository.AuthRepository
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +36,10 @@ class AuthViewModel @Inject constructor(
 
     var uiState = MutableStateFlow(UiState())
         private set
+
+    init {
+        getTesters()
+    }
 
     /**
      * Function to login into firebase auth.
@@ -73,6 +80,31 @@ class AuthViewModel @Inject constructor(
                     uiState.update { it.copy(loading = false) }
                 }
             )
+        }
+    }
+
+    private fun getTesters() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = authRepository.getTesters()
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
+                    uiState.update {
+                        it.copy(
+                            testers = result.data!!,
+                            loading = result.loading!!
+                        )
+                    }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                    uiState.update { it.copy(loading = result.loading!!) }
+                }
+            }
         }
     }
 

@@ -13,6 +13,7 @@
 
 package com.mca.repository
 
+import com.mca.util.warpper.DataOrException
 import com.mca.util.warpper.Response
 
 interface AuthRepository {
@@ -29,4 +30,6 @@ interface AuthRepository {
         onSuccess: (Response) -> Unit,
         onError: (Response) -> Unit
     )
+
+    suspend fun getTesters(): DataOrException<List<String>, Boolean, Exception>
 }

@@ -15,12 +15,18 @@ package com.mca.repository.impl
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.CollectionReference
 import com.mca.repository.AuthRepository
+import com.mca.util.warpper.DataOrException
 import com.mca.util.warpper.Response
 import com.mca.util.warpper.ResponseType
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class AuthRepositoryImpl : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(
+    val testRef: CollectionReference
+) : AuthRepository {
 
     override suspend fun login(
         email: String,
@@ -123,5 +129,29 @@ class AuthRepositoryImpl : AuthRepository {
                 }
             }
         }
+    }
+
+    override suspend fun getTesters(): DataOrException<List<String>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<String>, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            testRef.get()
+                .addOnSuccessListener { querySnap ->
+                    dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
+                        docSnap.getString("email")
+                    }
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+                .asFlow()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
     }
 }
