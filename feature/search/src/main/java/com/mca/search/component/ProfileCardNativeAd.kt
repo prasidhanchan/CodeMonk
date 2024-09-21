@@ -117,7 +117,7 @@ private fun SearchAd(
                 color = ExtraLightBlack,
                 content = {
                     AsyncImage(
-                        model = icon,
+                        model = icon.ifEmpty { R.drawable.user },
                         contentDescription = headLine,
                         modifier = Modifier.fillMaxSize()
                     )

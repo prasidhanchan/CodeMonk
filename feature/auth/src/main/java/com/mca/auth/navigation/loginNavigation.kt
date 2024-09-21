@@ -17,13 +17,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mca.auth.screen.AuthViewModel
 import com.mca.auth.screen.LoginScreen
+import com.mca.ui.R
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.navigation.Route
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
 
 fun NavGraphBuilder.loginNavigation(
     viewModel: AuthViewModel,
@@ -39,23 +44,34 @@ fun NavGraphBuilder.loginNavigation(
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+        val context = LocalContext.current
+
         LoginScreen(
             uiState = uiState,
             onEmailChange = viewModel::setEmail,
             onPasswordChange = viewModel::setPassword,
             onLoginClick = {
-                viewModel.login(
-                    email = uiState.email,
-                    password = uiState.password,
-                    onSuccess = {
-                        navController.navigate(Route.InnerScreen) {
-                            popUpTo(Route.Login) {
-                                inclusive = true
+                if (uiState.testers.contains(uiState.email)) {
+                    viewModel.login(
+                        email = uiState.email,
+                        password = uiState.password,
+                        onSuccess = {
+                            navController.navigate(Route.InnerScreen) {
+                                popUpTo(Route.Login) {
+                                    inclusive = true
+                                }
                             }
+                            viewModel.clearUiState()
                         }
-                        viewModel.clearUiState()
-                    }
-                )
+                    )
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = context.getString(R.string.not_registered),
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                }
             },
             onForgotPasswordClick = { navController.navigate(Route.ForgotPassword) }
         )
