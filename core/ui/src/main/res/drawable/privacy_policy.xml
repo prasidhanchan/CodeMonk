@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright © 2024 Prasidh Gopal Anchan
+  ~
+  ~ Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M12.307,1.25H12.307H12.307H11.195H11.195H11.195C9.357,1.25 7.901,1.25 6.762,1.403C5.59,1.561 4.641,1.893 3.892,2.641C3.144,3.39 2.812,4.339 2.654,5.511C2.501,6.65 2.501,8.106 2.501,9.944L2.501,14.056V14.056V14.056C2.501,15.894 2.501,17.35 2.654,18.489C2.812,19.661 3.144,20.61 3.892,21.359C4.641,22.107 5.589,22.439 6.762,22.597C7.901,22.75 9.357,22.75 11.194,22.75H12.307H12.308H12.308C12.872,22.75 13.4,22.75 13.893,22.746C13.74,22.364 13.705,21.938 13.806,21.525L14.993,16.981C14.373,16.242 14,15.29 14,14.25C14,11.903 15.903,10 18.25,10C19.299,10 20.26,10.38 21.001,11.01V9.944C21.001,8.106 21.001,6.65 20.848,5.511C20.69,4.339 20.358,3.39 19.61,2.641C18.861,1.893 17.912,1.561 16.74,1.403C15.601,1.25 14.145,1.25 12.307,1.25ZM7.003,6C7.003,5.586 7.339,5.25 7.753,5.25H15.753C16.167,5.25 16.503,5.586 16.503,6C16.503,6.414 16.167,6.75 15.753,6.75H7.753C7.339,6.75 7.003,6.414 7.003,6ZM7.003,10C7.003,9.586 7.339,9.25 7.753,9.25H12.253C12.667,9.25 13.003,9.586 13.003,10C13.003,10.414 12.667,10.75 12.253,10.75H7.753C7.339,10.75 7.003,10.414 7.003,10ZM18.25,17.25C19.907,17.25 21.25,15.907 21.25,14.25C21.25,12.593 19.907,11.25 18.25,11.25C16.593,11.25 15.25,12.593 15.25,14.25C15.25,15.907 16.593,17.25 18.25,17.25ZM15.023,21.814L15.928,17.81C16.595,18.246 17.393,18.499 18.249,18.499C19.138,18.499 19.964,18.226 20.646,17.759L21.48,21.833C21.542,22.105 21.448,22.389 21.236,22.57C21.024,22.751 20.729,22.799 20.471,22.696L18.249,21.807L16.028,22.696C15.765,22.801 15.467,22.75 15.254,22.563C15.042,22.377 14.953,22.087 15.023,21.814Z" />
+</vector>

@@ -18,5 +18,6 @@ data class Update(
     var versionInfo: String = "",
     var changeLogs: String = "",
     var download: String = "",
-    var report: String = ""
+    var report: String = "",
+    var privacyPolicy: String = ""
 )
