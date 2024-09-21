@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.StorageReference
 import com.mca.repository.BuildConfig.UPDATE_CHANNEL
 import com.mca.repository.ProfileRepository
@@ -45,12 +46,29 @@ class ProfileRepositoryImpl @Inject constructor(
             DataOrException(loading = true)
 
         try {
+            val token = FirebaseMessaging.getInstance().token.await() // Get FCM token
             userRef.document(currentUserId).get()
                 .addOnSuccessListener { docSnap ->
                     dataOrException.data = docSnap.toObject<User>()
-                    if (dataOrException.data?.username?.isBlank() == true) {
+                    if (dataOrException.data == null) {
+                        // Create tester details if empty
+                        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
                         userRef.document(currentUserId)
-                            .update("username", "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}") // Generate a random username if empty
+                            .set(
+                                User(
+                                    username = "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}",
+                                    name = if (currentUserEmail?.contains("tester") == true) "Tester" else "Code Monk User",
+                                    userId = currentUserId,
+                                    userType = if (currentUserEmail?.contains("tester") == true) "tester" else "student",
+                                    email = currentUserEmail.orEmpty(),
+                                    token = token.orEmpty()
+                                ).convertToMap()
+                            )
+                    }
+                    if (dataOrException.data?.username?.isBlank() == true) {
+                        // Generate a random username if empty
+                        userRef.document(currentUserId)
+                            .update("username", "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}")
                     }
                 }
                 .addOnFailureListener { error ->
