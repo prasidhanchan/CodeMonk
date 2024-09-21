@@ -14,20 +14,29 @@
 package com.mca.repository.impl
 
 import com.google.common.truth.Truth.assertThat
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mca.repository.AuthRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.Mockito.mock
 
 class AuthRepositoryTest {
 
     @Mock
     private lateinit var authRepository: AuthRepository
+    private lateinit var collectionReference: CollectionReference
+    private lateinit var fireStore: FirebaseFirestore
 
     @Before
     fun setUp() {
-        authRepository = AuthRepositoryImpl()
+        fireStore = mock(FirebaseFirestore::class.java)
+        collectionReference = mock(CollectionReference::class.java)
+        Mockito.`when`(fireStore.collection("testing")).thenReturn(collectionReference)
+        authRepository = AuthRepositoryImpl(testRef = collectionReference)
     }
 
     @Test

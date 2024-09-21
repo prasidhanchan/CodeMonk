@@ -108,6 +108,11 @@ internal fun AboutScreen(
                 onClick = { uriHandler.openUri(uiState.update.report) },
                 icon = painterResource(id = R.drawable.report)
             )
+            AboutCard(
+                text = stringResource(id = R.string.privacy_policy),
+                onClick = { uriHandler.openUri(uiState.update.privacyPolicy) },
+                icon = painterResource(id = R.drawable.privacy_policy)
+            )
             Row(
                 modifier = Modifier
                     .padding(vertical = 20.dp)
