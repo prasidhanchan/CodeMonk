@@ -41,7 +41,7 @@ fun NavGraphBuilder.forgotPasswordNavigation(
 
         ForgotPasswordScreen(
             uiState = uiState,
-            onFindAccountClick = { viewModel.forgotPassword(uiState.email) },
+            onFindAccountClick = { viewModel.forgotPassword(uiState.email.trim()) },
             onEmailChange = viewModel::setEmail,
             onBackClick = { navController.popBackStack() }
         )

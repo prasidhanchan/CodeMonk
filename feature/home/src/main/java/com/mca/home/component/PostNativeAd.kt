@@ -243,7 +243,7 @@ private fun MainContent(
                 fonSize = 16,
                 textColor = LinkBlue,
                 color = ExtraLightBlack,
-                onClick = onClick
+                onClick = { }
             )
         }
     }

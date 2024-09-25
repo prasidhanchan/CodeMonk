@@ -53,7 +53,7 @@ fun NavGraphBuilder.loginNavigation(
             onLoginClick = {
                 if (uiState.testers.contains(uiState.email)) {
                     viewModel.login(
-                        email = uiState.email,
+                        email = uiState.email.trim(),
                         password = uiState.password,
                         onSuccess = {
                             navController.navigate(Route.InnerScreen) {

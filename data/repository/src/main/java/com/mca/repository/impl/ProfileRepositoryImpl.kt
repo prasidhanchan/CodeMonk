@@ -78,8 +78,9 @@ class ProfileRepositoryImpl @Inject constructor(
                 .await()
         } catch (e: Exception) {
             dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
         }
-        dataOrException.loading = false
         return dataOrException
     }
 
@@ -194,9 +195,9 @@ class ProfileRepositoryImpl @Inject constructor(
                 ?.addOnFailureListener { error ->
                     if (error is FirebaseAuthException) {
                         when (error.errorCode) {
-                            "ERROR_REQUIRES_RECENT_LOGIN" -> throw Exception("This operation requires a recent login.")
-                            "ERROR_WEAK_PASSWORD" -> throw Exception("Password should be at least 6 characters.")
-                            else -> throw Exception("An unknown error occurred.")
+                            "ERROR_REQUIRES_RECENT_LOGIN" -> onError("This operation requires a recent login.")
+                            "ERROR_WEAK_PASSWORD" -> onError("Password should be at least 6 characters.")
+                            else -> onError("An unknown error occurred.")
                         }
                     }
                 }
@@ -204,12 +205,13 @@ class ProfileRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             if (e is FirebaseAuthException) {
                 when (e.errorCode) {
-                    "ERROR_REQUIRES_RECENT_LOGIN" -> throw Exception("This operation requires a recent login.")
-                    "ERROR_WEAK_PASSWORD" -> throw Exception("Password should be at least 6 characters.")
-                    else -> throw Exception("An unknown error occurred.")
+                    "ERROR_REQUIRES_RECENT_LOGIN" -> onError("This operation requires a recent login.")
+                    "ERROR_WEAK_PASSWORD" -> onError("Password should be at least 6 characters.")
+                    else -> onError("An unknown error occurred.")
                 }
+            } else {
+                e.localizedMessage?.let(onError)
             }
-            e.localizedMessage?.let(onError)
         }
     }
 

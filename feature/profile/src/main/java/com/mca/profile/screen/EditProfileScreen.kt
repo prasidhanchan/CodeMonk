@@ -167,7 +167,10 @@ internal fun EditProfileScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.username),
-                        contentDescription = stringResource(id = R.string.username),
+                        contentDescription = stringResource(
+                            id = R.string.username,
+                            uiState.currentUser.username
+                        ),
                         tint = tintColor
                     )
                 },
@@ -185,7 +188,7 @@ internal fun EditProfileScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.profile),
-                        contentDescription = stringResource(id = R.string.name_placeholder),
+                        contentDescription = stringResource(id = R.string.profile),
                         tint = tintColor
                     )
                 },
@@ -200,7 +203,7 @@ internal fun EditProfileScreen(
                     .padding(vertical = 8.dp),
                 value = uiState.currentUser.bio,
                 onValueChange = onBioChange,
-                placeHolder = stringResource(id = R.string.bio_placeholder),
+                placeHolder = stringResource(id = R.string.add_a_bio_placeholder),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.bio),
@@ -225,7 +228,7 @@ internal fun EditProfileScreen(
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.working_on),
-                            contentDescription = stringResource(id = R.string.current_project_placeholder),
+                            contentDescription = stringResource(id = R.string.working_on),
                             tint = tintColor
                         )
                     },
@@ -249,7 +252,7 @@ internal fun EditProfileScreen(
                     leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.mentor),
-                            contentDescription = stringResource(id = R.string.mentor_username),
+                            contentDescription = stringResource(id = R.string.mentor_placeholder),
                             tint = tintColor
                         )
                     },
@@ -295,7 +298,7 @@ internal fun EditProfileScreen(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.add),
-                            contentDescription = stringResource(id = R.string.add_a_link_placeholder)
+                            contentDescription = stringResource(id = R.string.tap_to_add_a_link)
                         )
                     }
                 },

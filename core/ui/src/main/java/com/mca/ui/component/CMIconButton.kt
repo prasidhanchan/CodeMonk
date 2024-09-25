@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mca.ui.R
@@ -36,12 +35,13 @@ fun CMIconButton(
     link: String,
     icon: Painter,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    contentDescription: String? = null
 ) {
     if (link.isNotBlank()) {
         Icon(
             painter = icon,
-            contentDescription = stringResource(id = R.string.link),
+            contentDescription = contentDescription,
             tint = tintColor,
             modifier = modifier
                 .padding(horizontal = 15.dp)
