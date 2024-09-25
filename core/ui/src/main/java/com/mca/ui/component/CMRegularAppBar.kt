@@ -16,6 +16,7 @@ package com.mca.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -60,7 +61,7 @@ fun CMRegularAppBar(
         when {
             enableBackButton && trailingIcon != null -> BackButton(onClick = onBackClick)
             enableBackButton -> BackButton(onClick = onBackClick)
-            trailingIcon != null -> Unit
+            trailingIcon != null -> Spacer(modifier = Modifier.size(36.dp))
         }
         Text(
             text = text,
@@ -92,7 +93,7 @@ fun CMRegularAppBar(
                 )
             }
 
-            else -> Unit
+            else -> Spacer(modifier = Modifier.size(36.dp))
         }
     }
 }

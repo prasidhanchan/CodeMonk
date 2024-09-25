@@ -39,6 +39,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,6 +103,9 @@ internal fun ViewProfileScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
+                if (uiState.selectedUser.isVerified || uiState.selectedUser.userType == ADMIN) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                }
                 Text(
                     text = uiState.selectedUser.name,
                     style = TextStyle(
@@ -111,9 +115,10 @@ internal fun ViewProfileScreen(
                         color = fontColor
                     ),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center
                 )
-                if (uiState.selectedUser.isVerified || uiState.selectedUser.userType == "Admin") {
+                if (uiState.selectedUser.isVerified || uiState.selectedUser.userType == ADMIN) {
                     Icon(
                         painter = painterResource(id = R.drawable.tick),
                         contentDescription = stringResource(id = R.string.blue_tick),
