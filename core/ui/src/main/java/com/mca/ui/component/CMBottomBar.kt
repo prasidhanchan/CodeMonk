@@ -246,7 +246,7 @@ private fun AddIcon(
 
     Surface(
         modifier = modifier
-            .size(45.dp)
+            .size(50.dp)
             .clickable(
                 indication = null,
                 interactionSource = interactionSource,

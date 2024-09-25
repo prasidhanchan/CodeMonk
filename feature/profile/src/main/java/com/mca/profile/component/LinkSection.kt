@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mca.ui.R
 import com.mca.ui.component.CMIconButton
@@ -53,21 +54,24 @@ internal fun LinkSection(
                 CMIconButton(
                     link = user.linkedInLink,
                     icon = painterResource(id = R.drawable.linkedin),
-                    onClick = { uriHandler.openUri(user.linkedInLink) }
+                    onClick = { uriHandler.openUri(user.linkedInLink) },
+                    contentDescription = stringResource(id = R.string.linkedin)
                 )
             }
             if (user.gitHubLink.isNotBlank()) {
                 CMIconButton(
                     link = user.gitHubLink,
                     icon = painterResource(id = R.drawable.github),
-                    onClick = { uriHandler.openUri(user.gitHubLink) }
+                    onClick = { uriHandler.openUri(user.gitHubLink) },
+                    contentDescription = stringResource(id = R.string.github)
                 )
             }
             if (user.portfolioLink.isNotBlank()) {
                 CMIconButton(
                     link = user.portfolioLink,
                     icon = painterResource(id = R.drawable.more_link),
-                    onClick = { uriHandler.openUri(user.portfolioLink) }
+                    onClick = { uriHandler.openUri(user.portfolioLink) },
+                    contentDescription = stringResource(id = R.string.more_link)
                 )
             }
         }

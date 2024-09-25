@@ -59,8 +59,10 @@
     <string name="username_placeholder">Username</string>
     <string name="name_placeholder">Name</string>
     <string name="bio_placeholder">Bio</string>
+    <string name="add_a_bio_placeholder">Add a Bio</string>
     <string name="current_project_placeholder">Current Project</string>
     <string name="add_a_link_placeholder">Add a link</string>
+    <string name="tap_to_add_a_link">Tap to add a link</string>
     <string name="update">Update</string>
     <string name="tap_to_remove">Tap to remove a link</string>
     <string name="invalid_link">Link should start with http:// or https://</string>
@@ -98,6 +100,7 @@
     <string name="edit_post">Edit Post</string>
     <string name="my_project_id">Project%1$s</string>
     <string name="mentor">Mentor:</string>
+    <string name="mentor_placeholder">Mentor</string>
     <string name="monk_not_found">Monk not found!</string>
     <string name="leaderboard">LeaderBoard</string>
     <string name="notification">Notification</string>

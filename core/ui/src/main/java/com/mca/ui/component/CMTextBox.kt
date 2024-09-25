@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
+import com.mca.ui.theme.tintColor
 
 /**
  * TextBox custom composable for normal text and passwords.
@@ -121,14 +122,19 @@ fun CMTextBox(
                 disabledTextColor = fontColor.copy(alpha = 0.5f),
                 disabledIndicatorColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLeadingIconColor = tintColor.copy(alpha = 0.5f),
+                focusedLeadingIconColor = tintColor,
+                unfocusedLeadingIconColor = if (enabled) tintColor else tintColor.copy(alpha = 0.5f),
+                disabledTrailingIconColor = tintColor.copy(alpha = 0.5f),
+                focusedTrailingIconColor = tintColor,
+                unfocusedTrailingIconColor = if (enabled) tintColor else tintColor.copy(alpha = 0.5f)
             ),
             shape = RoundedCornerShape(10.dp),
             textStyle = TextStyle(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
-                fontFamily = dosis,
-                color = fontColor
+                fontFamily = dosis
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType,
@@ -147,6 +153,7 @@ private fun CMTextBoxPreview() {
     CMTextBox(
         value = "Hello",
         onValueChange = { },
-        placeHolder = "Email"
+        placeHolder = "Email",
+        enabled = false
     )
 }

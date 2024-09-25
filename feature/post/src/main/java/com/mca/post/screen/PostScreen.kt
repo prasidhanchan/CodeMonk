@@ -68,7 +68,6 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
-import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
 import kotlinx.coroutines.launch
 
@@ -78,6 +77,7 @@ internal fun PostScreen(
     postId: String,
     uiState: UiState,
     userType: String,
+    currentUserId: String,
     onCurrentProjectChange: (String) -> Unit,
     onTeamMemberListChange: (List<String>) -> Unit,
     onTeamMemberChange: (String) -> Unit,
@@ -133,15 +133,15 @@ internal fun PostScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.working_on),
-                        contentDescription = stringResource(id = R.string.current_project_placeholder),
-                        tint = tintColor
+                        contentDescription = stringResource(id = R.string.current_project_placeholder)
                     )
                 },
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text,
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                )
+                ),
+                enabled = uiState.userId == currentUserId
             )
             CMTextBox(
                 value = newMember,
@@ -154,7 +154,6 @@ internal fun PostScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.team),
                         contentDescription = stringResource(id = R.string.team_member),
-                        tint = tintColor
                     )
                 },
                 trailingIcon = {
@@ -171,8 +170,7 @@ internal fun PostScreen(
                                 newMember = ""
                             },
                             interactionSource = interactionSource
-                        ),
-                        tint = tintColor
+                        )
                     )
                 },
                 imeAction = ImeAction.Next,
@@ -180,7 +178,8 @@ internal fun PostScreen(
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 ),
-                capitalization = KeyboardCapitalization.None
+                capitalization = KeyboardCapitalization.None,
+                enabled = uiState.userId == currentUserId
             )
             SearchedTags(
                 tags = uiState.tags,
@@ -203,6 +202,7 @@ internal fun PostScreen(
                 teamMembers.forEach { member ->
                     TeamMemberChip(
                         member = member,
+                        isMyPost = uiState.userId == currentUserId,
                         onRemove = { oldMember ->
                             teamMembers.remove(oldMember)
                             onTeamMemberListChange(teamMembers.toList())
@@ -217,8 +217,7 @@ internal fun PostScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.title),
-                        contentDescription = stringResource(id = R.string.description),
-                        tint = tintColor
+                        contentDescription = stringResource(id = R.string.description)
                     )
                 },
                 imeAction = if (userType == ADMIN) ImeAction.Next else ImeAction.Done,
@@ -236,7 +235,8 @@ internal fun PostScreen(
                 singleLine = false,
                 maxLines = Int.MAX_VALUE,
                 capitalization = KeyboardCapitalization.None,
-                headerTitle = stringResource(id = R.string.description)
+                headerTitle = stringResource(id = R.string.description),
+                enabled = uiState.userId == currentUserId
             )
             CMTextBox(
                 value = uiState.projectProgress,
@@ -245,15 +245,13 @@ internal fun PostScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.progress),
-                        contentDescription = stringResource(id = R.string.progress),
-                        tint = if (userType == ADMIN) tintColor else tintColor.copy(alpha = 0.5f)
+                        contentDescription = stringResource(id = R.string.progress)
                     )
                 },
                 trailingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.percent),
-                        contentDescription = stringResource(id = R.string.percent),
-                        tint = if (userType == "Admin") tintColor else tintColor.copy(alpha = 0.5f)
+                        contentDescription = stringResource(id = R.string.percent)
                     )
                 },
                 imeAction = ImeAction.Next,
@@ -268,8 +266,7 @@ internal fun PostScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.deadline),
-                        contentDescription = stringResource(id = R.string.deadline_placeholder),
-                        tint = if (userType == ADMIN) tintColor else tintColor.copy(alpha = 0.5f)
+                        contentDescription = stringResource(id = R.string.deadline_placeholder)
                     )
                 },
                 imeAction = ImeAction.Done,
@@ -303,6 +300,7 @@ internal fun PostScreen(
 @Composable
 private fun TeamMemberChip(
     member: String,
+    isMyPost: Boolean,
     modifier: Modifier = Modifier,
     onRemove: (String) -> Unit
 ) {
@@ -334,7 +332,7 @@ private fun TeamMemberChip(
                 ),
                 modifier = Modifier.padding(bottom = 4.dp, end = 5.dp)
             )
-            if (member != stringResource(id = R.string.me)) {
+            if (member != stringResource(id = R.string.me) && isMyPost) {
                 Icon(
                     painter = painterResource(id = R.drawable.remove),
                     contentDescription = stringResource(id = R.string.remove_member),
@@ -357,6 +355,7 @@ private fun PostScreenPreview() {
         postId = "",
         uiState = UiState(),
         userType = "student",
+        currentUserId = "",
         onCurrentProjectChange = { },
         onTeamMemberListChange = { },
         onTeamMemberChange = { },

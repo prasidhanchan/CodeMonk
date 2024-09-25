@@ -86,6 +86,7 @@ fun NavGraphBuilder.postNavigation(
             postId = postId,
             uiState = uiState,
             userType = userType,
+            currentUserId = currentUser?.uid!!,
             onCurrentProjectChange = viewModel::setCurrentProject,
             onTeamMemberListChange = viewModel::setTeamMembers,
             onTeamMemberChange = { member ->
@@ -101,7 +102,7 @@ fun NavGraphBuilder.postNavigation(
                 viewModel.upsertPost(
                     post = post,
                     onSuccess = {
-                        sendPostNotification()
+                        if (postId.isBlank()) sendPostNotification() // Only send notification if its a new post
                         navHostController.popBackStack()
                     },
                 )

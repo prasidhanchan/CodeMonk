@@ -111,7 +111,8 @@ fun ChangePasswordScreen(
                     localKeyboard?.hide()
                     onChangePasswordClick()
                 },
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.padding(vertical = 20.dp),
+                loading = uiState.loading
             )
             Text(
                 text = stringResource(id = R.string.recent_login_note),

@@ -137,30 +137,32 @@ internal fun ViewProfileScreen(
             )
             Spacer(modifier = Modifier.height(10.dp))
             LinkSection(user = uiState.selectedUser)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = if (uiState.selectedUser.currentProject.isNotBlank()) {
-                    buildAnnotatedString {
-                        append(stringResource(id = R.string.currently_working_on))
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = LinkBlue
-                            )
-                        ) {
-                            append(uiState.selectedUser.currentProject)
+            if (uiState.selectedUser.userType != ADMIN) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = if (uiState.selectedUser.currentProject.isNotBlank()) {
+                        buildAnnotatedString {
+                            append(stringResource(id = R.string.currently_working_on))
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = LinkBlue
+                                )
+                            ) {
+                                append(uiState.selectedUser.currentProject)
+                            }
                         }
-                    }
-                } else {
-                    buildAnnotatedString {
-                        append(stringResource(id = R.string.not_working_on_project))
-                    }
-                },
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            )
+                    } else {
+                        buildAnnotatedString {
+                            append(stringResource(id = R.string.not_working_on_project))
+                        }
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                )
+            }
             if (uiState.selectedUser.mentorFor.isNotBlank()) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
