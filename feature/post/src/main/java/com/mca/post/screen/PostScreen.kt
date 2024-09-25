@@ -141,7 +141,7 @@ internal fun PostScreen(
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 ),
-                enabled = uiState.userId == currentUserId
+                enabled = if (postId.isBlank()) true else uiState.userId == currentUserId
             )
             CMTextBox(
                 value = newMember,
@@ -179,7 +179,7 @@ internal fun PostScreen(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 ),
                 capitalization = KeyboardCapitalization.None,
-                enabled = uiState.userId == currentUserId
+                enabled = if (postId.isBlank()) true else uiState.userId == currentUserId
             )
             SearchedTags(
                 tags = uiState.tags,
@@ -236,7 +236,7 @@ internal fun PostScreen(
                 maxLines = Int.MAX_VALUE,
                 capitalization = KeyboardCapitalization.None,
                 headerTitle = stringResource(id = R.string.description),
-                enabled = uiState.userId == currentUserId
+                enabled = if (postId.isBlank()) true else uiState.userId == currentUserId
             )
             CMTextBox(
                 value = uiState.projectProgress,
