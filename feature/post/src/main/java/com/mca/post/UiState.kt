@@ -16,6 +16,7 @@ package com.mca.post
 import com.mca.util.model.Tag
 
 data class UiState(
+    var userId: String = "",
     var currentProject: String = "",
     var teamMembers: List<String> = emptyList(),
     var tags: List<Tag>? = null,
