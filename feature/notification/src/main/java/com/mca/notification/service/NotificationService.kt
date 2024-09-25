@@ -15,10 +15,13 @@ package com.mca.notification.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -47,6 +50,12 @@ class NotificationService : FirebaseMessagingService() {
         notificationChannel.importance = NotificationManager.IMPORTANCE_HIGH
         notificationChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
 
+        val intent = Intent(this, Class.forName("com.mca.codemonk.MainActivity"))
+        val pendingIntent = TaskStackBuilder.create(this).run {
+            addNextIntent(intent)
+            getPendingIntent(0, PendingIntent.FLAG_MUTABLE)
+        }
+
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (message.data["user_id"] != currentUser?.uid) { // notifications not shown for current user
             val notification = NotificationCompat.Builder(this, message.notification?.channelId ?: "")
@@ -57,6 +66,7 @@ class NotificationService : FirebaseMessagingService() {
                 .setSmallIcon(R.drawable.notification)
                 .setColor(Color.White.toArgb())
                 .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
                 .build()
 
             val id = message.data["id"]?.substringAfter("-")?.toInt()

@@ -95,7 +95,7 @@ internal fun AboutScreen(
             )
             AboutCard(
                 text = stringResource(id = R.string.whats_new),
-                onClick = { uriHandler.openUri(uiState.update.changeLogs) },
+                onClick = { uriHandler.openUri(uiState.update.changelogs) },
                 icon = painterResource(id = R.drawable.whats_new)
             )
             AboutCard(

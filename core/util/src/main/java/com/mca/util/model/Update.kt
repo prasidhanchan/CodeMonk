@@ -16,7 +16,7 @@ package com.mca.util.model
 data class Update(
     var latestVersion: String = "",
     var versionInfo: String = "",
-    var changeLogs: String = "",
+    var changelogs: String = "",
     var download: String = "",
     var report: String = "",
     var privacyPolicy: String = ""
