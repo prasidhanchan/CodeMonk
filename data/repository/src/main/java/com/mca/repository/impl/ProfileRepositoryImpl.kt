@@ -25,6 +25,7 @@ import com.mca.repository.ProfileRepository
 import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.Constant.USERNAME_REGEX
 import com.mca.util.constant.convertToMap
+import com.mca.util.constant.isLocalUri
 import com.mca.util.constant.matchUsername
 import com.mca.util.model.Tag
 import com.mca.util.model.Update
@@ -123,11 +124,12 @@ class ProfileRepositoryImpl @Inject constructor(
         onError: (String) -> Unit
     ) {
         try {
-            if (user.profileImage.isNotEmpty()) {
+            if (user.profileImage.isLocalUri()) {
                 val taskSnap = userStorage.child("${user.userId}.jpg")
                     .putFile(user.profileImage.toUri())
                     .addOnFailureListener { error ->
                         error.localizedMessage?.let(onError)
+
                     }
                     .await()
 
