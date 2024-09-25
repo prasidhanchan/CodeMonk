@@ -19,8 +19,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -36,8 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mca.ui.R
 import com.mca.notification.UiState
+import com.mca.ui.R
 import com.mca.ui.component.CMButton
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
@@ -62,7 +65,9 @@ internal fun SendNotificationScreen(
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .fillMaxSize(),
+                .imePadding()
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -87,19 +92,14 @@ internal fun SendNotificationScreen(
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 ),
+                singleLine = false,
+                maxLines = 4,
                 enableHeader = false
             )
             CMTextBox(
                 value = uiState.message,
                 onValueChange = onMessageChange,
                 placeHolder = stringResource(id = R.string.body),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.body),
-                        contentDescription = stringResource(id = R.string.body),
-                        tint = tintColor
-                    )
-                },
                 imeAction = ImeAction.Send,
                 keyboardActions = KeyboardActions(
                     onSend = {
@@ -112,8 +112,8 @@ internal fun SendNotificationScreen(
                     }
                 ),
                 singleLine = false,
-                maxLines = Int.MAX_VALUE,
-                enableHeader = false
+                maxLines = 20,
+                enableHeader = true
             )
             Spacer(modifier = Modifier.height(20.dp))
             CMButton(
@@ -127,6 +127,7 @@ internal fun SendNotificationScreen(
                     onSendClick()
                 }
             )
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

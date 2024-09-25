@@ -112,6 +112,7 @@ fun ChangePasswordScreen(
                     onChangePasswordClick()
                 },
                 modifier = Modifier.padding(vertical = 20.dp),
+                enabled = !uiState.loading,
                 loading = uiState.loading
             )
             Text(

@@ -308,3 +308,19 @@ fun loadNativeAds(
  * Function to check if the string is a local or firebase uri.
  */
 fun String.isLocalUri(): Boolean = !contains("https://firebasestorage.googleapis.com/")
+
+/**
+ * Function to trim all the whitespaces from [User].
+ */
+fun User.trimAll(): User {
+    return copy(
+        username = username.trim(),
+        name = name.trim(),
+        bio = bio.trim(),
+        currentProject = currentProject.trim(),
+        gitHubLink = gitHubLink.trim(),
+        linkedInLink = linkedInLink.trim(),
+        portfolioLink = portfolioLink.trim(),
+        mentor = mentor.trim(),
+    )
+}
