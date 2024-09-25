@@ -27,6 +27,7 @@ import com.mca.util.constant.Constant.USERNAME_REGEX
 import com.mca.util.constant.convertToMap
 import com.mca.util.constant.isLocalUri
 import com.mca.util.constant.matchUsername
+import com.mca.util.constant.trimAll
 import com.mca.util.model.Tag
 import com.mca.util.model.Update
 import com.mca.util.model.User
@@ -104,7 +105,8 @@ class ProfileRepositoryImpl @Inject constructor(
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
                 user.mentor.isEmpty() && user.userType != ADMIN -> throw Exception("Please add a mentor.")
                 else -> {
-                    userRef.document(user.userId).update(user.convertToMap())
+                    userRef.document(user.userId)
+                        .update(user.trimAll().convertToMap())
                         .addOnSuccessListener {
                             onSuccess()
                         }

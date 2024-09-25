@@ -98,7 +98,7 @@ internal fun ForgotPasswordScreen(
                     }
                 ),
                 capitalization = KeyboardCapitalization.None,
-                enableHeader = false,
+                enableHeader = false
             )
             CMButton(
                 text = stringResource(id = R.string.find_account),
