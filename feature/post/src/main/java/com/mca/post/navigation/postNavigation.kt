@@ -70,7 +70,7 @@ fun NavGraphBuilder.postNavigation(
         }
 
         val post = Post(
-            userId = currentUser?.uid!!,
+            userId = uiState.userId.ifEmpty { currentUser?.uid!! },
             currentProject = uiState.currentProject.trim(),
             description = uiState.description.trim(),
             projectId = projectId,

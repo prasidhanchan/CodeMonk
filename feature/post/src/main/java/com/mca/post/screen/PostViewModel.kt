@@ -76,6 +76,7 @@ class PostViewModel @Inject constructor(
                         if (result.data != null && result.exception == null && !result.loading!!) {
                             uiState.update {
                                 it.copy(
+                                    userId = result.data?.userId!!,
                                     currentProject = result.data?.currentProject!!,
                                     teamMembers = result.data?.teamMembers!!,
                                     description = result.data?.description!!,
