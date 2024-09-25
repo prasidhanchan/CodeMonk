@@ -202,7 +202,7 @@ internal fun PostScreen(
                 teamMembers.forEach { member ->
                     TeamMemberChip(
                         member = member,
-                        isMyPost = uiState.userId == currentUserId,
+                        isMyPost = if (postId.isBlank()) true else uiState.userId == currentUserId,
                         onRemove = { oldMember ->
                             teamMembers.remove(oldMember)
                             onTeamMemberListChange(teamMembers.toList())

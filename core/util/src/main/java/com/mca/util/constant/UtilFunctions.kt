@@ -299,8 +299,12 @@ fun loadNativeAds(
             onAdLoaded(null)
         }
     })
-        .withNativeAdOptions(NativeAdOptions.Builder().build())
+        .withNativeAdOptions(
+            NativeAdOptions.Builder()
+                .setAdChoicesPlacement(2)
+                .build())
         .build()
+
     adLoader.loadAds(AdRequest.Builder().build(), maxAds)
 }
 

@@ -152,9 +152,8 @@ fun NavGraphBuilder.innerScreen(
             bottomBar = {
                 CMBottomBar(
                     visible = showBottomBar,
-                    isNewNotification = if (uiStateNotify.notifications.isNotEmpty())
-                        uiStateNotify.notifications[0].timeStamp > uiStateProfile.currentUser.lastSeen
-                    else false,
+                    isNewNotification = if (uiStateNotify.notifications.isEmpty()) false
+                    else uiStateNotify.notifications[0].timeStamp > uiStateProfile.currentUser.lastSeen,
                     navHostController = navHostController
                 )
             },
@@ -178,7 +177,10 @@ fun NavGraphBuilder.innerScreen(
                                 message = MessageToToken(
                                     token = token,
                                     notification = Notification(
-                                        title = context.getString(R.string.liked, uiStateProfile.currentUser.name),
+                                        title = context.getString(
+                                            R.string.liked,
+                                            uiStateProfile.currentUser.name
+                                        ),
                                         body = context.getString(
                                             R.string.new_like_body,
                                             uiStateProfile.currentUser.username
