@@ -16,7 +16,6 @@ package com.mca.util.constant
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.navigation.NavBackStackEntry
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -24,8 +23,8 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
-import com.mca.util.model.Post
 import com.mca.util.model.NotificationData
+import com.mca.util.model.Post
 import com.mca.util.model.PushNotificationTopic
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
@@ -298,10 +297,14 @@ fun loadNativeAds(
         override fun onAdFailedToLoad(loadAdError: LoadAdError) {
             super.onAdFailedToLoad(loadAdError)
             onAdLoaded(null)
-            Log.d("ADDDDAD", "innerScreen: ${loadAdError.message}")
         }
     })
         .withNativeAdOptions(NativeAdOptions.Builder().build())
         .build()
     adLoader.loadAds(AdRequest.Builder().build(), maxAds)
 }
+
+/**
+ * Function to check if the string is a local or firebase uri.
+ */
+fun String.isLocalUri(): Boolean = !contains("https://firebasestorage.googleapis.com/")
