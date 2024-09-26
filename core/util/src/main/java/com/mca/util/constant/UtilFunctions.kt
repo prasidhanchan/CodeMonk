@@ -147,7 +147,7 @@ fun Int.toLikes(): String {
 fun String.getLinkDetail(): LinkType {
     return when {
         this.matches(Regex("(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9_-]+/?")) -> LinkType.GITHUB
-        this.matches(Regex("(?:https?://)?(?:www\\.)?linkedin\\.com/in/[A-Za-z0-9_-]+/?")) -> LinkType.LINKEDIN
+        this.matches(Regex("(?:https?://)?(?:www\\.)?(?:linkedin\\.com/in|linked\\.in)/[A-Za-z0-9_-]+/?")) -> LinkType.LINKEDIN
         else -> LinkType.MORE
     }
 }
@@ -305,7 +305,8 @@ fun loadNativeAds(
         .withNativeAdOptions(
             NativeAdOptions.Builder()
                 .setAdChoicesPlacement(adChoicesPlacement)
-                .build())
+                .build()
+        )
         .build()
 
     adLoader.loadAds(AdRequest.Builder().build(), maxAds)
@@ -314,7 +315,8 @@ fun loadNativeAds(
 /**
  * Function to check if the string is a local or firebase uri and is not blank.
  */
-fun String.isLocalUriAndNotBlank(): Boolean = !contains("https://firebasestorage.googleapis.com/") && isNotBlank()
+fun String.isLocalUriAndNotBlank(): Boolean =
+    !contains("https://firebasestorage.googleapis.com/") && isNotBlank()
 
 /**
  * Function to trim all the whitespaces from [User].
