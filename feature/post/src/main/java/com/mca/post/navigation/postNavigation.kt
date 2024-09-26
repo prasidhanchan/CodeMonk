@@ -78,7 +78,7 @@ fun NavGraphBuilder.postNavigation(
             projectProgress = uiState.projectProgress.toIntOrNull() ?: 0,
             deadline = uiState.deadline.trim(),
             likes = uiState.likes,
-            timeStamp = if (currentUser?.uid == uiState.userId) System.currentTimeMillis() else uiState.timestamp,
+            timeStamp = if (uiState.timestamp == 0L) System.currentTimeMillis() else uiState.timestamp,
             token = token
         )
 
