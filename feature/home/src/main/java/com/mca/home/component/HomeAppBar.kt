@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -67,7 +68,8 @@ internal fun HomeAppBar(
                 .clip(CircleShape)
                 .size(35.dp)
                 .background(LightBlack)
-                .clickable(onClick = onProfileClick)
+                .clickable(onClick = onProfileClick),
+            contentScale = ContentScale.Crop
         )
         Row(
             modifier = modifier
