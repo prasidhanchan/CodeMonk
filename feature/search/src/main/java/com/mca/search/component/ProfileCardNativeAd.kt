@@ -89,7 +89,7 @@ private fun SearchAd(
 ) {
     Surface(
         modifier = modifier
-            .padding(vertical = 5.dp)
+            .padding(bottom = 5.dp)
             .fillMaxWidth()
             .wrapContentHeight(Alignment.CenterVertically)
             .clickable(

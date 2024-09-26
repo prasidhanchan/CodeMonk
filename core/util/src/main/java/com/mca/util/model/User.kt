@@ -13,30 +13,28 @@
 
 package com.mca.util.model
 
-import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 
-@Stable
 @Serializable
 data class User(
-    val username: String = "",
-    val name: String = "",
-    val userId: String = "",
-    val token: String = "",
-    val bio: String = "",
-    val profileImage: String = "",
-    val email: String = "",
-    val lastSeen: Long = 0L,
-    val currentProject: String = "",
-    val currentProjectProgress: Int = 0,
-    val gitHubLink: String = "",
-    val linkedInLink: String = "",
-    val portfolioLink: String = "",
-    val xp: Int = 0,
-    val attendance: Int = 0,
-    val semester: String = "1",
-    val isVerified: Boolean = false,
-    val userType: String = "",
-    val mentor: String = "",
-    val mentorFor: String = ""
+    var username: String = "",
+    var name: String = "",
+    var userId: String = "",
+    var token: String = "",
+    var bio: String = "",
+    var profileImage: String = "",
+    var email: String = "",
+    var lastSeen: Long = 0L,
+    var currentProject: String = "",
+    var currentProjectProgress: Int = 0,
+    var gitHubLink: String = "",
+    var linkedInLink: String = "",
+    var portfolioLink: String = "",
+    var xp: Int = 0,
+    var attendance: Int = 0,
+    var semester: String = "1",
+    var isVerified: Boolean = false,
+    var userType: String = "",
+    var mentor: String = "",
+    var mentorFor: String = ""
 )

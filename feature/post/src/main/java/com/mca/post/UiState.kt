@@ -25,6 +25,7 @@ data class UiState(
     var deadline: String = "",
     var likes: List<String> = emptyList(),
     var projectId: String = "",
+    var timestamp: Long = 0L,
     var loading: Boolean = false,
     var updating: Boolean = false
 )

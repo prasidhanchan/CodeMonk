@@ -25,4 +25,3 @@ data class Post(
     var timeStamp: Long = 0L,
     var token: String = ""
 )
-

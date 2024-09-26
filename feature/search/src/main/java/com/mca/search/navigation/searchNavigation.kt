@@ -62,7 +62,8 @@ fun NavGraphBuilder.searchNavigation(
                 onAdLoaded = { ad ->
                     nativeAds.add(ad)
                 },
-                maxAds = MAX_SEARCH_ADS
+                maxAds = MAX_SEARCH_ADS,
+                adChoicesPlacement = 1
             )
         }
 

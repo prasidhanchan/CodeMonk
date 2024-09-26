@@ -25,7 +25,7 @@ import com.mca.repository.ProfileRepository
 import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.Constant.USERNAME_REGEX
 import com.mca.util.constant.convertToMap
-import com.mca.util.constant.isLocalUri
+import com.mca.util.constant.isLocalUriAndNotBlank
 import com.mca.util.constant.matchUsername
 import com.mca.util.constant.trimAll
 import com.mca.util.model.Tag
@@ -64,7 +64,9 @@ class ProfileRepositoryImpl @Inject constructor(
                                     userType = if (currentUserEmail?.contains("tester") == true) "tester" else "student",
                                     email = currentUserEmail.orEmpty(),
                                     token = token.orEmpty()
-                                ).convertToMap()
+                                )
+                                    .trimAll()
+                                    .convertToMap()
                             )
                     }
                     if (dataOrException.data?.username?.isBlank() == true) {
@@ -127,7 +129,7 @@ class ProfileRepositoryImpl @Inject constructor(
         onError: (String) -> Unit
     ) {
         try {
-            if (user.profileImage.isLocalUri()) {
+            if (user.profileImage.isLocalUriAndNotBlank()) {
                 val taskSnap = userStorage.child("${user.userId}.jpg")
                     .putFile(user.profileImage.toUri())
                     .addOnFailureListener { error ->

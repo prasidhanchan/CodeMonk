@@ -159,6 +159,7 @@ fun User.convertToMap(): HashMap<String, Any> {
     return hashMapOf(
         "username" to username,
         "name" to name,
+        "userId" to userId,
         "token" to token,
         "bio" to bio,
         "profileImage" to profileImage,
@@ -277,13 +278,15 @@ fun PushNotificationTopic.toNotification(): HashMap<String, Any> {
  * @param isLoading Indicator if the ad is being loaded.
  * @param onAdLoaded The lambda triggered when the ads are loaded.
  * @param maxAds The max number of ads that are to be loaded. Can only load max 5 ads
+ * @param adChoicesPlacement The placement of the ad choices icon.
  */
 fun loadNativeAds(
     context: Context,
     adUnitId: String,
     isLoading: (Boolean) -> Unit = { },
     onAdLoaded: (NativeAd?) -> Unit,
-    maxAds: Int = 5
+    maxAds: Int = 5,
+    adChoicesPlacement: Int = 2
 ) {
     lateinit var adLoader: AdLoader
 
@@ -301,7 +304,7 @@ fun loadNativeAds(
     })
         .withNativeAdOptions(
             NativeAdOptions.Builder()
-                .setAdChoicesPlacement(2)
+                .setAdChoicesPlacement(adChoicesPlacement)
                 .build())
         .build()
 
@@ -309,9 +312,9 @@ fun loadNativeAds(
 }
 
 /**
- * Function to check if the string is a local or firebase uri.
+ * Function to check if the string is a local or firebase uri and is not blank.
  */
-fun String.isLocalUri(): Boolean = !contains("https://firebasestorage.googleapis.com/")
+fun String.isLocalUriAndNotBlank(): Boolean = !contains("https://firebasestorage.googleapis.com/") && isNotBlank()
 
 /**
  * Function to trim all the whitespaces from [User].

@@ -83,6 +83,7 @@ class PostViewModel @Inject constructor(
                                     projectProgress = result.data?.projectProgress.toString(),
                                     deadline = result.data?.deadline!!,
                                     projectId = result.data?.projectId!!,
+                                    timestamp = result.data?.timeStamp!!,
                                     loading = result.loading!!
                                 )
                             }
