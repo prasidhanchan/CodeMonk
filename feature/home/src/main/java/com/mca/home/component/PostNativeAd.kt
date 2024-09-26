@@ -142,7 +142,8 @@ private fun PostAdTopBar(
                 .padding(end = 8.dp)
                 .clip(CircleShape)
                 .background(LightBlack)
-                .size(30.dp)
+                .size(30.dp),
+            contentScale = ContentScale.Crop
         )
         Text(
             text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
