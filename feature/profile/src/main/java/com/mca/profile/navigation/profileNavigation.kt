@@ -16,6 +16,7 @@ package com.mca.profile.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -39,6 +40,10 @@ fun NavGraphBuilder.profileNavigation(
         }
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        LaunchedEffect(key1 = uiState.currentUser) {
+            if (uiState.currentUser.userId.isBlank()) viewModel.getUser()
+        }
 
         ProfileScreen(
             uiState = uiState,

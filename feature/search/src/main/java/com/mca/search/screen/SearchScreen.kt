@@ -116,6 +116,7 @@ internal fun SearchScreen(
                     ) { index, user ->
                         CMProfileCard(
                             user = user,
+                            modifier= Modifier.padding(bottom = 5.dp),
                             delay = index * 100,
                             onClick = onProfileClick
                         )

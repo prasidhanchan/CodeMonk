@@ -97,8 +97,8 @@ fun NavGraphBuilder.innerScreen(
 
         val context = LocalContext.current
         // Load user data when the app starts
-        LaunchedEffect(key1 = uiStateProfile.currentUser) {
-            if (uiStateProfile.currentUser.username.isEmpty()) viewModelProfile.getUser()
+        LaunchedEffect(key1 = uiStateProfile.currentUser.userId) {
+            if (uiStateProfile.currentUser.userId.isEmpty()) viewModelProfile.getUser()
 
             // Subscribe to topics
             FirebaseMessaging.getInstance().apply {
@@ -152,7 +152,7 @@ fun NavGraphBuilder.innerScreen(
             bottomBar = {
                 CMBottomBar(
                     visible = showBottomBar,
-                    isNewNotification = if (uiStateNotify.notifications.isEmpty()) false
+                    isNewNotification = if (uiStateNotify.notifications.isEmpty() || uiStateProfile.currentUser.lastSeen == 0L) false
                     else uiStateNotify.notifications[0].timeStamp > uiStateProfile.currentUser.lastSeen,
                     navHostController = navHostController
                 )

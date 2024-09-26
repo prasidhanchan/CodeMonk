@@ -93,7 +93,7 @@ fun CMProfileCard(
                 color = ExtraLightBlack,
                 content = {
                     AsyncImage(
-                        model = user.profileImage,
+                        model = user.profileImage.ifEmpty { R.drawable.user },
                         contentDescription = user.username,
                         modifier = Modifier.fillMaxSize()
                     )

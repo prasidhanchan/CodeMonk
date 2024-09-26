@@ -70,7 +70,7 @@ fun NavGraphBuilder.postNavigation(
         }
 
         val post = Post(
-            userId = uiState.userId.ifEmpty { currentUser?.uid!! },
+            userId = uiState.userId.ifEmpty { currentUser?.uid!! }, // Empty if its a new post
             currentProject = uiState.currentProject.trim(),
             description = uiState.description.trim(),
             projectId = projectId,
@@ -78,7 +78,7 @@ fun NavGraphBuilder.postNavigation(
             projectProgress = uiState.projectProgress.toIntOrNull() ?: 0,
             deadline = uiState.deadline.trim(),
             likes = uiState.likes,
-            timeStamp = System.currentTimeMillis(),
+            timeStamp = if (currentUser?.uid == uiState.userId) System.currentTimeMillis() else uiState.timestamp,
             token = token
         )
 
