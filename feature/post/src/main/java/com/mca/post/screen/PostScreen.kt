@@ -234,7 +234,7 @@ internal fun PostScreen(
                 ),
                 singleLine = false,
                 maxLines = Int.MAX_VALUE,
-                capitalization = KeyboardCapitalization.None,
+                capitalization = KeyboardCapitalization.Sentences,
                 headerTitle = stringResource(id = R.string.description),
                 enabled = if (postId.isBlank()) true else uiState.userId == currentUserId
             )
