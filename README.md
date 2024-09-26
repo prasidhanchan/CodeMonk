@@ -1,7 +1,7 @@
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/bee5a2a8-7e42-4675-9ace-30b564bc3663" width="160" height="160" align="center" />
-  
+<img src="https://github.com/user-attachments/assets/9272360e-be0f-4005-9c0c-b5897ee6a100" width="160" height="160" align="center" />
+
 # Code Monk
 
 </div>
@@ -15,6 +15,18 @@
 - **Notifications**: Receive real-time updates and notifications relevant to the club activities.
 - **Profile Section**: Manage your profile, update your bio, and add links to your GitHub, LinkedIn, and portfolio websites.
 - **XP and Attendance**: View your experience points (XP) earned from project completions and track your attendance percentage.
+
+## Screenshots
+<div align="center">
+<div>
+  <img src="https://github.com/user-attachments/assets/94ac129d-e835-437f-8ac9-5f2d104de961" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/aee576c6-1865-4a08-8166-a5f7a8904db5" width="30%"/>
+  <div>
+  <img src="https://github.com/user-attachments/assets/210384aa-6d74-412c-9d91-1f0be112327c" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/df4192a8-a0a0-4bc0-a27d-e971e699cc91" width="30%"/>
+  </div>
+</div>
+</div>
 
 ## Contributing, Issues, Feature Requests
 
