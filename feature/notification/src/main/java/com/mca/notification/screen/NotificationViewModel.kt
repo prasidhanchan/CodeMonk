@@ -70,7 +70,7 @@ class NotificationViewModel @Inject constructor(
     fun sendNotificationToTopic(
         pushNotification: PushNotificationTopic,
         accessToken: String,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit = { }
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             notificationRepository.sendNotification(
@@ -93,7 +93,7 @@ class NotificationViewModel @Inject constructor(
     fun sendNotificationToToken(
         pushNotification: PushNotificationToken,
         accessToken: String,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit = { }
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             notificationRepository.sendNotification(

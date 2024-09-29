@@ -22,6 +22,5 @@ data class Post(
     var description: String = "",
     var deadline: String = "",
     var likes: List<String> = emptyList(),
-    var timeStamp: Long = 0L,
-    var token: String = ""
+    var timeStamp: Long = 0L
 )

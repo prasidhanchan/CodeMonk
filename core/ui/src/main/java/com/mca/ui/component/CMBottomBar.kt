@@ -219,7 +219,7 @@ private fun BottomBarItem(
     ) {
         Icon(
             painter = painterResource(
-                id = if (route == Route.Notification && isNewNotification) route.notificationIcon else route.icon
+                id = if (route == Route.Notification && isNewNotification) route.newNotificationIcon else route.icon
             ),
             contentDescription = route.javaClass.simpleName,
             tint = if (selected) tintColor else Color.Unspecified,

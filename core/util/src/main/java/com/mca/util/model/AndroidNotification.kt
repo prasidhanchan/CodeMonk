@@ -17,5 +17,6 @@ import androidx.compose.runtime.Stable
 
 @Stable
 data class AndroidNotification(
-    val channel_id: String
+    val channel_id: String,
+    val sound: String = "notification"
 )

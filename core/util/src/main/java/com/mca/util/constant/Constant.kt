@@ -34,10 +34,10 @@ object Constant {
     const val EVENT_TOPIC = "Event"
     const val POST_CHANNEL_ID = "PostChannel"
     const val POST_TOPIC = "Post"
-    const val ANNOUNCEMENT_CHANNEL_ID = "Announcement"
-    const val ANNOUNCEMENT_TOPIC = "AnnouncementChannel"
-    const val LIKE_CHANNEL_ID = "Like"
-    const val LIKE_TOPIC = "LikeChannel"
+    const val ANNOUNCEMENT_CHANNEL_ID = "AnnouncementChannel"
+    const val ANNOUNCEMENT_TOPIC = "Announcement"
+    const val LIKE_CHANNEL_ID = "LikeChannel"
+    const val LIKE_TOPIC = "Like"
 
     const val MAX_POST_ADS = 3
     const val MAX_SEARCH_ADS = 2

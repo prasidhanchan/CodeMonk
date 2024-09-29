@@ -18,6 +18,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
+import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
@@ -41,33 +43,47 @@ class NotificationService : FirebaseMessagingService() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        val notificationUri =
+            Uri.parse("android.resource://com.mca.codemonk/raw/${message.notification?.sound}")
         val notificationChannel = NotificationChannel(
             message.notification?.channelId,
             message.data["channel_name"],
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            importance = NotificationManager.IMPORTANCE_HIGH
+            lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
+            setSound(
+                notificationUri,
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build()
+            )
+            enableVibration(true)
+            setVibrationPattern(longArrayOf(0, 200, 100, 200))
+        }
         notificationManager.createNotificationChannel(notificationChannel)
-        notificationChannel.importance = NotificationManager.IMPORTANCE_HIGH
-        notificationChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
 
         val intent = Intent(this, Class.forName("com.mca.codemonk.MainActivity"))
         val pendingIntent = TaskStackBuilder.create(this).run {
-            addNextIntent(intent)
-            getPendingIntent(0, PendingIntent.FLAG_MUTABLE)
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
         }
 
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (message.data["user_id"] != currentUser?.uid) { // notifications not shown for current user
-            val notification = NotificationCompat.Builder(this, message.notification?.channelId ?: "")
-                .setContentTitle(message.notification?.title)
-                .setContentText(message.notification?.body)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setChannelId(message.notification?.channelId ?: "")
-                .setSmallIcon(R.drawable.notification)
-                .setColor(Color.White.toArgb())
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .build()
+            val notification =
+                NotificationCompat.Builder(this, message.notification?.channelId ?: "")
+                    .setContentTitle(message.notification?.title)
+                    .setContentText(message.notification?.body)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setChannelId(message.notification?.channelId ?: "")
+                    .setSmallIcon(R.drawable.notification)
+                    .setColor(Color.White.toArgb())
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setSound(notificationUri)
+                    .setVibrate(longArrayOf(0, 200, 100, 200))
+                    .build()
 
             val id = message.data["id"]?.substringAfter("-")?.toInt()
             notificationManager.notify(id ?: 1, notification)

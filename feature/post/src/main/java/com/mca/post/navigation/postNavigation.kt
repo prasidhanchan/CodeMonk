@@ -38,7 +38,6 @@ import kotlin.random.Random
 
 fun NavGraphBuilder.postNavigation(
     userType: String,
-    token: String,
     navHostController: NavHostController,
     sendPostNotification: () -> Unit
 ) {
@@ -79,7 +78,6 @@ fun NavGraphBuilder.postNavigation(
             deadline = uiState.deadline.trim(),
             likes = uiState.likes,
             timeStamp = if (uiState.timestamp == 0L) System.currentTimeMillis() else uiState.timestamp,
-            token = token
         )
 
         PostScreen(
