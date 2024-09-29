@@ -525,7 +525,6 @@ private fun UsernameChip(
                 Icon(
                     painter = painterResource(id = R.drawable.tick),
                     contentDescription = stringResource(id = R.string.blue_tick),
-                    modifier = Modifier.padding(bottom = 2.dp),
                     tint = LinkBlue
                 )
             }
