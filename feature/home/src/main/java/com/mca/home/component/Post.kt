@@ -182,6 +182,7 @@ private fun PostCard(
         )
         MainContent(
             post = post,
+            user = user,
             mentor = user.mentor,
             currentUserId = currentUserId,
             currentUsername = currentUsername,
@@ -203,6 +204,7 @@ private fun PostCard(
 @Composable
 private fun MainContent(
     post: Post,
+    user: User,
     mentor: String,
     currentUserId: String,
     currentUsername: String,
@@ -344,7 +346,7 @@ private fun MainContent(
                                 } else {
                                     isLiked = true
                                     likes += 1
-                                    onLikeClick(post.toPostId(), post.token)
+                                    onLikeClick(post.toPostId(), user.token)
                                 }
                             }
                         )

@@ -189,8 +189,7 @@ fun Post.convertToMap(): HashMap<String, Any> {
         "description" to description,
         "projectProgress" to projectProgress,
         "deadline" to deadline,
-        "timeStamp" to timeStamp,
-        "token" to token
+        "timeStamp" to timeStamp
     )
 }
 

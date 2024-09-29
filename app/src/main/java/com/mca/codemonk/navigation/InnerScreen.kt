@@ -74,7 +74,7 @@ import kotlin.random.Random
 fun NavGraphBuilder.innerScreen(
     navigateToLogin: () -> Unit
 ) {
-    composable<Route.InnerScreen> {
+    composable<Route.InnerScreen>{
         val viewModelHome: HomeViewModel = hiltViewModel()
         val viewModelProfile: ProfileViewModel = hiltViewModel()
         val viewModelNotification: NotificationViewModel = hiltViewModel()
@@ -161,7 +161,7 @@ fun NavGraphBuilder.innerScreen(
         ) {
             NavHost(
                 navController = navHostController,
-                startDestination = Route.Home
+                startDestination = Route.Home,
             ) {
                 homeNavigation(
                     viewModel = viewModelHome,
@@ -197,8 +197,7 @@ fun NavGraphBuilder.innerScreen(
                                     )
                                 )
                             ),
-                            accessToken = uiStateNotify.accessToken ?: "",
-                            onSuccess = { }
+                            accessToken = uiStateNotify.accessToken ?: ""
                         )
                     },
                     nativeAds = nativeAds
@@ -225,13 +224,11 @@ fun NavGraphBuilder.innerScreen(
                 )
                 postNavigation(
                     userType = uiStateProfile.currentUser.userType,
-                    token = uiStateProfile.currentUser.token,
                     navHostController = navHostController,
                     sendPostNotification = {
                         viewModelNotification.sendNotificationToTopic(
                             pushNotification = pushNotification,
-                            accessToken = uiStateNotify.accessToken ?: "",
-                            onSuccess = { }
+                            accessToken = uiStateNotify.accessToken ?: ""
                         )
                     }
                 )
