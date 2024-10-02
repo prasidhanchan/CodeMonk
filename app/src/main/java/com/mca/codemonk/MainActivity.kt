@@ -20,17 +20,36 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
 import com.google.android.gms.ads.MobileAds
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.InstallStatus
 import com.mca.codemonk.navigation.MainNavigation
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.BottomBarBlack
 import com.mca.ui.theme.CodeMonkTheme
+import com.mca.util.constant.checkUpdates
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val updatedStateListener = InstallStateUpdatedListener { state ->
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            appUpdateManager.completeUpdate()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MobileAds.initialize(this@MainActivity)
+
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        appUpdateManager.registerListener(updatedStateListener)
+        checkUpdates(
+            appUpdateManager = appUpdateManager,
+            activity = this
+        )
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Black.toArgb()),
@@ -41,5 +60,10 @@ class MainActivity : ComponentActivity() {
                 MainNavigation()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        appUpdateManager.unregisterListener(updatedStateListener)
     }
 }

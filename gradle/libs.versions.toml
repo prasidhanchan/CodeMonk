@@ -17,6 +17,7 @@ firebaseBom = "33.3.0"
 firebaseMessaging = "24.0.1"
 googleServices = "4.4.2"
 playServicesAds = "23.3.0"
+appUpdateVersion = "2.1.0"
 retrofit = "2.11.0"
 oauthVersion = "1.19.0"
 coil = "2.6.0"
@@ -45,6 +46,9 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", ve
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 # Admob
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
+# InApp Update
+app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
+app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 # Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
