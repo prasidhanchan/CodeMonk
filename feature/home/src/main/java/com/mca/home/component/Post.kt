@@ -215,8 +215,8 @@ private fun MainContent(
     onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit
 ) {
-    var isLiked by remember(post.likes) { mutableStateOf(post.likes.contains(currentUsername)) }
-    var likes by remember(post.likes) { mutableIntStateOf(post.likes.size) }
+    var isLiked by remember { mutableStateOf(post.likes.contains(currentUsername)) }
+    var likes by remember { mutableIntStateOf(post.likes.size) }
 
     Surface(
         modifier = modifier
