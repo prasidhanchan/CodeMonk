@@ -13,6 +13,7 @@
 
 package com.mca.util.constant
 
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -23,6 +24,10 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.mca.util.model.NotificationData
 import com.mca.util.model.Post
 import com.mca.util.model.PushNotificationTopic
@@ -331,4 +336,30 @@ fun User.trimAll(): User {
         portfolioLink = portfolioLink.trim(),
         mentor = mentor.trim(),
     )
+}
+
+/**
+ * Function to check app updates.
+ * @param appUpdateManager Requires [AppUpdateManager].
+ * @param updateType The type of update to check for.
+ * @param activity Requires an [Activity].
+ */
+fun checkUpdates(
+    appUpdateManager: AppUpdateManager,
+    updateType: Int = AppUpdateType.FLEXIBLE,
+    activity: Activity
+) {
+    appUpdateManager.appUpdateInfo
+        .addOnSuccessListener { info ->
+            val isUpdateAvailable = info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+            val isUpdateAllowed = info.isUpdateTypeAllowed(updateType)
+
+            if (isUpdateAvailable && isUpdateAllowed) {
+                appUpdateManager.startUpdateFlow(
+                    info,
+                    activity,
+                    AppUpdateOptions.defaultOptions(updateType)
+                )
+            }
+        }
 }

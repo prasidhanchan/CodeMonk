@@ -65,6 +65,10 @@ dependencies {
     // Admob
     implementation(libs.play.services.ads)
 
+    // InApp Update
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
+
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.navigation.compose)

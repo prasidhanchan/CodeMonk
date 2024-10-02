@@ -44,6 +44,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -89,6 +94,10 @@ dependencies {
 
     // Admob
     implementation(libs.play.services.ads)
+
+    //InApp Update
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
 
     // Retrofit
     implementation(libs.retrofit)
