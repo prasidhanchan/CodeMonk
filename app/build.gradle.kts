@@ -34,7 +34,7 @@ android {
         applicationId = "com.mca.codemonk"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = 5
+        versionCode = 8
         versionName = "1.0.0"
 
         testInstrumentationRunner = "com.mca.codemonk.HiltRunner"
