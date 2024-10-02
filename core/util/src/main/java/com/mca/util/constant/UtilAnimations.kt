@@ -22,6 +22,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -30,6 +31,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Animated the scale of any composable function.
@@ -37,22 +40,26 @@ import androidx.compose.ui.layout.onGloballyPositioned
  */
 fun Modifier.animatedLike(onClick: () -> Unit) = composed {
     var scale by remember { mutableFloatStateOf(1f) }
+    val scope = rememberCoroutineScope()
     val animatedLike by animateFloatAsState(
         targetValue = scale,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
         ),
-        label = "animatedLike",
-        finishedListener = { scale = 1f }
+        label = "animatedLike"
     )
     scale(animatedLike)
         .clickable(
             indication = null,
             interactionSource = remember(::MutableInteractionSource),
             onClick = {
-                scale = 1.2f
-                onClick()
+                scope.launch {
+                    onClick()
+                    scale = 1.4f
+                    delay(100L)
+                    scale = 1f
+                }
             }
         )
 }
@@ -64,11 +71,11 @@ fun Modifier.animatedLike(onClick: () -> Unit) = composed {
 fun Modifier.animateAlpha(delay: Int) = composed {
     var alpha by rememberSaveable { mutableFloatStateOf(0f) }
     val animatedAlpha by animateFloatAsState(
+        targetValue = alpha,
         animationSpec = tween(
             durationMillis = 800,
             delayMillis = delay
         ),
-        targetValue = alpha,
         label = "animatedNotificationAlpha"
     )
     alpha(animatedAlpha)
