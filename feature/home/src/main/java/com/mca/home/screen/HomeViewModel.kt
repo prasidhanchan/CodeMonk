@@ -66,10 +66,47 @@ class HomeViewModel @Inject constructor(
                                         posts = result.data?.map { post ->
                                             val user = homeRepository.getUserDetail(post.userId)
 
+                                            val likes: MutableList<String> =
+                                                mutableListOf() // Likes list of usernames converted from userIds
+                                            likes.addAll(post.likes)
+                                            val userId1 = likes.getOrNull(0)
+                                            val userId2 = likes.getOrNull(1)
+                                            val usernames = homeRepository.getUsername(
+                                                userId1 = userId1,
+                                                userId2 = userId2
+                                            ).data
+
+                                            // Replace first 2 userIds with usernames
+                                            if (!usernames.isNullOrEmpty()) {
+                                                if (!userId1.isNullOrEmpty()) {
+                                                    likes.replaceAll { id ->
+                                                        id.replace(
+                                                            userId1,
+                                                            usernames.getOrElse(
+                                                                index = 0,
+                                                                defaultValue = { "" }
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                                if (!userId2.isNullOrEmpty()) {
+                                                    likes.replaceAll { id ->
+                                                        id.replace(
+                                                            userId2,
+                                                            usernames.getOrElse(
+                                                                index = 1,
+                                                                defaultValue = { "" }
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            }
+
                                             if (user.data != null && user.exception == null && !user.loading!!) {
-                                                post to user.data!!
+                                                // .apply { likes.toList() } Updated likes list with usernames
+                                                post.apply { this.likes = likes } to user.data!!
                                             } else {
-                                                post to User()
+                                                post to User(username = "cm_user")
                                             }
                                         }.orEmpty(),
                                         loading = false
@@ -108,12 +145,12 @@ class HomeViewModel @Inject constructor(
     fun like(
         postId: String,
         onSuccess: () -> Unit,
-        currentUsername: String
+        currentUserId: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             homeRepository.like(
                 postId = postId,
-                currentUsername = currentUsername,
+                currentUserId = currentUserId,
                 onSuccess = onSuccess,
                 onError = { error ->
                     showSnackBar(
@@ -127,11 +164,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun unLike(postId: String, currentUsername: String) {
+    fun unLike(postId: String, currentUserId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             homeRepository.unLike(
                 postId = postId,
-                currentUsername = currentUsername,
+                currentUserId = currentUserId,
                 onError = { error ->
                     showSnackBar(
                         response = Response(

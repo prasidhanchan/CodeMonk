@@ -59,9 +59,9 @@ fun NavGraphBuilder.postNavigation(
         val postId = backStackEntry.toRoute<Route.Post>().postId
         // If creating a new post, generate a new projectId
         val projectId = if (postId.isBlank()) {
-            stringResource(R.string.my_project_id, Random.nextInt())
+            stringResource(R.string.my_post_id, Random.nextInt(0, Int.MAX_VALUE))
         } else {
-            uiState.projectId
+            uiState.postId
         }
 
         LaunchedEffect(key1 = postId) {
@@ -72,7 +72,7 @@ fun NavGraphBuilder.postNavigation(
             userId = uiState.userId.ifEmpty { currentUser?.uid!! }, // Empty if its a new post
             currentProject = uiState.currentProject.trim(),
             description = uiState.description.trim(),
-            projectId = projectId,
+            postId = projectId,
             teamMembers = uiState.teamMembers,
             projectProgress = uiState.projectProgress.toIntOrNull() ?: 0,
             deadline = uiState.deadline.trim(),

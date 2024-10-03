@@ -102,14 +102,14 @@ fun NavGraphBuilder.homeNavigation(
             onLikeClick = { postId, token ->
                 viewModel.like(
                     postId = postId,
-                    currentUsername = currentUsername,
+                    currentUserId = currentUserId,
                     onSuccess = { sendLikeNotification(token) }
                 )
             },
             onUnlikeClick = { postId ->
                 viewModel.unLike(
                     postId = postId,
-                    currentUsername = currentUsername
+                    currentUserId = currentUserId
                 )
             },
             onDeletedClick = onDeletedClick,

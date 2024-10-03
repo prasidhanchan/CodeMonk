@@ -24,7 +24,7 @@ data class UiState(
     var description: String = "",
     var deadline: String = "",
     var likes: List<String> = emptyList(),
-    var projectId: String = "",
+    var postId: String = "",
     var timestamp: Long = 0L,
     var loading: Boolean = false,
     var updating: Boolean = false

@@ -39,6 +39,7 @@ import com.mca.leaderboard.navigation.leaderBoardNavigation
 import com.mca.notification.navigation.notificationNavigation
 import com.mca.notification.navigation.sendNotificationNavigation
 import com.mca.notification.screen.NotificationViewModel
+import com.mca.post.navigation.announcementNavigation
 import com.mca.post.navigation.postNavigation
 import com.mca.profile.navigation.aboutNavigation
 import com.mca.profile.navigation.changePasswordNavigation
@@ -50,6 +51,7 @@ import com.mca.search.navigation.searchNavigation
 import com.mca.ui.R
 import com.mca.ui.component.CMBottomBar
 import com.mca.ui.theme.Black
+import com.mca.util.constant.Constant.ANNOUNCEMENT_CHANNEL_ID
 import com.mca.util.constant.Constant.ANNOUNCEMENT_TOPIC
 import com.mca.util.constant.Constant.EVENT_TOPIC
 import com.mca.util.constant.Constant.LIKE_CHANNEL_ID
@@ -74,7 +76,7 @@ import kotlin.random.Random
 fun NavGraphBuilder.innerScreen(
     navigateToLogin: () -> Unit
 ) {
-    composable<Route.InnerScreen>{
+    composable<Route.InnerScreen> {
         val viewModelHome: HomeViewModel = hiltViewModel()
         val viewModelProfile: ProfileViewModel = hiltViewModel()
         val viewModelNotification: NotificationViewModel = hiltViewModel()
@@ -123,28 +125,6 @@ fun NavGraphBuilder.innerScreen(
                 maxAds = MAX_POST_ADS
             )
         }
-
-        val pushNotification = PushNotificationTopic(
-            message = MessageToTopic(
-                topic = POST_TOPIC,
-                notification = Notification(
-                    title = context.getString(R.string.new_post),
-                    body = context.getString(
-                        R.string.new_post_body,
-                        uiStateProfile.currentUser.username
-                    )
-                ),
-                data = Data(
-                    id = "$POST_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
-                    channel_name = POST_TOPIC,
-                    time_stamp = System.currentTimeMillis().toString(),
-                    user_id = currentUser?.uid ?: ""
-                ),
-                android = Android(
-                    notification = AndroidNotification(channel_id = POST_CHANNEL_ID)
-                )
-            )
-        )
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -227,7 +207,56 @@ fun NavGraphBuilder.innerScreen(
                     navHostController = navHostController,
                     sendPostNotification = {
                         viewModelNotification.sendNotificationToTopic(
-                            pushNotification = pushNotification,
+                            pushNotification = PushNotificationTopic(
+                                message = MessageToTopic(
+                                    topic = POST_TOPIC,
+                                    notification = Notification(
+                                        title = context.getString(R.string.new_post),
+                                        body = context.getString(
+                                            R.string.new_post_body,
+                                            uiStateProfile.currentUser.username
+                                        )
+                                    ),
+                                    data = Data(
+                                        id = "$POST_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
+                                        channel_name = POST_TOPIC,
+                                        time_stamp = System.currentTimeMillis().toString(),
+                                        user_id = currentUser?.uid ?: ""
+                                    ),
+                                    android = Android(
+                                        notification = AndroidNotification(channel_id = POST_CHANNEL_ID)
+                                    )
+                                )
+                            ),
+                            accessToken = uiStateNotify.accessToken ?: ""
+                        )
+                    }
+                )
+                announcementNavigation(
+                    navHostController = navHostController,
+                    sendNotification = {
+                        viewModelNotification.sendNotificationToTopic(
+                            pushNotification = PushNotificationTopic(
+                                message = MessageToTopic(
+                                    topic = ANNOUNCEMENT_TOPIC,
+                                    notification = Notification(
+                                        title = context.getString(R.string.new_announcement),
+                                        body = context.getString(
+                                            R.string.new_announcement_body,
+                                            uiStateProfile.currentUser.username
+                                        )
+                                    ),
+                                    data = Data(
+                                        id = "$ANNOUNCEMENT_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
+                                        channel_name = ANNOUNCEMENT_TOPIC,
+                                        time_stamp = System.currentTimeMillis().toString(),
+                                        user_id = currentUser?.uid ?: ""
+                                    ),
+                                    android = Android(
+                                        notification = AndroidNotification(channel_id = ANNOUNCEMENT_CHANNEL_ID)
+                                    )
+                                )
+                            ),
                             accessToken = uiStateNotify.accessToken ?: ""
                         )
                     }

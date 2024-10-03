@@ -65,6 +65,31 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun addAnnouncement(
+        post: Post,
+        onSuccess: () -> Unit
+    ) {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            postRepository.addAnnouncement(
+                post = post,
+                onSuccess = {
+                    onSuccess()
+                    uiState.update { it.copy(loading = false) }
+                },
+                onError = { error ->
+                    showSnackBar(
+                        response = Response(
+                            message = error,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                    uiState.update { it.copy(loading = false) }
+                }
+            )
+        }
+    }
+
     fun getPost(postId: String) {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
@@ -82,7 +107,7 @@ class PostViewModel @Inject constructor(
                                     description = result.data?.description!!,
                                     projectProgress = result.data?.projectProgress.toString(),
                                     deadline = result.data?.deadline!!,
-                                    projectId = result.data?.projectId!!,
+                                    postId = result.data?.postId!!,
                                     timestamp = result.data?.timeStamp!!,
                                     loading = result.loading!!
                                 )

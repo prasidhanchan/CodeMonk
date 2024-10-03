@@ -50,7 +50,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -69,12 +68,9 @@ import com.mca.ui.theme.OffWhite
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
-import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.constant.getCurrentRoute
 import com.mca.util.constant.rotateIcon
 import com.mca.util.navigation.Route
-import com.mca.util.warpper.Response
-import com.mca.util.warpper.ResponseType
 
 /**
  * BottomBar composable to display navigation screens.
@@ -103,8 +99,6 @@ fun CMBottomBar(
     LaunchedEffect(key1 = visible) {
         if (!visible) isOpen = false
     }
-
-    val context = LocalContext.current
 
     AnimatedVisibility(
         visible = visible,
@@ -183,12 +177,12 @@ fun CMBottomBar(
                     }
                 },
                 onAnnouncementClick = {
-                    showSnackBar(
-                        response = Response(
-                            message = context.getString(R.string.feature_not_available),
-                            responseType = ResponseType.ERROR
-                        )
-                    )
+                    navHostController.navigate(Route.Announcement) {
+                        popUpTo<Route.Home>()
+                        launchSingleTop = true
+                        restoreState = true
+                        isOpen = false
+                    }
                 }
             )
         }

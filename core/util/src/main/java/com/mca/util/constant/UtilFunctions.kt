@@ -43,6 +43,11 @@ enum class LinkType {
     MORE
 }
 
+enum class PostType {
+    PROJECT,
+    ANNOUNCEMENT
+}
+
 /**
  * Function to converts a list of likes to a string of liked by.
  * Ex: Liked by kawaki_22, naruto and 2 others
@@ -188,8 +193,10 @@ fun User.convertToMap(): HashMap<String, Any> {
 fun Post.convertToMap(): HashMap<String, Any> {
     return hashMapOf(
         "userId" to userId,
+        "postType" to postType,
         "currentProject" to currentProject,
-        "projectId" to projectId,
+        "postId" to postId,
+        "images" to images,
         "teamMembers" to teamMembers,
         "description" to description,
         "projectProgress" to projectProgress,
@@ -214,11 +221,11 @@ fun Context.getCurrentVersion(): String {
 
 /**
  * Function to retrieve a postId from a [Post].
- * Format: userId-projectId.
- * Ex: ABC123-Project123456.
+ * Format: userId-postId.
+ * Ex: ABC123-Post123456.
  */
 fun Post.toPostId(): String {
-    return "${userId}-${projectId}"
+    return "${userId}-${postId}"
 }
 
 /**
@@ -335,6 +342,18 @@ fun User.trimAll(): User {
         linkedInLink = linkedInLink.trim(),
         portfolioLink = portfolioLink.trim(),
         mentor = mentor.trim(),
+    )
+}
+
+/**
+ * Function to trim all the whitespaces from [Post].
+ */
+fun Post.trimAll(): Post {
+    return copy(
+        currentProject = currentProject.trim(),
+        description = description.trim(),
+        deadline = deadline.trim(),
+        teamMembers = teamMembers.map { it.trim() }
     )
 }
 

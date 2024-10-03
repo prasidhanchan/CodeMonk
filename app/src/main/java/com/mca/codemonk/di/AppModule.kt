@@ -63,6 +63,7 @@ object AppModule {
     fun provideHomeRepository(): HomeRepository =
         HomeRepositoryImpl(
             postDB = FirebaseDatabase.getInstance().getReference("posts"),
+            postStorage = FirebaseStorage.getInstance().getReference("posts"),
             userRef = FirebaseFirestore.getInstance().collection("users")
         )
 
@@ -71,6 +72,7 @@ object AppModule {
     fun providePostRepository(): PostRepository =
         PostRepositoryImpl(
             postDB = FirebaseDatabase.getInstance().getReference("posts"),
+            postStorage = FirebaseStorage.getInstance().getReference("posts"),
             userRef = FirebaseFirestore.getInstance().collection("users")
         )
 

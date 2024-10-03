@@ -19,13 +19,16 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
 import com.mca.repository.HomeRepository
 import com.mca.util.model.Post
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
@@ -33,6 +36,7 @@ import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(
     val postDB: DatabaseReference,
+    val postStorage: StorageReference,
     val userRef: CollectionReference
 ) : HomeRepository {
 
@@ -86,9 +90,43 @@ class HomeRepositoryImpl @Inject constructor(
         return dataOrException
     }
 
+    override suspend fun getUsername(
+        userId1: String?,
+        userId2: String?
+    ): DataOrException<List<String>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<String>, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            userRef.whereIn(FieldPath.documentId(), listOfNotNull(userId1, userId2)).get()
+                .addOnSuccessListener { querySnap ->
+                    dataOrException.data = querySnap.documents
+                        .mapNotNull { it.toObject<User>()?.username }
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+                .asFlow()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
+    }
+
     override suspend fun deletePost(postId: String, onError: (String) -> Unit) {
         try {
             postDB.child(postId).removeValue()
+                .addOnSuccessListener {
+                    postStorage.child(postId).listAll()
+                        .addOnSuccessListener { result ->
+                            result.items.forEach { item ->
+                                item.delete()
+                            }
+                        }
+                }
                 .addOnFailureListener { error ->
                     error.localizedMessage?.let(onError)
                 }
@@ -100,7 +138,7 @@ class HomeRepositoryImpl @Inject constructor(
 
     override suspend fun like(
         postId: String,
-        currentUsername: String,
+        currentUserId: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
@@ -113,7 +151,7 @@ class HomeRepositoryImpl @Inject constructor(
                     if (snap.exists()) {
                         likes = snap.getValue<List<String>>()?.toMutableList()!!
                     }
-                    likes.add(currentUsername)
+                    likes.add(currentUserId)
                     postDB.child(postId)
                         .updateChildren(mapOf("likes" to likes))
                         .addOnSuccessListener { onSuccess() }
@@ -131,7 +169,7 @@ class HomeRepositoryImpl @Inject constructor(
 
     override suspend fun unLike(
         postId: String,
-        currentUsername: String,
+        currentUserId: String,
         onError: (String) -> Unit
     ) {
         var likes: MutableList<String>
@@ -142,7 +180,7 @@ class HomeRepositoryImpl @Inject constructor(
                     val snap = snapshot.child(postId).child("likes")
                     if (snap.exists()) {
                         likes = snap.getValue<List<String>>()?.toMutableList()!!
-                        likes.remove(currentUsername)
+                        likes.remove(currentUserId)
                         postDB.child(postId).updateChildren(mapOf("likes" to likes))
                     }
                 }
