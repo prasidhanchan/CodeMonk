@@ -32,6 +32,8 @@ import com.mca.ui.R
 
 class NotificationService : FirebaseMessagingService() {
 
+    private val currentUser = FirebaseAuth.getInstance().currentUser
+
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         setToken(token)
@@ -69,8 +71,7 @@ class NotificationService : FirebaseMessagingService() {
             getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
         }
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (message.data["user_id"] != currentUser?.uid) { // notifications not shown for current user
+        if (currentUser != null && message.data["user_id"] != currentUser.uid) { // notifications not shown for current user
             val notification =
                 NotificationCompat.Builder(this, message.notification?.channelId ?: "")
                     .setContentTitle(message.notification?.title)
