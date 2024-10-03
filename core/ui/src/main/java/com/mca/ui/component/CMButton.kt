@@ -83,7 +83,7 @@ fun CMButton(
                 CircularProgressIndicator(
                     modifier = Modifier.size(26.dp),
                     strokeWidth = 3.5.dp,
-                    color = fontColor,
+                    color = textColor,
                     strokeCap = StrokeCap.Round
                 )
             }

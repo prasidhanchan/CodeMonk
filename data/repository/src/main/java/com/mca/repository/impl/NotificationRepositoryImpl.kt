@@ -24,7 +24,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.mca.remote.NotificationApi
 import com.mca.repository.NotificationRepository
 import com.mca.util.R
-import com.mca.util.constant.Constant.ANNOUNCEMENT_TOPIC
 import com.mca.util.constant.Constant.EVENT_TOPIC
 import com.mca.util.constant.Constant.SCOPE
 import com.mca.util.constant.toNotification
@@ -118,9 +117,7 @@ class NotificationRepositoryImpl @Inject constructor(
             }
 
             if (response.isSuccessful) {
-                if (pushNotificationTopic?.message?.data?.channel_name == EVENT_TOPIC ||
-                    pushNotificationTopic?.message?.data?.channel_name == ANNOUNCEMENT_TOPIC
-                ) {
+                if (pushNotificationTopic?.message?.data?.channel_name == EVENT_TOPIC) {
                     // Add notification data to firebase database
                     notificationRef.child(pushNotificationTopic.message.data.id)
                         .setValue(pushNotificationTopic.toNotification())

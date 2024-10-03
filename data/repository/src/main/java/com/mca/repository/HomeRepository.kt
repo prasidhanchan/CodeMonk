@@ -24,9 +24,19 @@ interface HomeRepository {
 
     suspend fun getUserDetail(userId: String): DataOrException<User, Boolean, Exception>
 
+    suspend fun getUsername(
+        userId1: String?,
+        userId2: String?
+    ): DataOrException<List<String>, Boolean, Exception>
+
     suspend fun deletePost(postId: String, onError: (String) -> Unit)
 
-    suspend fun like(postId: String, currentUsername: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+    suspend fun like(
+        postId: String,
+        currentUserId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    )
 
-    suspend fun unLike(postId: String, currentUsername: String, onError: (String) -> Unit)
+    suspend fun unLike(postId: String, currentUserId: String, onError: (String) -> Unit)
 }

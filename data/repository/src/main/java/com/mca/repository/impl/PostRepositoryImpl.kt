@@ -13,6 +13,7 @@
 
 package com.mca.repository.impl
 
+import androidx.core.net.toUri
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -20,11 +21,13 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
 import com.mca.repository.PostRepository
 import com.mca.util.constant.Constant.DEADLINE_REGEX
 import com.mca.util.constant.convertToMap
 import com.mca.util.constant.matchUsername
 import com.mca.util.constant.toPostId
+import com.mca.util.constant.trimAll
 import com.mca.util.model.Post
 import com.mca.util.model.Tag
 import com.mca.util.warpper.DataOrException
@@ -35,10 +38,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlin.random.Random
 
 class PostRepositoryImpl @Inject constructor(
     val postDB: DatabaseReference,
-    val userRef: CollectionReference
+    val userRef: CollectionReference,
+    val postStorage: StorageReference
 ) : PostRepository {
 
     override suspend fun upsertPost(
@@ -50,13 +55,62 @@ class PostRepositoryImpl @Inject constructor(
             if (post.currentProject.isBlank()) throw Exception("Current project cannot be empty.")
             if (post.teamMembers.size <= 1) throw Exception("Team members cannot be empty")
             if (post.projectProgress > 100) throw Exception("Project progress cannot be more than 100.")
-            if (post.description.length > 200) throw  Exception("Description cannot be more than 200 characters.")
+            if (post.description.length > 200) throw Exception("Description cannot be more than 200 characters.")
             if (post.deadline.isNotBlank() && !post.deadline.matches(DEADLINE_REGEX))
                 throw Exception("Deadline should be of format dd MMM yyyy.")
 
             postDB.child(post.toPostId())
                 .updateChildren(post.convertToMap())
                 .addOnSuccessListener {
+                    onSuccess()
+                }
+                .addOnFailureListener { error ->
+                    error.localizedMessage?.let(onError)
+                }
+                .await()
+        } catch (e: Exception) {
+            e.localizedMessage?.let(onError)
+        }
+    }
+
+    override suspend fun addAnnouncement(
+        post: Post,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        try {
+            if (post.description.isBlank()) throw Exception("Description cannot be empty.")
+            if (post.description.length > 300) throw Exception("Max 300 characters reached.")
+
+            if (post.images.isNotEmpty()) {
+                val images: MutableList<String> = mutableListOf()
+
+                // Get download urls for all images
+                post.images.forEach { image ->
+                    val storageRef = postStorage
+                        .child(post.toPostId())
+                        .child("image-${Random.nextInt(0, Int.MAX_VALUE)}.jpg")
+
+                    storageRef.putFile(image.toUri()).await()
+
+                    storageRef.downloadUrl
+                        .addOnSuccessListener { uri ->
+                            images.add(uri.toString())
+                        }
+                        .addOnFailureListener { error ->
+                            error.localizedMessage?.let(onError)
+                        }
+                        .await()
+                }
+            }
+
+            // Add to Realtime DB with download urls
+            postDB.child(post.toPostId())
+                .updateChildren(
+                    post.apply { this.images = images.toList() }
+                        .trimAll()
+                        .convertToMap()
+                ).addOnSuccessListener {
                     onSuccess()
                 }
                 .addOnFailureListener { error ->

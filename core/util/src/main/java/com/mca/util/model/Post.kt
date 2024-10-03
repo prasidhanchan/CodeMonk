@@ -13,11 +13,15 @@
 
 package com.mca.util.model
 
+import com.mca.util.constant.PostType
+
 data class Post(
     var userId: String = "",
+    var postType: String = PostType.PROJECT.name,
     var currentProject: String = "",
-    var projectId: String = "",
+    var postId: String = "",
     var teamMembers: List<String> = emptyList(),
+    var images: List<String> = emptyList(),
     var projectProgress: Int = 0,
     var description: String = "",
     var deadline: String = "",

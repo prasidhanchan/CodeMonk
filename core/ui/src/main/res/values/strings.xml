@@ -39,7 +39,7 @@
     <string name="username">\@%1$s</string>
     <string name="search">Search</string>
     <string name="profile">Profile</string>
-    <string name="delete">Delete Post</string>
+    <string name="delete">Delete</string>
     <string name="add_post">Add Post</string>
     <string name="linkedin">LinkedIn</string>
     <string name="github">GitHub</string>
@@ -96,9 +96,11 @@
     <string name="other_mentors">Other mentors:</string>
     <string name="delete_post">Delete Post</string>
     <string name="delete_post_message">Are you sure you want to delete this post?</string>
+    <string name="delete_announcement">Delete Announcement</string>
+    <string name="delete_announcement_message">Are you sure you want to delete this announcement?</string>
     <string name="link">Link</string>
     <string name="edit_post">Edit Post</string>
-    <string name="my_project_id">Project%1$s</string>
+    <string name="my_post_id">Post%1$d</string>
     <string name="mentor">Mentor:</string>
     <string name="mentor_placeholder">Mentor</string>
     <string name="monk_not_found">Monk not found!</string>
@@ -112,7 +114,9 @@
     <string name="notification_sent">Notification sent</string>
     <string name="no_notifications">No notifications</string>
     <string name="new_post">New Post</string>
+    <string name="new_announcement">New Announcement</string>
     <string name="new_post_body">%1$s has posted a new project</string>
+    <string name="new_announcement_body">%1$s has made a new announcement</string>
     <string name="liked">%1$s Liked</string>
     <string name="new_like_body">%1$s has liked your post</string>
     <string name="sponsored">Sponsored</string>
@@ -121,4 +125,10 @@
     <string name="ad_username">google_ad</string>
     <string name="ad_body">Stay up to date with your Ads Check how your ads are performing</string>
     <string name="not_registered">You are not registered for alpha testing!</string>
+    <string name="post_image">Post Image</string>
+    <string name="add_announcement">Add Announcement</string>
+    <string name="add_image">Add Image</string>
+    <string name="select_your_images">Select your images</string>
+    <string name="remove_image">Remove Image</string>
+    <string name="whats_going_on">What\'s going on?</string>
 </resources>
