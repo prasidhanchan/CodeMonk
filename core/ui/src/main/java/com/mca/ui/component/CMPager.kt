@@ -50,6 +50,18 @@ import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.tintColor
 
+/**
+ * Horizontal pager composable to display post images along with the dots indicator.
+ * @param images List of image URLs to be displayed in the pager.
+ * @param state PagerState to control and observe the pager's state.
+ * @param modifier Modifier for styling and layout customization.
+ * @param contentScale Scale to apply to the image content.
+ * @param enableTint Enable or disable the tint effect on the image.
+ * @param enableRemoveIcon Enable or disable the remove icon on the image.
+ * @param enableClick Enable or disable the click interaction on the image.
+ * @param onClick Callback to be invoked when the image is clicked.
+ * @param onRemoveImageClick Callback to be invoked when the remove icon is clicked.
+ */
 @Composable
 fun CMPager(
     images: List<String>,
