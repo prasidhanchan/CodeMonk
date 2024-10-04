@@ -114,7 +114,7 @@ internal fun PostScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 15.dp)
                 .imePadding()
                 .fillMaxSize()
                 .verticalScroll(state),

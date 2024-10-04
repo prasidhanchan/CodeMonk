@@ -89,7 +89,7 @@ internal fun AnnouncementScreen(
         Column(
             modifier = Modifier
                 .imePadding()
-                .padding(all = 20.dp)
+                .padding(all = 15.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
