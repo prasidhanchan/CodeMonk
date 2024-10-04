@@ -80,7 +80,8 @@ class PostRepositoryImpl @Inject constructor(
     ) {
         try {
             if (post.description.isBlank()) throw Exception("Description cannot be empty.")
-            if (post.description.length > 300) throw Exception("Max 300 characters reached.")
+            if (post.description.length > 300) throw Exception("Your description exceeds 300 characters.")
+            if (post.images.size > 4) throw Exception("You can only select up to 4 images.")
 
             if (post.images.isNotEmpty()) {
                 val images: MutableList<String> = mutableListOf()
