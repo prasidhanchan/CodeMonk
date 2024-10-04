@@ -67,19 +67,30 @@ fun Modifier.animatedLike(onClick: () -> Unit) = composed {
 /**
  * Animate the alpha of any composable function such as a Card.
  * @param delay The delay of the enter animation in milliseconds.
+ * @param duration The duration of the enter animation in milliseconds.
+ * @param condition The condition when the composable should be shown.
  */
-fun Modifier.animateAlpha(delay: Int) = composed {
+fun Modifier.animateAlpha(
+    delay: Int,
+    duration: Int = 800,
+    condition: Boolean = true
+) = composed {
     var alpha by rememberSaveable { mutableFloatStateOf(0f) }
     val animatedAlpha by animateFloatAsState(
         targetValue = alpha,
         animationSpec = tween(
-            durationMillis = 800,
+            durationMillis = duration,
             delayMillis = delay
         ),
         label = "animatedNotificationAlpha"
     )
-    alpha(animatedAlpha)
-        .onGloballyPositioned { alpha = 1f }
+    if (condition) {
+        alpha(animatedAlpha)
+            .onGloballyPositioned { alpha = 1f }
+    } else {
+        alpha(animatedAlpha)
+            .onGloballyPositioned { alpha = 0f }
+    }
 }
 
 /**
