@@ -15,6 +15,8 @@ package com.mca.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +25,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -34,24 +37,34 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mca.ui.R
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.tintColor
+import com.mca.util.constant.animateAlpha
 
 /**
  * Horizontal pager composable to display post images along with the dots indicator.
+ * Includes additional features such as pinch to zoom and pan.
  * @param images List of image URLs to be displayed in the pager.
  * @param state PagerState to control and observe the pager's state.
  * @param modifier Modifier for styling and layout customization.
@@ -72,8 +85,24 @@ fun CMPager(
     enableRemoveIcon: Boolean = false,
     enableClick: Boolean = false,
     onClick: () -> Unit = { },
-    onRemoveImageClick: (image: String) -> Unit = { }
+    onRemoveImageClick: (image: String) -> Unit = { },
+    onTransform: (Boolean) -> Unit = { }
 ) {
+    var scale by remember { mutableFloatStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    val transformable = rememberTransformableState { zoomChange, panChange, _ ->
+        scale = (scale * zoomChange).coerceAtLeast(1f)
+        if (scale != 1f) offset = (offset + panChange)
+    }
+
+    LaunchedEffect(key1 = transformable.isTransformInProgress) {
+        if (!transformable.isTransformInProgress) {
+            scale = 1f
+            offset = Offset.Zero
+        }
+        if (transformable.isTransformInProgress) onTransform(true) else onTransform(false)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,7 +112,7 @@ fun CMPager(
     ) {
         Surface(
             modifier = modifier
-                .padding(top = 4.dp, bottom = 10.dp)
+                .padding(bottom = 10.dp)
                 .fillMaxWidth()
                 .height(220.dp)
                 .clickable(
@@ -91,7 +120,10 @@ fun CMPager(
                     indication = null,
                     interactionSource = remember(::MutableInteractionSource),
                     onClick = onClick
-                ),
+                )
+                .transformable(transformable)
+                .scale(scale)
+                .offset { IntOffset(offset.x.toInt(), offset.y.toInt()) },
             shape = RoundedCornerShape(10.dp),
             color = LightBlack
         ) {
@@ -138,7 +170,12 @@ fun CMPager(
 
         PagerDot(
             pageCount = state.pageCount,
-            selectedPage = state.currentPage
+            selectedPage = state.currentPage,
+            modifier = Modifier.animateAlpha(
+                delay = 0,
+                duration = 250,
+                condition = !transformable.isTransformInProgress
+            )
         )
     }
 }

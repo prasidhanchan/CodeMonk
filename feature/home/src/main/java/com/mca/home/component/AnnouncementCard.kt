@@ -36,6 +36,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -63,6 +65,7 @@ import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
+import com.mca.util.constant.animateAlpha
 import com.mca.util.constant.animatedLike
 import com.mca.util.constant.toLikedBy
 import com.mca.util.constant.toLikes
@@ -83,6 +86,8 @@ internal fun AnnouncementCard(
     onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeCLick: (postId: String) -> Unit
 ) {
+    var alpha by remember { mutableFloatStateOf(1f) }
+
     Column(
         modifier = modifier
             .animateContentSize(animationSpec = tween(durationMillis = 400))
@@ -108,18 +113,29 @@ internal fun AnnouncementCard(
         ) {
             Column(
                 modifier = modifier
-                    .padding(all = 10.dp)
+                    .padding(all = 15.dp)
                     .fillMaxWidth()
                     .wrapContentHeight(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                MainContent(post = post)
+                MainContent(
+                    post = post,
+                    alpha = alpha,
+                    onTransform = { transforming ->
+                        alpha = if (transforming) 0f else 1f
+                    }
+                )
                 LikesAndTimeStamp(
                     post = post,
                     token = user.token,
                     currentUserId = currentUserId,
                     currentUsername = currentUsername,
+                    modifier = Modifier.animateAlpha(
+                        delay = 0,
+                        duration = 250,
+                        condition = alpha == 1f
+                    ),
                     onLikeCLick = onLikeClick,
                     onUnlikeCLick = onUnlikeCLick
                 )
@@ -194,10 +210,13 @@ private fun AnnouncementTopBar(
 }
 
 @Composable
-private fun AnnouncementBottomBar(likes: List<String>) {
+private fun AnnouncementBottomBar(
+    likes: List<String>,
+    modifier: Modifier = Modifier
+) {
     Spacer(modifier = Modifier.height(20.dp))
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -224,7 +243,9 @@ private fun AnnouncementBottomBar(likes: List<String>) {
 @Composable
 private fun MainContent(
     post: Post,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    alpha: Float,
+    onTransform: (Boolean) -> Unit
 ) {
     val state = rememberPagerState { post.images.size }
     var isOpen by remember { mutableStateOf(false) }
@@ -233,7 +254,9 @@ private fun MainContent(
         CMPager(
             images = post.images,
             state = state,
-            modifier = modifier
+            modifier = modifier,
+            contentScale = ContentScale.Crop,
+            onTransform = onTransform
         )
     }
 
@@ -247,11 +270,17 @@ private fun MainContent(
         ),
         overflow = TextOverflow.Ellipsis,
         maxLines = if (!isOpen) 5 else Int.MAX_VALUE,
-        modifier = Modifier.clickable(
-            indication = null,
-            interactionSource = remember(::MutableInteractionSource),
-            onClick = { isOpen = !isOpen }
-        )
+        modifier = Modifier
+            .clickable(
+                indication = null,
+                interactionSource = remember(::MutableInteractionSource),
+                onClick = { isOpen = !isOpen }
+            )
+            .animateAlpha(
+                delay = 0,
+                duration = 250,
+                condition = alpha == 1f
+            )
     )
 }
 
