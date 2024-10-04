@@ -19,19 +19,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -44,17 +39,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,8 +54,6 @@ import coil.compose.AsyncImage
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.mca.ui.R
-import com.mca.ui.component.CMButton
-import com.mca.ui.theme.ExtraLightBlack
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
@@ -81,7 +70,6 @@ internal fun PostNativeAd(nativeAd: NativeAd?, modifier: Modifier = Modifier) {
             headline = ad?.headline.orEmpty(),
             body = ad?.body.orEmpty(),
             mediaImage = ad?.mediaContent?.mainImage,
-            callToAction = ad?.callToAction ?: stringResource(id = R.string.install),
             onClick = { composeView.performClick() }
         )
     }
@@ -94,12 +82,9 @@ private fun PostAd(
     headline: String,
     body: String,
     mediaImage: Drawable?,
-    callToAction: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val buttonText = "${callToAction[0]}${callToAction.substringAfter(callToAction[0]).lowercase()}"
-
     Column(
         modifier = modifier
             .padding(vertical = 20.dp)
@@ -109,15 +94,10 @@ private fun PostAd(
     ) {
         PostAdTopBar(image = image, headLine = headline)
         MainContent(
+            mediaImage = mediaImage,
             headline = headline,
             body = body,
-            mediaImage = mediaImage,
-            buttonText = buttonText,
             onClick = onClick
-        )
-        PostAdDescription(
-            description = stringResource(id = R.string.ad_description),
-            username = headline.ifEmpty { stringResource(id = R.string.ad_username) }
         )
     }
 }
@@ -129,9 +109,7 @@ private fun PostAdTopBar(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .padding(bottom = 10.dp)
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -166,154 +144,69 @@ private fun PostAdTopBar(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MainContent(
+    mediaImage: Drawable?,
     headline: String,
     body: String,
-    mediaImage: Drawable?,
-    buttonText: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Surface(
         modifier = modifier
+            .padding(vertical = 10.dp)
             .fillMaxWidth()
             .wrapContentHeight(Alignment.CenterVertically)
             .combinedClickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(15.dp),
         color = LightBlack
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(all = 15.dp)
                 .wrapContentHeight(Alignment.CenterVertically),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Surface(
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .height(30.dp)
-                        .wrapContentWidth(Alignment.CenterHorizontally),
-                    shape = RoundedCornerShape(6.dp),
-                    color = ExtraLightBlack
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxHeight(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.sponsored),
-                            style = TextStyle(
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                fontFamily = dosis,
-                                color = Color.White
-                            ),
-                            modifier = Modifier.padding(
-                                top = 5.dp,
-                                start = 10.dp,
-                                end = 10.dp,
-                                bottom = 6.dp
-                            )
-                        )
-                    }
-                }
-                Text(
-                    text = body.ifEmpty { stringResource(id = R.string.ad_body) },
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    ),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            ImageContent(mediaImage = mediaImage, headLine = headline)
-            Spacer(modifier = Modifier.height(10.dp))
-            CMButton(
-                text = buttonText,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp),
-                fonSize = 16,
-                textColor = LinkBlue,
-                color = ExtraLightBlack,
-                onClick = { }
-            )
-        }
-    }
-}
-
-@Composable
-private fun ImageContent(
-    mediaImage: Drawable?,
-    headLine: String,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier
-            .padding(vertical = 10.dp)
-            .fillMaxWidth()
-            .height(160.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = ExtraLightBlack
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopEnd
+            horizontalAlignment = Alignment.Start
         ) {
             AsyncImage(
                 model = mediaImage,
-                contentDescription = headLine,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentDescription = headline,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .height(200.dp),
+                contentScale = ContentScale.FillBounds
             )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = body.ifEmpty { stringResource(id = R.string.ad_body) },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+            Row(
+                modifier = Modifier.padding(top = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CMSponsoredIcon(modifier = Modifier.padding(end = 10.dp))
+                Text(
+                    text = stringResource(id = R.string.ad_description),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = dosis,
+                        color = fontColor
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
+                )
+            }
         }
     }
 }
-
-@Composable
-private fun PostAdDescription(
-    description: String,
-    username: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .padding(vertical = 10.dp, horizontal = 5.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.Top
-    ) {
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    SpanStyle(fontWeight = FontWeight.ExtraBold)
-                ) {
-                    append(username.lowercase())
-                }
-                append("  ")
-                append(description)
-            },
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
 
 @Composable
 private fun NativeAdView(
@@ -354,7 +247,6 @@ private fun PostAdPreview() {
         headline = "Test Ad: Google Ads",
         body = "Stay up to date with your Ads Check how your ads are performing",
         mediaImage = null,
-        callToAction = "Install",
         onClick = { }
     )
 }

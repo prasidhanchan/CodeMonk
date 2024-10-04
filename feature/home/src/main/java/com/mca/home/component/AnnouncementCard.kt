@@ -23,13 +23,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,8 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -59,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mca.ui.R
+import com.mca.ui.component.CMPager
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
@@ -106,7 +103,7 @@ internal fun AnnouncementCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(Alignment.CenterVertically),
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(15.dp),
             color = LightBlack
         ) {
             Column(
@@ -233,40 +230,10 @@ private fun MainContent(
     var isOpen by remember { mutableStateOf(false) }
 
     if (post.images.isNotEmpty()) {
-        Column(
+        CMPager(
+            images = post.images,
+            state = state,
             modifier = modifier
-                .fillMaxWidth()
-                .wrapContentHeight(Alignment.CenterVertically),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Surface(
-                modifier = modifier
-                    .padding(vertical = 10.dp, horizontal = 2.dp)
-                    .fillMaxWidth()
-                    .height(220.dp),
-                shape = RoundedCornerShape(10.dp),
-                color = LightBlack
-            ) {
-                HorizontalPager(
-                    state = state,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(Alignment.CenterVertically)
-                ) { page ->
-                    AsyncImage(
-                        model = post.images[page],
-                        contentDescription = stringResource(id = R.string.post_image),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
-                }
-            }
-        }
-
-        PagerDot(
-            pageCount = state.pageCount,
-            selectedPage = state.currentPage
         )
     }
 
@@ -359,31 +326,6 @@ private fun LikesAndTimeStamp(
                 ),
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
-            )
-        }
-    }
-}
-
-@Composable
-private fun PagerDot(
-    pageCount: Int,
-    selectedPage: Int,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = Modifier
-            .padding(bottom = 20.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        for (page in 0 until pageCount) {
-            Box(
-                modifier = modifier
-                    .padding(horizontal = 5.dp)
-                    .clip(CircleShape)
-                    .background(color = if (page == selectedPage) Color.White else Color.Gray)
-                    .size(5.dp)
             )
         }
     }

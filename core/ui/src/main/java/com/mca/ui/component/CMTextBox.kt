@@ -70,7 +70,7 @@ fun CMTextBox(
     enableHeader: Boolean = true
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 5.dp)
             .fillMaxWidth(0.9f),
         verticalArrangement = Arrangement.Center,

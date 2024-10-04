@@ -18,24 +18,19 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -46,7 +41,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -59,10 +53,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.mca.post.UiState
 import com.mca.ui.R
 import com.mca.ui.component.CMButton
+import com.mca.ui.component.CMPager
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.CMTextBox
 import com.mca.ui.theme.Black
@@ -81,7 +75,9 @@ internal fun AnnouncementScreen(
 ) {
     val images = remember { mutableStateListOf<String>() }
     val activityResultsLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(4)
+        contract = ActivityResultContracts.PickMultipleVisualMedia(
+            (4 - images.size).coerceAtLeast(2)
+        )
     ) { result ->
         result.forEach { uri -> images.add(uri.toString()) }
     }
@@ -93,6 +89,7 @@ internal fun AnnouncementScreen(
         Column(
             modifier = Modifier
                 .imePadding()
+                .padding(all = 20.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
@@ -110,6 +107,7 @@ internal fun AnnouncementScreen(
             CMTextBox(
                 value = uiState.description,
                 onValueChange = onDescriptionChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.whats_going_on),
                 imeAction = ImeAction.Default,
                 capitalization = KeyboardCapitalization.Sentences,
@@ -118,20 +116,21 @@ internal fun AnnouncementScreen(
                 enableHeader = false
             )
             Text(
-                text = if (uiState.description.length >= 300)
-                    "Max characters reached"
-                else "${300 - uiState.description.length} characters",
+                text = stringResource(
+                    id = R.string.character_count,
+                    uiState.description.length
+                ),
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = dosis,
-                    color = if (uiState.description.length >= 300) Red else fontColor.copy(0.5f)
+                    color = if (uiState.description.length > 300) Red else fontColor.copy(0.5f)
                 )
             )
             Spacer(modifier = Modifier.height(20.dp))
             CMButton(
                 text = stringResource(id = R.string.post),
-                modifier = Modifier.fillMaxWidth(0.9f),
+                modifier = Modifier.fillMaxWidth(),
                 loading = uiState.loading,
                 enabled = !uiState.loading,
                 color = Color.White,
@@ -140,13 +139,12 @@ internal fun AnnouncementScreen(
             )
             Box(
                 modifier = Modifier
-                    .padding(vertical = 20.dp)
                     .weight(1f)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Text(
-                    text = "Once you make an announcement it cannot be edited later. \nMake sure it's accurate!",
+                    text = stringResource(id = R.string.announcement_note),
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -175,26 +173,26 @@ private fun ImagePicker(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Surface(
-            modifier = modifier
-                .padding(all = 20.dp)
-                .fillMaxWidth()
-                .height(250.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember(::MutableInteractionSource),
-                    enabled = images.size < 4,
-                    onClickLabel = stringResource(id = R.string.select_your_images),
-                    onClick = {
-                        activityResultLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }
-                ),
-            shape = RoundedCornerShape(10.dp),
-            color = LightBlack
-        ) {
-            if (images.isEmpty()) {
+        if (images.isEmpty()) {
+            Surface(
+                modifier = modifier
+                    .padding(vertical = 20.dp)
+                    .fillMaxWidth()
+                    .height(260.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember(::MutableInteractionSource),
+                        enabled = images.size < 4,
+                        onClickLabel = stringResource(id = R.string.select_your_images),
+                        onClick = {
+                            activityResultLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }
+                    ),
+                shape = RoundedCornerShape(10.dp),
+                color = LightBlack
+            ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -216,68 +214,21 @@ private fun ImagePicker(
                         )
                     )
                 }
-            } else {
-                HorizontalPager(state = state) { page ->
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.BottomEnd
-                        ) {
-                            AsyncImage(
-                                model = images[page],
-                                contentDescription = stringResource(id = R.string.post_image),
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(color = Black.copy(0.2f))
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.delete),
-                                contentDescription = stringResource(id = R.string.remove_image),
-                                modifier = Modifier
-                                    .padding(all = 10.dp)
-                                    .clickable(
-                                        onClick = { onRemoveImageClick(images[page]) }
-                                    ),
-                                tint = tintColor
-                            )
-                        }
-                    }
-                }
             }
-        }
-
-        PagerDot(
-            pageCount = state.pageCount,
-            selectedPage = state.currentPage
-        )
-    }
-}
-
-@Composable
-private fun PagerDot(
-    pageCount: Int,
-    selectedPage: Int,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        for (page in 0 until pageCount) {
-            Box(
-                modifier = modifier
-                    .padding(horizontal = 5.dp)
-                    .clip(CircleShape)
-                    .background(color = if (page == selectedPage) Color.White else Color.Gray)
-                    .size(5.dp)
+        } else {
+            CMPager(
+                images = images,
+                state = state,
+                contentScale = ContentScale.FillBounds,
+                enableTint = true,
+                enableRemoveIcon = true,
+                enableClick = images.size < 4,
+                onClick = {
+                    activityResultLauncher.launch(
+                        PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                },
+                onRemoveImageClick = onRemoveImageClick
             )
         }
     }

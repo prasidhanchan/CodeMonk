@@ -120,10 +120,10 @@
     <string name="liked">%1$s Liked</string>
     <string name="new_like_body">%1$s has liked your post</string>
     <string name="sponsored">Sponsored</string>
-    <string name="ad_description">Sponsored content that you might find interesting.</string>
+    <string name="ad_description">This is a sponsored content that you might find interesting.</string>
     <string name="install">Install</string>
     <string name="ad_username">google_ad</string>
-    <string name="ad_body">Stay up to date with your Ads Check how your ads are performing</string>
+    <string name="ad_body">Stay up to date with your Ads Check how your ads are performing.</string>
     <string name="not_registered">You are not registered for alpha testing!</string>
     <string name="post_image">Post Image</string>
     <string name="add_announcement">Add Announcement</string>
@@ -131,4 +131,6 @@
     <string name="select_your_images">Select your images</string>
     <string name="remove_image">Remove Image</string>
     <string name="whats_going_on">What\'s going on?</string>
+    <string name="character_count">%1$d characters</string>
+    <string name="announcement_note">Once you make an announcement it cannot be edited later. \nMake sure it\'s accurate!</string>
 </resources>
