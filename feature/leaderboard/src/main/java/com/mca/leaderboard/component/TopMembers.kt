@@ -114,9 +114,9 @@ internal fun CMHistogram(
             delay(1200L)
             visible = true
             delay = when (position) {
-                1 -> 800
-                2 -> 1000
-                else -> 1200
+                1 -> 600
+                2 -> 800
+                else -> 1000
             }
         }
     }
