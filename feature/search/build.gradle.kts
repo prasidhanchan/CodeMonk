@@ -36,7 +36,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         val properties = Properties()
-        properties.load(project.rootProject.file("gradle.properties").inputStream())
+        properties.load(project.rootProject.file("local.properties").inputStream())
 
         buildConfigField("String", "NATIVE_AD_ID_SEARCH", "\"${properties.getProperty("NATIVE_AD_ID_SEARCH")}\"")
     }
