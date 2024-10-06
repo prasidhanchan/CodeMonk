@@ -39,6 +39,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      # Create local.properties
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo ${{ vars.UPDATE_CHANNEL }} >> local.properties
+          echo ${{ vars.PROJECT_ID }} >> local.properties
+          echo ${{ vars.NATIVE_AD_ID_POST }} >> local.properties
+          echo ${{ vars.NATIVE_AD_ID_SEARCH }} >> local.properties
+
       # Build APK
       - name: Build APK
         run: ./gradlew assembleRelease
@@ -55,7 +64,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew testReleaseUnitTest
 
       # Increment alpha version
       - name: Bump alpha version
