@@ -1,4 +1,4 @@
-name: Release
+name: Release Alpha
 
 on:
   pull_request:
@@ -58,7 +58,9 @@ jobs:
       - name: Create codemonk_service_key.json
         env:
           SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
-        run: echo SERVICE_KEY | base64 -di > core/util/src/main/res/raw/codemonk_service_key.json
+        run: |
+          mkdir -p core/util/src/main/res/raw
+          echo $SERVICE_KEY | base64 -di > core/util/src/main/res/raw/codemonk_service_key.json
 
       # Build APK
       - name: Build APK
@@ -77,14 +79,6 @@ jobs:
       # Run tests
       - name: Run tests
         run: ./gradlew testReleaseUnitTest
-
-      # Increment alpha version
-      - name: Bump alpha version
-        uses: action-pack/increment@v2
-        id: increment
-        with:
-          name: 'ALPHA_VERSION'
-          token: ${{ secrets.TOKEN }}
 
       # Generate release version name and tag
       - name: Generate version name and tag
@@ -111,3 +105,11 @@ jobs:
           files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-alpha${{ vars.ALPHA_VERSION }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+      # Increment alpha version
+      - name: Bump alpha version
+        uses: action-pack/increment@v2
+        id: increment
+        with:
+          name: 'ALPHA_VERSION'
+          token: ${{ secrets.TOKEN }}

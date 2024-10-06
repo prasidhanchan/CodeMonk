@@ -34,7 +34,7 @@ android {
         applicationId = "com.mca.codemonk"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = 8
+        versionCode = 9
         versionName = "1.0.0"
 
         testInstrumentationRunner = "com.mca.codemonk.HiltRunner"
@@ -71,6 +71,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "META-INF/DEPENDENCIES"
         }
+    }
+}
+
+tasks.register("printVersionName") {
+    doLast {
+        println("${android.defaultConfig.versionName}")
     }
 }
 
