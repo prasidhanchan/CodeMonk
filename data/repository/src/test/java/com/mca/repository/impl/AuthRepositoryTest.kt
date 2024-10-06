@@ -46,7 +46,7 @@ class AuthRepositoryTest {
             password = "test123",
             onSuccess = { },
             onError = { error ->
-                assertThat(error).isEqualTo("Please enter your email.")
+                assertThat(error.message).isEqualTo("Please enter your email.")
             }
         )
     }
@@ -58,7 +58,7 @@ class AuthRepositoryTest {
             password = "",
             onSuccess = { },
             onError = { error ->
-                assertThat(error).isEqualTo("Please enter your password.")
+                assertThat(error.message).isEqualTo("Please enter your password.")
             }
         )
     }
@@ -69,7 +69,7 @@ class AuthRepositoryTest {
             email = "",
             onSuccess = { },
             onError = { error ->
-                assertThat(error).isEqualTo("Please enter your email.")
+                assertThat(error.message).isEqualTo("Please enter your email.")
             }
         )
     }
