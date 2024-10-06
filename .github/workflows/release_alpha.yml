@@ -80,14 +80,6 @@ jobs:
       - name: Run tests
         run: ./gradlew testReleaseUnitTest
 
-      # Increment alpha version
-      - name: Bump alpha version
-        uses: action-pack/increment@v2
-        id: increment
-        with:
-          name: 'ALPHA_VERSION'
-          token: ${{ secrets.TOKEN }}
-
       # Generate release version name and tag
       - name: Generate version name and tag
         id: vars
@@ -113,3 +105,11 @@ jobs:
           files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-alpha${{ vars.ALPHA_VERSION }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+      # Increment alpha version
+      - name: Bump alpha version
+        uses: action-pack/increment@v2
+        id: increment
+        with:
+          name: 'ALPHA_VERSION'
+          token: ${{ secrets.TOKEN }}
