@@ -74,6 +74,12 @@ android {
     }
 }
 
+tasks.register("printVersionName") {
+    doLast {
+        println("${android.defaultConfig.versionName}")
+    }
+}
+
 dependencies {
 
     // Hilt
