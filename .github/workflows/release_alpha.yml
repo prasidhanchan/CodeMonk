@@ -70,7 +70,6 @@ jobs:
         id: vars
         run: |
           VERSION_NAME=$(./gradlew -q printVersionName)
-          echo $ALPHA_VERSION
           TAG_NAME=$(echo "v$VERSION_NAME-alpha${{ vars.ALPHA_VERSION }}" | sed 's/ /_/g')
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
