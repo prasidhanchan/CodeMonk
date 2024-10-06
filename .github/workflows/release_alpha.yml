@@ -59,7 +59,7 @@ jobs:
         env:
           SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
         run: |
-          run: mkdir -p core/util/src/main/res/raw
+          mkdir -p core/util/src/main/res/raw
           echo SERVICE_KEY | base64 -di > core/util/src/main/res/raw/codemonk_service_key.json
 
       # Build APK
