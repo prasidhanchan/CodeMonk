@@ -16,7 +16,7 @@ package com.mca.util.constant
 object Constant {
 
     /** Regex for username ex: pra_sidh_22 */
-    val USERNAME_REGEX = Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")
+    val USERNAME_REGEX = Regex("^[a-zA-Z_]+[a-zA-Z0-9_]*\$")
 
     /** Regex for deadline ex: 20 Apr 2024 */
     val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")

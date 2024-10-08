@@ -42,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -219,10 +218,10 @@ private fun ImagePicker(
             CMPager(
                 images = images,
                 state = state,
-                contentScale = ContentScale.FillBounds,
                 enableTint = true,
                 enableRemoveIcon = true,
                 enableClick = images.size < 4,
+                enableTransform = false,
                 onClick = {
                     activityResultLauncher.launch(
                         PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)

@@ -81,6 +81,7 @@ import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.LinkType
 import com.mca.util.model.User
 import kotlinx.coroutines.launch
@@ -158,7 +159,6 @@ internal fun EditProfileScreen(
             Spacer(modifier = Modifier.height(10.dp))
             CMTextBox(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
                     .focusable(enabled = true)
                     .focusRequester(focusRequester),
                 value = uiState.currentUser.username,
@@ -181,7 +181,6 @@ internal fun EditProfileScreen(
                 capitalization = KeyboardCapitalization.None
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.currentUser.name,
                 onValueChange = onNameChange,
                 placeHolder = stringResource(id = R.string.name_placeholder),
@@ -199,8 +198,6 @@ internal fun EditProfileScreen(
                 capitalization = KeyboardCapitalization.Words
             )
             CMTextBox(
-                modifier = Modifier
-                    .padding(vertical = 8.dp),
                 value = uiState.currentUser.bio,
                 onValueChange = onBioChange,
                 placeHolder = stringResource(id = R.string.add_a_bio_placeholder),
@@ -219,9 +216,8 @@ internal fun EditProfileScreen(
                 singleLine = false,
                 maxLines = 4
             )
-            if (uiState.currentUser.userType != "Admin") {
+            if (uiState.currentUser.userType != ADMIN) {
                 CMTextBox(
-                    modifier = Modifier.padding(vertical = 8.dp),
                     value = uiState.currentUser.currentProject,
                     onValueChange = onCurrentProjectChange,
                     placeHolder = stringResource(id = R.string.current_project_placeholder),
@@ -245,7 +241,6 @@ internal fun EditProfileScreen(
                     capitalization = KeyboardCapitalization.Words
                 )
                 CMTextBox(
-                    modifier = Modifier.padding(vertical = 8.dp),
                     value = uiState.currentUser.mentor,
                     onValueChange = onMentorChange,
                     placeHolder = stringResource(id = R.string.mentor_username),
@@ -269,7 +264,6 @@ internal fun EditProfileScreen(
             }
 
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = linkState,
                 onValueChange = { linkState = it },
                 placeHolder = stringResource(id = R.string.add_a_link_placeholder),

@@ -126,7 +126,6 @@ internal fun PostScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.currentProject,
                 onValueChange = onCurrentProjectChange,
                 placeHolder = stringResource(id = R.string.current_project_placeholder),
@@ -259,7 +258,6 @@ internal fun PostScreen(
                 enabled = userType == ADMIN
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.deadline,
                 onValueChange = onDeadlineChange,
                 placeHolder = stringResource(id = R.string.deadline_placeholder),
