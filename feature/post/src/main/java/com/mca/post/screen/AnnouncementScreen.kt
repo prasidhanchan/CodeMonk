@@ -44,11 +44,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -95,7 +98,7 @@ internal fun AnnouncementScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CMRegularAppBar(
-                text = stringResource(id = R.string.add_announcement),
+                text = stringResource(id = R.string.new_announcement),
                 onBackClick = onBackClick
             )
             ImagePicker(
@@ -204,13 +207,24 @@ private fun ImagePicker(
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = stringResource(id = R.string.select_your_images),
+                        text = buildAnnotatedString {
+                            append(stringResource(id = R.string.select_your_images))
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            ) {
+                                append(stringResource(id = R.string.recommended_size))
+                            }
+                        },
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontFamily = dosis,
                             color = fontColor.copy(0.5f)
-                        )
+                        ),
+                        textAlign = TextAlign.Center
                     )
                 }
             }

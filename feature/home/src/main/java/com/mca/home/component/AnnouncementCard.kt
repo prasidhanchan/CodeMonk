@@ -368,7 +368,7 @@ private fun AnnouncementCardPreview() {
                     "After months of hard work, I'm excited to announce the launch of CodeLab, an app designed to simplify coding project management for developers. " +
                     "Whether you're a beginner or a pro, CodeLab helps you create, track, and collaborate on coding projects effortlessly. With real-time updates, progress tracking, and an intuitive interface, this app is here to streamline your workflow. " +
                     "Stay tuned for the official release—let's code smarter, together! ✨",
-            likes = listOf("1", "2"),
+            likes = listOf("uchiha_sasuke", "uzumaki_naruto"),
             images = listOf("image1", "image2")
         ),
         user = User(

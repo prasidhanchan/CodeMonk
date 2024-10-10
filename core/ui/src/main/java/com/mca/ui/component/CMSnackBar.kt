@@ -20,12 +20,11 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -89,15 +88,16 @@ fun CMSnackBar(
                 .padding(all = 10.dp)
                 .imePadding()
                 .fillMaxWidth()
-                .height(50.dp)
+                .wrapContentHeight(Alignment.CenterVertically)
                 .then(modifier),
             shape = RoundedCornerShape(10.dp),
-            color = SnackBarColor
+            color = SnackBarColor.copy(alpha = 0.95f)
         ) {
             Row(
                 modifier = Modifier
                     .padding(all = 10.dp)
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .wrapContentHeight(Alignment.CenterVertically),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -116,7 +116,7 @@ fun CMSnackBar(
                             fontFamily = dosis,
                             color = fontColor
                         ),
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                 }

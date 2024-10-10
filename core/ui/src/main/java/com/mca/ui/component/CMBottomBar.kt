@@ -256,7 +256,7 @@ private fun AddIcon(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = stringResource(id = R.string.add_post),
+                contentDescription = stringResource(id = R.string.new_post),
                 modifier = Modifier.rotateIcon(isOpen),
                 tint = tintColor
             )
@@ -287,11 +287,13 @@ private fun PostOptions(
     ) {
         CMButton(
             text = stringResource(id = R.string.project_post),
+            modifier = Modifier.fillMaxWidth(0.8f),
             onClick = onProjectOptionClick
         )
         Spacer(modifier = Modifier.height(10.dp))
         CMButton(
             text = stringResource(id = R.string.announcement),
+            modifier = Modifier.fillMaxWidth(0.8f),
             textColor = Black,
             color = tintColor,
             onClick = onAnnouncementClick

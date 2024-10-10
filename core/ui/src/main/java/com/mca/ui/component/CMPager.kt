@@ -22,9 +22,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -107,7 +106,7 @@ fun CMPager(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(265.dp),
+            .wrapContentHeight(Alignment.CenterVertically),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -115,7 +114,7 @@ fun CMPager(
             modifier = modifier
                 .padding(bottom = 10.dp)
                 .fillMaxWidth()
-                .height(220.dp)
+                .wrapContentHeight(Alignment.CenterVertically)
                 .clickable(
                     enabled = enableClick,
                     indication = null,
@@ -139,7 +138,9 @@ fun CMPager(
                     .wrapContentHeight(Alignment.CenterVertically)
             ) { page ->
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(Alignment.CenterVertically),
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     AsyncImage(
@@ -147,14 +148,15 @@ fun CMPager(
                         contentDescription = stringResource(id = R.string.post_image),
                         modifier = Modifier
                             .padding(horizontal = 0.5.dp)
-                            .fillMaxSize(),
+                            .aspectRatio(1412f/949f),
                         contentScale = contentScale
                     )
                     if (enableTint) {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = Black.copy(0.2f))
+                                .fillMaxWidth()
+                                .aspectRatio(1412f/949f)
+                                .background(color = Black.copy(alpha = 0.2f))
                         )
                     }
                     if (enableRemoveIcon) {
@@ -217,6 +219,8 @@ private fun PagerDot(
 private fun CMPagerPreview() {
     CMPager(
         images = listOf("image1", "image2"),
-        state = rememberPagerState { 2 }
+        state = rememberPagerState { 2 },
+        enableRemoveIcon = true,
+        enableTint = true
     )
 }

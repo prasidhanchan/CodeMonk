@@ -160,7 +160,8 @@ internal fun EditProfileScreen(
             CMTextBox(
                 modifier = Modifier
                     .focusable(enabled = true)
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .fillMaxWidth(),
                 value = uiState.currentUser.username,
                 onValueChange = onUsernameChange,
                 placeHolder = stringResource(id = R.string.username_placeholder),
@@ -183,6 +184,7 @@ internal fun EditProfileScreen(
             CMTextBox(
                 value = uiState.currentUser.name,
                 onValueChange = onNameChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.name_placeholder),
                 leadingIcon = {
                     Icon(
@@ -200,6 +202,7 @@ internal fun EditProfileScreen(
             CMTextBox(
                 value = uiState.currentUser.bio,
                 onValueChange = onBioChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.add_a_bio_placeholder),
                 leadingIcon = {
                     Icon(
@@ -220,6 +223,7 @@ internal fun EditProfileScreen(
                 CMTextBox(
                     value = uiState.currentUser.currentProject,
                     onValueChange = onCurrentProjectChange,
+                    modifier = Modifier.fillMaxWidth(),
                     placeHolder = stringResource(id = R.string.current_project_placeholder),
                     leadingIcon = {
                         Icon(
@@ -243,6 +247,7 @@ internal fun EditProfileScreen(
                 CMTextBox(
                     value = uiState.currentUser.mentor,
                     onValueChange = onMentorChange,
+                    modifier = Modifier.fillMaxWidth(),
                     placeHolder = stringResource(id = R.string.mentor_username),
                     leadingIcon = {
                         Icon(
@@ -266,6 +271,7 @@ internal fun EditProfileScreen(
             CMTextBox(
                 value = linkState,
                 onValueChange = { linkState = it },
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.add_a_link_placeholder),
                 leadingIcon = {
                     Icon(
@@ -313,6 +319,7 @@ internal fun EditProfileScreen(
             Spacer(modifier = Modifier.height(10.dp))
             CMButton(
                 text = stringResource(id = R.string.update),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.loading,
                 loading = uiState.loading,
                 onClick = onUpdateClick
