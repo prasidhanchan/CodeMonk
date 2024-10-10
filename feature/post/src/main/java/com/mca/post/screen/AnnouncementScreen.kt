@@ -42,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -83,6 +84,8 @@ internal fun AnnouncementScreen(
     ) { result ->
         result.forEach { uri -> images.add(uri.toString()) }
     }
+
+    val localKeyboard = LocalSoftwareKeyboardController.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -137,7 +140,10 @@ internal fun AnnouncementScreen(
                 enabled = !uiState.loading,
                 color = Color.White,
                 textColor = Black,
-                onClick = { onPostClick(images) }
+                onClick = {
+                    if (uiState.description.isNotEmpty()) localKeyboard?.hide()
+                    onPostClick(images)
+                }
             )
             Box(
                 modifier = Modifier
