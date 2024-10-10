@@ -46,13 +46,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Scale
+import coil.size.Size
 import com.mca.ui.R
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
@@ -144,12 +149,17 @@ fun CMPager(
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     AsyncImage(
-                        model = images[page],
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(images[page])
+                            .scale(Scale.FIT)
+                            .size(Size.ORIGINAL)
+                            .build(),
                         contentDescription = stringResource(id = R.string.post_image),
                         modifier = Modifier
                             .padding(horizontal = 0.5.dp)
                             .aspectRatio(1412f/949f),
-                        contentScale = contentScale
+                        contentScale = contentScale,
+                        filterQuality = FilterQuality.High
                     )
                     if (enableTint) {
                         Box(

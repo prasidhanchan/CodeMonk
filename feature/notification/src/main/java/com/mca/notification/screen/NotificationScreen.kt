@@ -104,11 +104,12 @@ internal fun NotificationScreen(
     )
 
     DisposableEffect(key1 = lifeCycleOwner) {
-
         val observer = LifecycleEventObserver { _, event ->
-            when(event) {
-                Lifecycle.Event.ON_START -> { updateLastSeen() }
-                Lifecycle.Event.ON_DESTROY -> { updateLastSeen() }
+            when (event) {
+                Lifecycle.Event.ON_START, Lifecycle.Event.ON_DESTROY -> {
+                    updateLastSeen()
+                }
+
                 else -> Unit
             }
         }

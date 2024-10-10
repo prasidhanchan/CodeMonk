@@ -41,4 +41,7 @@ object Constant {
 
     const val MAX_POST_ADS = 4
     const val MAX_SEARCH_ADS = 2
+
+    /** Compression level for uploading images. */
+    const val COMPRESSION_LEVEL = 70
 }
