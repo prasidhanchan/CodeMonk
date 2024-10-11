@@ -45,12 +45,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,6 +72,7 @@ import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.animateAlpha
 import com.mca.util.constant.animatedLike
+import com.mca.util.constant.extractUrl
 import com.mca.util.constant.toLikedBy
 import com.mca.util.constant.toLikes
 import com.mca.util.constant.toPostId
@@ -246,6 +253,8 @@ private fun MainContent(
     alpha: Float,
     onTransform: (Boolean) -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
+
     val state = rememberPagerState { post.images.size }
     var isOpen by remember { mutableStateOf(false) }
 
@@ -259,7 +268,22 @@ private fun MainContent(
     }
 
     Text(
-        text = post.description,
+        text = buildAnnotatedString {
+            val link = post.description.extractUrl()
+            append(post.description.substringBefore(link))
+            withLink(
+                link = LinkAnnotation.Clickable(
+                    tag = "URL",
+                    styles = TextLinkStyles(
+                        style = SpanStyle(color = LinkBlue)
+                    ),
+                    linkInteractionListener = { uriHandler.openUri(link) }
+                )
+            ) {
+                append(link)
+            }
+            append(post.description.substringAfter(link))
+        },
         style = TextStyle(
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold,
@@ -365,7 +389,7 @@ private fun AnnouncementCardPreview() {
         post = Post(
             userId = "1",
             description = "Introducing CodeLab! \uD83D\uDE80\n\n" +
-                    "After months of hard work, I'm excited to announce the launch of CodeLab, an app designed to simplify coding project management for developers. " +
+                    "\n\nAfter months of hard work, I'm excited to announce the launch of CodeLab, an app designed to simplify coding project management for developers. " +
                     "Whether you're a beginner or a pro, CodeLab helps you create, track, and collaborate on coding projects effortlessly. With real-time updates, progress tracking, and an intuitive interface, this app is here to streamline your workflow. " +
                     "Stay tuned for the official release—let's code smarter, together! ✨",
             likes = listOf("uchiha_sasuke", "uzumaki_naruto"),
