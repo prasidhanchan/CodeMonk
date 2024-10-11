@@ -422,7 +422,7 @@ fun compressImage(context: Context, uri: Uri): ImageData? {
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         val mimeType = context.contentResolver.getType(uri)
-        val format = when(mimeType) {
+        val format = when (mimeType) {
             "image/jpeg" -> Bitmap.CompressFormat.JPEG
             "image/png" -> Bitmap.CompressFormat.PNG
             else -> Bitmap.CompressFormat.JPEG
@@ -435,7 +435,7 @@ fun compressImage(context: Context, uri: Uri): ImageData? {
         // Return image with meta data
         ImageData(
             image = byteArrayOutputStream.toByteArray(),
-            mimeType = when(mimeType) {
+            mimeType = when (mimeType) {
                 "image/jpeg" -> "jpeg"
                 "image/png" -> "png"
                 else -> "jpg"
@@ -450,4 +450,12 @@ fun compressImage(context: Context, uri: Uri): ImageData? {
         )
         null
     }
+}
+
+/**
+ * Function to extract a url from a string.
+ */
+fun String.extractUrl(): String {
+    return Regex("""https?://(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)""")
+        .find(this)?.value ?: ""
 }
