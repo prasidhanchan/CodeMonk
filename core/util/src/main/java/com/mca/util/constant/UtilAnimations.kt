@@ -27,9 +27,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -82,13 +82,13 @@ fun Modifier.animateAlpha(
             durationMillis = duration,
             delayMillis = delay
         ),
-        label = "animatedNotificationAlpha"
+        label = "animatedAlpha"
     )
     if (condition) {
-        alpha(animatedAlpha)
+        graphicsLayer(alpha = animatedAlpha)
             .onGloballyPositioned { alpha = 1f }
     } else {
-        alpha(animatedAlpha)
+        graphicsLayer(alpha = animatedAlpha)
             .onGloballyPositioned { alpha = 0f }
     }
 }

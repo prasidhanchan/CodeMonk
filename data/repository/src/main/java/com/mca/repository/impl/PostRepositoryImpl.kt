@@ -13,6 +13,7 @@
 
 package com.mca.repository.impl
 
+import android.content.Context
 import androidx.core.net.toUri
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.mca.repository.PostRepository
 import com.mca.util.constant.Constant.DEADLINE_REGEX
+import com.mca.util.constant.compressImage
 import com.mca.util.constant.convertToMap
 import com.mca.util.constant.matchUsername
 import com.mca.util.constant.toPostId
@@ -31,6 +33,7 @@ import com.mca.util.constant.trimAll
 import com.mca.util.model.Post
 import com.mca.util.model.Tag
 import com.mca.util.warpper.DataOrException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
@@ -75,6 +78,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun addAnnouncement(
         post: Post,
+        context: Context,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
@@ -87,23 +91,31 @@ class PostRepositoryImpl @Inject constructor(
             if (post.images.isNotEmpty()) {
                 // Get download urls for all images
                 post.images.forEach { image ->
+                    val imageData = compressImage(
+                        context = context,
+                        uri = image.toUri()
+                    )
+
                     val storageRef = postStorage
                         .child(post.toPostId())
-                        .child("image-${Random.nextInt(0, Int.MAX_VALUE)}.jpg")
+                        .child("image-${Random.nextInt(0, Int.MAX_VALUE)}.${imageData?.mimeType}")
 
-                    storageRef.putFile(image.toUri()).await()
+                    if (imageData != null) {
+                        storageRef.putBytes(imageData.image!!).await()
 
-                    storageRef.downloadUrl
-                        .addOnSuccessListener { uri ->
-                            images.add(uri.toString())
-                        }
-                        .addOnFailureListener { error ->
-                            error.localizedMessage?.let(onError)
-                        }
-                        .await()
+                        storageRef.downloadUrl
+                            .addOnSuccessListener { uri ->
+                                images.add(uri.toString())
+                            }
+                            .addOnFailureListener { error ->
+                                error.localizedMessage?.let(onError)
+                            }
+                            .await()
+                    }
                 }
             }
 
+            delay(800L) // Delay so that all the images are added to the list
             // Add to Realtime DB with download urls
             postDB.child(post.toPostId())
                 .updateChildren(

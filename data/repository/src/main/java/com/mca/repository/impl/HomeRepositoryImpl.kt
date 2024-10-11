@@ -162,7 +162,7 @@ class HomeRepositoryImpl @Inject constructor(
                 }
             }
             postDB.addListenerForSingleValueEvent(valueEventListener)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             onError("Couldn't like the post")
         }
     }
@@ -190,7 +190,7 @@ class HomeRepositoryImpl @Inject constructor(
                 }
             }
             postDB.addListenerForSingleValueEvent(valueEventListener)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             onError("Couldn't remove the like")
         }
     }

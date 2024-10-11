@@ -13,6 +13,7 @@
 
 package com.mca.post.screen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mca.post.UiState
@@ -67,12 +68,14 @@ class PostViewModel @Inject constructor(
 
     fun addAnnouncement(
         post: Post,
+        context: Context,
         onSuccess: () -> Unit
     ) {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             postRepository.addAnnouncement(
                 post = post,
+                context = context,
                 onSuccess = {
                     onSuccess()
                     uiState.update { it.copy(loading = false) }

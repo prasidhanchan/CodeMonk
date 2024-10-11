@@ -144,8 +144,8 @@ class NotificationRepositoryImpl @Inject constructor(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     dataOrException.update {
                         it.copy(
-                            data = snapshot.children.map { docSnap ->
-                                docSnap.getValue<NotificationData>()!!
+                            data = snapshot.children.mapNotNull { docSnap ->
+                                docSnap.getValue<NotificationData>()
                             }
                                 .sortedByDescending { notification -> notification.timeStamp }
                         )
@@ -176,7 +176,7 @@ class NotificationRepositoryImpl @Inject constructor(
                 .addOnSuccessListener { onSuccess() }
                 .addOnFailureListener { onError() }
                 .await()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             onError()
         }
     }

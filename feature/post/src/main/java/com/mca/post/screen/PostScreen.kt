@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,6 +71,7 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
+import com.mca.ui.theme.fontColor
 import com.mca.util.constant.Constant.ADMIN
 import kotlinx.coroutines.launch
 
@@ -119,16 +123,16 @@ internal fun PostScreen(
                 .fillMaxSize()
                 .verticalScroll(state),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             CMRegularAppBar(
-                text = stringResource(id = if (postId.isBlank()) R.string.add_post else R.string.edit_post),
+                text = stringResource(id = if (postId.isBlank()) R.string.new_post else R.string.edit_post),
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.currentProject,
                 onValueChange = onCurrentProjectChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.current_project_placeholder),
                 leadingIcon = {
                     Icon(
@@ -149,6 +153,7 @@ internal fun PostScreen(
                     newMember = it
                     onTeamMemberChange(it)
                 },
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.team_member),
                 leadingIcon = {
                     Icon(
@@ -194,8 +199,8 @@ internal fun PostScreen(
             )
             FlowRow(
                 modifier = Modifier
-                    .padding(bottom = 15.dp, start = 10.dp)
-                    .fillMaxWidth(),
+                    .padding(bottom = 15.dp)
+                    .fillMaxWidth(0.9f),
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -213,6 +218,7 @@ internal fun PostScreen(
             CMTextBox(
                 value = uiState.description,
                 onValueChange = onDescriptionChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.short_description),
                 leadingIcon = {
                     Icon(
@@ -238,9 +244,25 @@ internal fun PostScreen(
                 headerTitle = stringResource(id = R.string.description),
                 enabled = if (postId.isBlank()) true else uiState.userId == currentUserId
             )
+            if (userType != ADMIN) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 20.dp))
+                Text(
+                    text = stringResource(id = R.string.update_field_message),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = TextStyle(
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = dosis,
+                        color = fontColor.copy(alpha = 0.5f)
+                    ),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
             CMTextBox(
                 value = uiState.projectProgress,
                 onValueChange = onProgressChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.progress_progress),
                 leadingIcon = {
                     Icon(
@@ -259,9 +281,9 @@ internal fun PostScreen(
                 enabled = userType == ADMIN
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.deadline,
                 onValueChange = onDeadlineChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.deadline_placeholder),
                 leadingIcon = {
                     Icon(
@@ -282,7 +304,9 @@ internal fun PostScreen(
             )
             CMButton(
                 text = stringResource(id = if (postId.isBlank()) R.string.post else R.string.update),
-                modifier = Modifier.padding(vertical = 20.dp),
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .fillMaxWidth(),
                 loading = uiState.updating,
                 onClick = {
                     if (uiState.currentProject.isNotBlank() && uiState.teamMembers.size > 1) {
@@ -308,7 +332,7 @@ private fun TeamMemberChip(
 
     Surface(
         modifier = Modifier
-            .padding(top = 10.dp, bottom = 10.dp, start = 6.dp, end = 10.dp)
+            .padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
             .height(35.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
             .then(modifier),

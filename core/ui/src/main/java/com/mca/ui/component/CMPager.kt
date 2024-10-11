@@ -22,10 +22,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -46,16 +44,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Scale
+import coil.size.Size
 import com.mca.ui.R
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.LightBlack
@@ -84,6 +86,7 @@ fun CMPager(
     enableTint: Boolean = false,
     enableRemoveIcon: Boolean = false,
     enableClick: Boolean = false,
+    enableTransform: Boolean = true,
     onClick: () -> Unit = { },
     onRemoveImageClick: (image: String) -> Unit = { },
     onTransform: (Boolean) -> Unit = { }
@@ -91,8 +94,10 @@ fun CMPager(
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val transformable = rememberTransformableState { zoomChange, panChange, _ ->
-        scale = (scale * zoomChange).coerceAtLeast(1f)
-        if (scale != 1f) offset = (offset + panChange)
+        if (enableTransform) {
+            scale = (scale * zoomChange).coerceAtLeast(1f)
+            if (scale != 1f) offset = (offset + panChange)
+        }
     }
 
     LaunchedEffect(key1 = transformable.isTransformInProgress) {
@@ -106,7 +111,7 @@ fun CMPager(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(265.dp),
+            .wrapContentHeight(Alignment.CenterVertically),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -114,7 +119,7 @@ fun CMPager(
             modifier = modifier
                 .padding(bottom = 10.dp)
                 .fillMaxWidth()
-                .height(220.dp)
+                .wrapContentHeight(Alignment.CenterVertically)
                 .clickable(
                     enabled = enableClick,
                     indication = null,
@@ -122,8 +127,12 @@ fun CMPager(
                     onClick = onClick
                 )
                 .transformable(transformable)
-                .scale(scale)
-                .offset { IntOffset(offset.x.toInt(), offset.y.toInt()) },
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    translationX = offset.x
+                    translationY = offset.y
+                },
             shape = RoundedCornerShape(10.dp),
             color = LightBlack
         ) {
@@ -134,22 +143,30 @@ fun CMPager(
                     .wrapContentHeight(Alignment.CenterVertically)
             ) { page ->
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(Alignment.CenterVertically),
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     AsyncImage(
-                        model = images[page],
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(images[page])
+                            .scale(Scale.FIT)
+                            .size(Size.ORIGINAL)
+                            .build(),
                         contentDescription = stringResource(id = R.string.post_image),
                         modifier = Modifier
                             .padding(horizontal = 0.5.dp)
-                            .fillMaxSize(),
-                        contentScale = contentScale
+                            .aspectRatio(1412f/949f),
+                        contentScale = contentScale,
+                        filterQuality = FilterQuality.High
                     )
                     if (enableTint) {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = Black.copy(0.2f))
+                                .fillMaxWidth()
+                                .aspectRatio(1412f/949f)
+                                .background(color = Black.copy(alpha = 0.2f))
                         )
                     }
                     if (enableRemoveIcon) {
@@ -174,7 +191,7 @@ fun CMPager(
             modifier = Modifier.animateAlpha(
                 delay = 0,
                 duration = 250,
-                condition = !transformable.isTransformInProgress
+                condition = if (enableTransform) !transformable.isTransformInProgress else true
             )
         )
     }
@@ -212,6 +229,8 @@ private fun PagerDot(
 private fun CMPagerPreview() {
     CMPager(
         images = listOf("image1", "image2"),
-        state = rememberPagerState { 2 }
+        state = rememberPagerState { 2 },
+        enableRemoveIcon = true,
+        enableTint = true
     )
 }

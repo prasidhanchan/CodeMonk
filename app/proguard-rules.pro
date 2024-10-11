@@ -1,21 +1,22 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-dontobfuscate
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-dontwarn android.media.LoudnessCodecController$OnLoudnessCodecUpdateListener
+-dontwarn android.media.LoudnessCodecController
+-dontwarn java.lang.reflect.AnnotatedType
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Keep all the members of public constructor
+-keepclassmembers class com.mca.repository.impl.* {
+    public <init>();
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep all the network models
+-keepattributes Signature
+-keep class com.mca.util.model.* { *; }
+-keep class * extends com.google.firebase.database.GenericTypeIndicator { *; }
+
+# Keep Google API classes
+-keep class com.google.** { *; }
+
+# Keep all the Routes
+-keep class com.mca.util.navigation.Route { *; }
+-keep class com.mca.util.navigation.Route$* { *; }

@@ -593,12 +593,6 @@ private fun PostDescription(
 
 @Preview
 @Composable
-private fun PostCardLoaderPreview() {
-    PostLoader()
-}
-
-@Preview
-@Composable
 private fun PostCardPreview() {
     PostCard(
         post = Post(

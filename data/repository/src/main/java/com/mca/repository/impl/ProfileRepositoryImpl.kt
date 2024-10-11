@@ -255,7 +255,7 @@ class ProfileRepositoryImpl @Inject constructor(
                             docSnap.toObject<User>()
                         }
                         onSuccess()
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         onError()
                         dataOrException.exception = Exception("User profile not created!")
                     }

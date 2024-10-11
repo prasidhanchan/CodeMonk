@@ -16,6 +16,9 @@ package com.mca.util.constant
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import androidx.navigation.NavBackStackEntry
 import com.google.android.gms.ads.AdListener
@@ -28,11 +31,16 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.mca.util.constant.Constant.COMPRESSION_LEVEL
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.model.NotificationData
 import com.mca.util.model.Post
 import com.mca.util.model.PushNotificationTopic
 import com.mca.util.model.User
 import com.mca.util.navigation.Route
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,6 +55,14 @@ enum class PostType {
     PROJECT,
     ANNOUNCEMENT
 }
+
+/**
+ * Data class to hold an image and its mime type.
+ */
+data class ImageData(
+    val image: ByteArray?,
+    val mimeType: String
+)
 
 /**
  * Function to converts a list of likes to a string of liked by.
@@ -381,4 +397,57 @@ fun checkUpdates(
                 )
             }
         }
+}
+
+/**
+ * Function to compress and scale an image to lower quality.
+ * Scales an image if its greater that 1412x949 pixels.
+ * @param context Requires a [Context].
+ * @param uri Requires a local image uri.
+ * @return Return a [ImageData] of the compressed image.
+ */
+fun compressImage(context: Context, uri: Uri): ImageData? {
+    return try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+        val aspectRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
+        val width = if (bitmap.width > 1412f) 1412 else bitmap.width
+        val height = if (bitmap.height > 949f) {
+            (width.toFloat() / aspectRatio).toInt()
+        } else {
+            bitmap.height
+        }
+        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        val mimeType = context.contentResolver.getType(uri)
+        val format = when(mimeType) {
+            "image/jpeg" -> Bitmap.CompressFormat.JPEG
+            "image/png" -> Bitmap.CompressFormat.PNG
+            else -> Bitmap.CompressFormat.JPEG
+        }
+        resizedBitmap.compress(
+            format,
+            COMPRESSION_LEVEL,
+            byteArrayOutputStream
+        )
+        // Return image with meta data
+        ImageData(
+            image = byteArrayOutputStream.toByteArray(),
+            mimeType = when(mimeType) {
+                "image/jpeg" -> "jpeg"
+                "image/png" -> "png"
+                else -> "jpg"
+            }
+        )
+    } catch (e: Exception) {
+        showSnackBar(
+            response = Response(
+                message = e.localizedMessage,
+                responseType = ResponseType.ERROR
+            )
+        )
+        null
+    }
 }

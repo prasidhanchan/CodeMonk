@@ -16,7 +16,7 @@ package com.mca.util.constant
 object Constant {
 
     /** Regex for username ex: pra_sidh_22 */
-    val USERNAME_REGEX = Regex("^[a-zA-Z0-9_.]+|[a-zA-Z]+\$")
+    val USERNAME_REGEX = Regex("^[a-zA-Z_]+[a-zA-Z0-9_]*\$")
 
     /** Regex for deadline ex: 20 Apr 2024 */
     val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")
@@ -39,6 +39,9 @@ object Constant {
     const val LIKE_CHANNEL_ID = "LikeChannel"
     const val LIKE_TOPIC = "Like"
 
-    const val MAX_POST_ADS = 3
+    const val MAX_POST_ADS = 4
     const val MAX_SEARCH_ADS = 2
+
+    /** Compression level for uploading images. */
+    const val COMPRESSION_LEVEL = 70
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -100,7 +101,7 @@ internal fun TopMembers(
 }
 
 @Composable
-internal fun CMHistogram(
+private fun CMHistogram(
     position: Int,
     color: Color,
     profileImage: String,
@@ -138,12 +139,18 @@ internal fun CMHistogram(
         Column(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
-                .height(
+                .fillMaxHeight(
                     when (position) {
+                        1 -> 1f
+                        2 -> 0.8f
+                        else -> 0.6f
+                    }
+                    /*when (position) {
                         1 -> 260.dp
                         2 -> 200.dp
                         else -> 160.dp
                     }
+                     */
                 )
                 .width(70.dp),
             verticalArrangement = Arrangement.SpaceBetween,

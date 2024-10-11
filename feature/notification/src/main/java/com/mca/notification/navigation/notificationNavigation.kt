@@ -41,15 +41,13 @@ fun NavGraphBuilder.notificationNavigation(
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val lastSeen = System.currentTimeMillis()
-
         NotificationScreen(
             uiState = uiState,
             userType = userType,
             onSendNotificationClick = { navHostController.navigate(Route.SendNotification) },
             updateLastSeen = {
                 viewModel.updateLastSeen(
-                    lastSeen = lastSeen,
+                    lastSeen = System.currentTimeMillis(),
                     onSuccess = refreshUser
                 )
             }

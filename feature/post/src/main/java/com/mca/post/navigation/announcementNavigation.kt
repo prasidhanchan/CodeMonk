@@ -56,6 +56,7 @@ fun NavGraphBuilder.announcementNavigation(
                         images = images,
                         timeStamp = System.currentTimeMillis()
                     ),
+                    context = context,
                     onSuccess = {
                         sendNotification()
                         navHostController.popBackStack()
