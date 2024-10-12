@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import com.mca.profile.screen.ChangePasswordScreen
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.ui.R
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.navigation.Route
 import com.mca.util.warpper.Response
@@ -36,10 +37,10 @@ fun NavGraphBuilder.changePasswordNavigation(
 ) {
     composable<Route.ChangePassword>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 200))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 200))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val context = LocalContext.current

@@ -13,6 +13,9 @@
 
 package com.mca.post.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.post.screen.AnnouncementScreen
 import com.mca.post.screen.PostViewModel
 import com.mca.ui.R
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.constant.PostType
 import com.mca.util.model.Post
 import com.mca.util.navigation.Route
@@ -33,7 +37,14 @@ fun NavGraphBuilder.announcementNavigation(
     navHostController: NavHostController,
     sendNotification: () -> Unit
 ) {
-    composable<Route.Announcement> {
+    composable<Route.Announcement>(
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
+        }
+    ) {
         val viewModel: PostViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val currentUser = FirebaseAuth.getInstance().currentUser

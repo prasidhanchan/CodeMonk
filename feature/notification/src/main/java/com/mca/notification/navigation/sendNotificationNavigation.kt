@@ -28,6 +28,7 @@ import com.mca.notification.screen.SendNotificationScreen
 import com.mca.ui.R
 import com.mca.util.constant.Constant.EVENT_CHANNEL_ID
 import com.mca.util.constant.Constant.EVENT_TOPIC
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.model.Android
 import com.mca.util.model.AndroidNotification
@@ -46,10 +47,10 @@ fun NavGraphBuilder.sendNotificationNavigation(
 ) {
     composable<Route.SendNotification>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()

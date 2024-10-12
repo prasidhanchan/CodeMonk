@@ -23,6 +23,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mca.auth.screen.AuthViewModel
 import com.mca.auth.screen.LoginScreen
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.loginNavigation(
@@ -31,10 +32,10 @@ fun NavGraphBuilder.loginNavigation(
 ) {
     composable<Route.Login>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()

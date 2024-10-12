@@ -14,6 +14,7 @@
 import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
 import AndroidConfig.JVM_TARGET
+import AndroidConfig.MIN_SDK
 
 plugins {
     alias(libs.plugins.android.library)
@@ -24,6 +25,10 @@ plugins {
 android {
     namespace = "com.mca.splash"
     compileSdk = COMPILE_SDK
+
+    defaultConfig {
+        minSdk = MIN_SDK
+    }
 
     compileOptions {
         sourceCompatibility = JAVA_VERSION

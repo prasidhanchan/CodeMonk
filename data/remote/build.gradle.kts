@@ -14,6 +14,7 @@
 import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
 import AndroidConfig.JVM_TARGET
+import AndroidConfig.MIN_SDK
 import java.util.Properties
 
 plugins {
@@ -26,6 +27,8 @@ android {
     compileSdk = COMPILE_SDK
 
     defaultConfig {
+        minSdk = MIN_SDK
+
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
 

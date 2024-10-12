@@ -13,6 +13,7 @@
 
 package com.mca.search.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -116,7 +117,7 @@ internal fun SearchScreen(
                     ) { index, user ->
                         CMProfileCard(
                             user = user,
-                            modifier= Modifier.padding(bottom = 5.dp),
+                            modifier = Modifier.padding(bottom = 5.dp),
                             delay = index * 100,
                             onClick = onProfileClick
                         )
@@ -126,6 +127,16 @@ internal fun SearchScreen(
                                 delay = index * 100
                             )
                         }
+                    }
+                } else if (uiState.search.isBlank()) {
+                    item(key = "searchSomeone") {
+                        Image(
+                            painter = painterResource(id = R.drawable.search_sccreen_media_dark),
+                            contentDescription = stringResource(id = R.string.search_something),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(vertical = 50.dp)
+                        )
                     }
                 }
             }
@@ -143,7 +154,7 @@ internal fun SearchScreen(
 private fun SearchScreenPreview() {
     SearchScreen(
         uiState = UiState(
-            users = null
+            users = listOf()
         ),
         onProfileClick = { },
         onSearchChange = { },

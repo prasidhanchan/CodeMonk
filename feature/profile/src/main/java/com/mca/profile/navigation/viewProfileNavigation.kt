@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.profile.screen.ViewProfileScreen
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.viewProfileNavigation(
@@ -33,10 +34,10 @@ fun NavGraphBuilder.viewProfileNavigation(
 ) {
     composable<Route.ViewProfile>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) { backStackEntry ->
         val username = backStackEntry.toRoute<Route.ViewProfile>().username

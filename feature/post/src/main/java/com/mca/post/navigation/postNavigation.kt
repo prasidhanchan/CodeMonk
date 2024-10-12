@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mca.post.screen.PostScreen
 import com.mca.post.screen.PostViewModel
 import com.mca.ui.R
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.model.Post
 import com.mca.util.navigation.Route
 import kotlinx.coroutines.delay
@@ -45,10 +46,10 @@ fun NavGraphBuilder.postNavigation(
 
     composable<Route.Post>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) { backStackEntry ->
         val viewModel: PostViewModel = hiltViewModel()

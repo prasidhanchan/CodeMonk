@@ -31,6 +31,7 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.mca.search.BuildConfig.NATIVE_AD_ID_SEARCH
 import com.mca.search.screen.SearchScreen
 import com.mca.search.screen.SearchViewModel
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.constant.Constant.MAX_SEARCH_ADS
 import com.mca.util.constant.loadNativeAds
 import com.mca.util.navigation.Route
@@ -42,10 +43,10 @@ fun NavGraphBuilder.searchNavigation(
 ) {
     composable<Route.Search>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val viewModel: SearchViewModel = hiltViewModel()
