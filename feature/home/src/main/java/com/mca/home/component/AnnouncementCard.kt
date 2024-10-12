@@ -270,19 +270,23 @@ private fun MainContent(
     Text(
         text = buildAnnotatedString {
             val link = post.description.extractUrl()
-            append(post.description.substringBefore(link))
-            withLink(
-                link = LinkAnnotation.Clickable(
-                    tag = "URL",
-                    styles = TextLinkStyles(
-                        style = SpanStyle(color = LinkBlue)
-                    ),
-                    linkInteractionListener = { uriHandler.openUri(link) }
-                )
-            ) {
-                append(link)
+            if (!link.isNullOrBlank()) {
+                append(post.description.substringBefore(link))
+                withLink(
+                    link = LinkAnnotation.Clickable(
+                        tag = "URL",
+                        styles = TextLinkStyles(
+                            style = SpanStyle(color = LinkBlue)
+                        ),
+                        linkInteractionListener = { uriHandler.openUri(link) }
+                    )
+                ) {
+                    append(link)
+                }
+                append(post.description.substringAfter(link))
+            } else {
+                append(post.description)
             }
-            append(post.description.substringAfter(link))
         },
         style = TextStyle(
             fontSize = 15.sp,
