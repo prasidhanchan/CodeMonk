@@ -175,7 +175,7 @@ private fun AnnouncementTopBar(
             .clickable(
                 indication = null,
                 interactionSource = remember(::MutableInteractionSource),
-                onClick = { onUsernameClick(user.username) }
+                onClick = { onUsernameClick(user.userId) }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start

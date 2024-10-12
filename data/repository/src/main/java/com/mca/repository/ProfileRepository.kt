@@ -47,7 +47,7 @@ interface ProfileRepository {
     suspend fun getUpdate(): DataOrException<Update, Boolean, Exception>
 
     suspend fun getSelectedUser(
-        username: String,
+        userId: String,
         onSuccess: () -> Unit,
         onError: () -> Unit
     ): DataOrException<User, Boolean, Exception>

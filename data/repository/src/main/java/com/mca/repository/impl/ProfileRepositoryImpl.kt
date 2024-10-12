@@ -234,13 +234,14 @@ class ProfileRepositoryImpl @Inject constructor(
                 .await()
         } catch (e: Exception) {
             dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
         }
-        dataOrException.loading = false
         return dataOrException
     }
 
     override suspend fun getSelectedUser(
-        username: String,
+        userId: String,
         onSuccess: () -> Unit,
         onError: () -> Unit
     ): DataOrException<User, Boolean, Exception> {
@@ -248,12 +249,10 @@ class ProfileRepositoryImpl @Inject constructor(
             DataOrException(loading = true)
 
         try {
-            userRef.whereEqualTo("username", username).get()
-                .addOnSuccessListener { dataSnap ->
+            userRef.document(userId).get()
+                .addOnSuccessListener { docSnap ->
                     try {
-                        dataOrException.data = dataSnap.firstNotNullOf { docSnap ->
-                            docSnap.toObject<User>()
-                        }
+                        dataOrException.data = docSnap.toObject<User>()
                         onSuccess()
                     } catch (_: Exception) {
                         onError()
@@ -266,8 +265,9 @@ class ProfileRepositoryImpl @Inject constructor(
                 .await()
         } catch (e: Exception) {
             dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
         }
-        dataOrException.loading = false
         return dataOrException
     }
 
@@ -282,7 +282,7 @@ class ProfileRepositoryImpl @Inject constructor(
                     dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
                         docSnap.toObject<User>()
                     }
-                        .filter { user -> user.userId != selectedUserId }
+                        .filterNot { user -> user.userId == selectedUserId }
                         .shuffled()
                         .take(3)
                 }
