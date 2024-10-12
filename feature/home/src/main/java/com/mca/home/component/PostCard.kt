@@ -350,7 +350,7 @@ private fun PostTopBar(
             .clickable(
                 indication = null,
                 interactionSource = interactionSource,
-                onClick = { onUsernameClick(user.userId) }
+                onClick = { onUsernameClick(post.userId) }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
