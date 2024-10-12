@@ -15,6 +15,9 @@ package com.mca.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitDragOrCancellation
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -48,6 +51,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -91,6 +95,9 @@ fun CMPager(
     onRemoveImageClick: (image: String) -> Unit = { },
     onTransform: (Boolean) -> Unit = { }
 ) {
+    val interactionSource = remember(::MutableInteractionSource)
+    var isDragged by remember { mutableStateOf(false) }
+
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val transformable = rememberTransformableState { zoomChange, panChange, _ ->
@@ -123,10 +130,20 @@ fun CMPager(
                 .clickable(
                     enabled = enableClick,
                     indication = null,
-                    interactionSource = remember(::MutableInteractionSource),
+                    interactionSource = interactionSource,
                     onClick = onClick
                 )
-                .transformable(transformable)
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        val down = awaitFirstDown(requireUnconsumed = true)
+                        awaitDragOrCancellation(down.id)
+                        isDragged = (currentEvent.changes.size == 2)
+                    }
+                }
+                .transformable(
+                    state = transformable,
+                    enabled = isDragged
+                )
                 .graphicsLayer {
                     scaleX = scale
                     scaleY = scale
@@ -157,7 +174,7 @@ fun CMPager(
                         contentDescription = stringResource(id = R.string.post_image),
                         modifier = Modifier
                             .padding(horizontal = 0.5.dp)
-                            .aspectRatio(1412f/949f),
+                            .aspectRatio(1412f / 949f),
                         contentScale = contentScale,
                         filterQuality = FilterQuality.High
                     )
@@ -165,7 +182,7 @@ fun CMPager(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(1412f/949f)
+                                .aspectRatio(1412f / 949f)
                                 .background(color = Black.copy(alpha = 0.2f))
                         )
                     }
