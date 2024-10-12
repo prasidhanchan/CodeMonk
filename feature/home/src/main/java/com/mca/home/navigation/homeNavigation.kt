@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import com.google.android.gms.ads.nativead.NativeAd
 import com.mca.home.screen.HomeScreen
 import com.mca.home.screen.HomeViewModel
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.homeNavigation(
@@ -39,10 +40,10 @@ fun NavGraphBuilder.homeNavigation(
 ) {
     composable<Route.Home>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()

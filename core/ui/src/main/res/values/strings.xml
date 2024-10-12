@@ -38,6 +38,7 @@
     <string name="not_set">"Not set"</string>
     <string name="username">\@%1$s</string>
     <string name="search">Search</string>
+    <string name="search_something">Search Something</string>
     <string name="profile">Profile</string>
     <string name="delete">Delete</string>
     <string name="linkedin">LinkedIn</string>

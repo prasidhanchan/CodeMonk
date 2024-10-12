@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.mca.leaderboard.screen.LeaderBoardScreen
 import com.mca.leaderboard.screen.LeaderBoardViewModel
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.leaderBoardNavigation(
@@ -31,10 +32,10 @@ fun NavGraphBuilder.leaderBoardNavigation(
 ){
     composable<Route.LeaderBoard>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val viewModel: LeaderBoardViewModel = hiltViewModel()

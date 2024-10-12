@@ -14,6 +14,7 @@
 import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
 import AndroidConfig.JVM_TARGET
+import AndroidConfig.MIN_SDK
 import java.util.Properties
 
 plugins {
@@ -21,7 +22,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.ksp)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -29,10 +30,16 @@ android {
     compileSdk = COMPILE_SDK
 
     defaultConfig {
+        minSdk = MIN_SDK
+
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
 
-        buildConfigField("String", "NATIVE_AD_ID_POST", "\"${properties.getProperty("NATIVE_AD_ID_POST")}\"")
+        buildConfigField(
+            "String",
+            "NATIVE_AD_ID_POST",
+            "\"${properties.getProperty("NATIVE_AD_ID_POST")}\""
+        )
     }
 
     compileOptions {
@@ -58,7 +65,6 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 

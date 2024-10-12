@@ -14,18 +14,23 @@
 import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
 import AndroidConfig.JVM_TARGET
+import AndroidConfig.MIN_SDK
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.ksp)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
     namespace = "com.mca.post"
     compileSdk = COMPILE_SDK
+
+    defaultConfig {
+        minSdk = MIN_SDK
+    }
 
     compileOptions {
         sourceCompatibility = JAVA_VERSION
@@ -49,7 +54,6 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 

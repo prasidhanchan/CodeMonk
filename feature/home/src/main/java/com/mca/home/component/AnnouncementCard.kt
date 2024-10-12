@@ -22,9 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -40,6 +38,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -79,6 +78,8 @@ import com.mca.util.constant.toPostId
 import com.mca.util.constant.toTimeStamp
 import com.mca.util.model.Post
 import com.mca.util.model.User
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun AnnouncementCard(
@@ -148,7 +149,13 @@ internal fun AnnouncementCard(
             }
         }
 
-        if (post.likes.isNotEmpty()) AnnouncementBottomBar(likes = post.likes)
+        if (post.likes.isNotEmpty()) {
+            AnnouncementBottomBar(
+                likes = post.likes,
+                currentUserId = currentUserId,
+                currentUsername = currentUsername
+            )
+        }
     }
 }
 
@@ -168,7 +175,7 @@ private fun AnnouncementTopBar(
             .clickable(
                 indication = null,
                 interactionSource = remember(::MutableInteractionSource),
-                onClick = { onUsernameClick(user.username) }
+                onClick = { onUsernameClick(post.userId) }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
@@ -218,11 +225,16 @@ private fun AnnouncementTopBar(
 @Composable
 private fun AnnouncementBottomBar(
     likes: List<String>,
+    currentUserId: String,
+    currentUsername: String,
     modifier: Modifier = Modifier
 ) {
-    Spacer(modifier = Modifier.height(20.dp))
+    val postLikes by rememberSaveable { mutableStateOf(likes) }
+
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .padding(top = 20.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -233,7 +245,9 @@ private fun AnnouncementBottomBar(
             tint = Red
         )
         Text(
-            text = likes.toLikedBy(),
+            text = postLikes
+                .filterNot { it == currentUserId || it == currentUsername }
+                .toLikedBy(),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -270,19 +284,23 @@ private fun MainContent(
     Text(
         text = buildAnnotatedString {
             val link = post.description.extractUrl()
-            append(post.description.substringBefore(link))
-            withLink(
-                link = LinkAnnotation.Clickable(
-                    tag = "URL",
-                    styles = TextLinkStyles(
-                        style = SpanStyle(color = LinkBlue)
-                    ),
-                    linkInteractionListener = { uriHandler.openUri(link) }
-                )
-            ) {
-                append(link)
+            if (!link.isNullOrBlank()) {
+                append(post.description.substringBefore(link))
+                withLink(
+                    link = LinkAnnotation.Clickable(
+                        tag = "URL",
+                        styles = TextLinkStyles(
+                            style = SpanStyle(color = LinkBlue)
+                        ),
+                        linkInteractionListener = { uriHandler.openUri(link) }
+                    )
+                ) {
+                    append(link)
+                }
+                append(post.description.substringAfter(link))
+            } else {
+                append(post.description)
             }
-            append(post.description.substringAfter(link))
         },
         style = TextStyle(
             fontSize = 15.sp,
@@ -316,12 +334,14 @@ private fun LikesAndTimeStamp(
     onLikeCLick: (postId: String, token: String) -> Unit,
     onUnlikeCLick: (postId: String) -> Unit
 ) {
-    var isLiked by rememberSaveable(post.likes) {
+    val scope = rememberCoroutineScope()
+
+    var isLiked by rememberSaveable {
         mutableStateOf(
             post.likes.any { it.contains(currentUserId) || it.contains(currentUsername) }
         )
     }
-    var likes by rememberSaveable(post.likes) { mutableIntStateOf(post.likes.size) }
+    var likes by rememberSaveable { mutableIntStateOf(post.likes.size) }
 
     Column(
         modifier = modifier
@@ -345,13 +365,19 @@ private fun LikesAndTimeStamp(
                     .animatedLike(
                         onClick = {
                             if (isLiked) {
-                                onUnlikeCLick(post.toPostId())
-                                isLiked = false
-                                likes -= 1
+                                scope.launch {
+                                    isLiked = false
+                                    likes -= 1
+                                    delay(1000L) // Delay to avoid spammy notifications
+                                    onUnlikeCLick(post.toPostId())
+                                }
                             } else {
-                                onLikeCLick(post.toPostId(), token)
-                                isLiked = true
-                                likes += 1
+                                scope.launch {
+                                    isLiked = true
+                                    likes += 1
+                                    delay(1000L)
+                                    onLikeCLick(post.toPostId(), token)
+                                }
                             }
                         }
                     )

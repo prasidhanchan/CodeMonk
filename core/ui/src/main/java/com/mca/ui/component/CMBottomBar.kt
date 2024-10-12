@@ -18,9 +18,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -46,6 +45,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,6 +71,8 @@ import com.mca.ui.theme.tintColor
 import com.mca.util.constant.getCurrentRoute
 import com.mca.util.constant.rotateIcon
 import com.mca.util.navigation.Route
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * BottomBar composable to display navigation screens.
@@ -86,6 +88,8 @@ fun CMBottomBar(
     val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentScreen = navaBackStackEntry?.getCurrentRoute()
 
+    val scope = rememberCoroutineScope()
+
     var isOpen by remember { mutableStateOf(false) }
     val animateHeight by animateDpAsState(
         targetValue = if (isOpen) 175.dp else 75.dp,
@@ -97,13 +101,22 @@ fun CMBottomBar(
     )
 
     LaunchedEffect(key1 = visible) {
-        if (!visible) isOpen = false
+        if (!visible) {
+            scope.launch {
+                delay(1000)
+                isOpen = false
+            }
+        }
     }
 
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = tween(durationMillis = 200)),
-        exit = fadeOut(animationSpec = tween(durationMillis = 200)),
+        enter = slideInVertically(
+            initialOffsetY = { it }
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { it }
+        ),
     ) {
         Box(
             modifier = Modifier
@@ -173,6 +186,10 @@ fun CMBottomBar(
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true
+                    }
+
+                    scope.launch {
+                        delay(1000)
                         isOpen = false
                     }
                 },
@@ -181,6 +198,10 @@ fun CMBottomBar(
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true
+                    }
+
+                    scope.launch {
+                        delay(1000)
                         isOpen = false
                     }
                 }

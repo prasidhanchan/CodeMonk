@@ -75,146 +75,154 @@ internal fun ViewProfileScreen(
         modifier = Modifier.fillMaxSize(),
         color = Black
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CMRegularAppBar(
-                text = stringResource(id = R.string.username, uiState.selectedUser.username),
-                onBackClick = onBackClick
-            )
-            Surface(
-                modifier = Modifier.size(100.dp),
-                shape = CircleShape,
-                color = LightBlack,
-                content = {
-                    AsyncImage(
-                        model = uiState.selectedUser.profileImage,
-                        contentDescription = uiState.selectedUser.username,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+        if (uiState.selectedUser != null) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (uiState.selectedUser.isVerified || uiState.selectedUser.userType == ADMIN) {
-                    Spacer(modifier = Modifier.size(16.dp))
+                CMRegularAppBar(
+                    text = stringResource(
+                        id = R.string.username,
+                        uiState.selectedUser?.username!!
+                    ),
+                    onBackClick = onBackClick
+                )
+                Surface(
+                    modifier = Modifier.size(100.dp),
+                    shape = CircleShape,
+                    color = LightBlack,
+                    content = {
+                        AsyncImage(
+                            model = uiState.selectedUser?.profileImage,
+                            contentDescription = uiState.selectedUser?.username,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    if (uiState.selectedUser?.isVerified!! || uiState.selectedUser?.userType == ADMIN) {
+                        Spacer(modifier = Modifier.size(16.dp))
+                    }
+                    Text(
+                        text = uiState.selectedUser?.name!!,
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = dosis,
+                            color = fontColor
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                    if (uiState.selectedUser?.isVerified!! || uiState.selectedUser?.userType == ADMIN) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.tick),
+                            contentDescription = stringResource(id = R.string.blue_tick),
+                            modifier = Modifier.padding(top = 2.dp, start = 5.dp),
+                            tint = LinkBlue
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = uiState.selectedUser.name,
+                    text = uiState.selectedUser?.bio!!,
                     style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = dosis,
+                        color = fontColor.copy(alpha = 0.8f)
+                    ),
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                LinkSection(user = uiState.selectedUser!!)
+                if (uiState.selectedUser?.userType != ADMIN) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = if (uiState.selectedUser?.currentProject?.isNotBlank()!!) {
+                            buildAnnotatedString {
+                                append(stringResource(id = R.string.currently_working_on))
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = LinkBlue
+                                    )
+                                ) {
+                                    append(uiState.selectedUser?.currentProject)
+                                }
+                            }
+                        } else {
+                            buildAnnotatedString {
+                                append(stringResource(id = R.string.not_working_on_project))
+                            }
+                        },
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
                         fontFamily = dosis,
                         color = fontColor
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
-                )
-                if (uiState.selectedUser.isVerified || uiState.selectedUser.userType == ADMIN) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.tick),
-                        contentDescription = stringResource(id = R.string.blue_tick),
-                        modifier = Modifier.padding(top = 2.dp, start = 5.dp),
-                        tint = LinkBlue
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = uiState.selectedUser.bio,
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = dosis,
-                    color = fontColor.copy(alpha = 0.8f)
-                ),
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            LinkSection(user = uiState.selectedUser)
-            if (uiState.selectedUser.userType != ADMIN) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = if (uiState.selectedUser.currentProject.isNotBlank()) {
-                        buildAnnotatedString {
-                            append(stringResource(id = R.string.currently_working_on))
-                            withStyle(
-                                style = SpanStyle(
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = LinkBlue
-                                )
-                            ) {
-                                append(uiState.selectedUser.currentProject)
-                            }
-                        }
-                    } else {
-                        buildAnnotatedString {
-                            append(stringResource(id = R.string.not_working_on_project))
-                        }
-                    },
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = dosis,
-                    color = fontColor
-                )
-            }
-            if (uiState.selectedUser.mentorFor.isNotBlank()) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = stringResource(id = R.string.mentor_for, uiState.selectedUser.mentorFor),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = dosis,
-                    color = LinkBlue
-                )
-            }
-            Spacer(modifier = Modifier.height(40.dp))
-            if (uiState.selectedUser.userType != ADMIN) {
-                ProfileProgress(
-                    progress = uiState.selectedUser.xp,
-                    progressType = ProgressType.XP,
-                    header = stringResource(id = R.string.dev_experience),
-                    icon = painterResource(id = R.drawable.xp_icon),
-                    color = Yellow
-                )
-                ProfileProgress(
-                    progress = uiState.selectedUser.currentProjectProgress,
-                    progressType = ProgressType.PROJECT_PROGRESS,
-                    header = stringResource(id = R.string.current_project_progress),
-                    icon = painterResource(id = R.drawable.working_on),
-                    color = BrandColor
-                )
-            } else {
-                HorizontalDivider(modifier = Modifier.fillMaxWidth(0.8f))
-                OtherMentorsSection(
-                    mentors = uiState.otherMentors,
-                    onProfileCardClick = onProfileCardClick
-                )
+                if (uiState.selectedUser?.mentorFor?.isNotBlank()!!) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = stringResource(
+                            id = R.string.mentor_for,
+                            uiState.selectedUser?.mentorFor!!
+                        ),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = dosis,
+                        color = LinkBlue
+                    )
+                }
+                Spacer(modifier = Modifier.height(40.dp))
+                if (uiState.selectedUser?.userType != ADMIN) {
+                    ProfileProgress(
+                        progress = uiState.selectedUser?.xp!!,
+                        progressType = ProgressType.XP,
+                        header = stringResource(id = R.string.dev_experience),
+                        icon = painterResource(id = R.drawable.xp_icon),
+                        color = Yellow
+                    )
+                    ProfileProgress(
+                        progress = uiState.selectedUser?.currentProjectProgress!!,
+                        progressType = ProgressType.PROJECT_PROGRESS,
+                        header = stringResource(id = R.string.current_project_progress),
+                        icon = painterResource(id = R.drawable.working_on),
+                        color = BrandColor
+                    )
+                } else {
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth(0.8f))
+                    OtherMentorsSection(
+                        mentors = uiState.otherMentors,
+                        onProfileCardClick = onProfileCardClick
+                    )
+                }
             }
         }
     }
 
     BackHandler(onBack = onBackClick)
-    Loader(loading = uiState.loading)
+    Loader(loading = uiState.selectedUser == null)
 }
 
 @Composable
 private fun OtherMentorsSection(
     mentors: List<User>,
     modifier: Modifier = Modifier,
-    onProfileCardClick: (username: String) -> Unit
+    onProfileCardClick: (userId: String) -> Unit
 ) {
     Column(
         modifier = modifier

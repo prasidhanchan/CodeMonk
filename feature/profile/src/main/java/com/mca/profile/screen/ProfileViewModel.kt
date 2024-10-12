@@ -187,81 +187,83 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getUpdate()
 
-            withContext(Dispatchers.Main) {
-                if (result.data != null && !result.loading!! && result.exception == null) {
+            if (result.data != null && !result.loading!! && result.exception == null) {
+                withContext(Dispatchers.Main) {
                     uiState.update {
                         it.copy(
                             update = result.data!!,
                             loading = result.loading!!
                         )
                     }
-                } else {
-                    showSnackBar(
-                        response = Response(
-                            message = result.exception?.localizedMessage,
-                            responseType = ResponseType.ERROR
-                        )
-                    )
-                    uiState.update { it.copy(loading = false) }
                 }
+            } else {
+                showSnackBar(
+                    response = Response(
+                        message = result.exception?.localizedMessage,
+                        responseType = ResponseType.ERROR
+                    )
+                )
+                uiState.update { it.copy(loading = false) }
             }
         }
     }
 
     fun getSelectedUser(
-        username: String,
+        userId: String,
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
-            val result = profileRepository.getSelectedUser(
-                username = username,
-                onSuccess = onSuccess,
-                onError = onError
-            )
-
-            withContext(Dispatchers.Main) {
-                if (result.data != null && result.exception == null && !result.loading!!) {
-                    uiState.update {
-                        it.copy(
-                            selectedUser = result.data!!,
-                            loading = result.loading!!
-                        )
+            profileRepository.getSelectedUser(
+                userId = userId,
+                onSuccess = { user ->
+                    if (user != null) {
+                        uiState.update {
+                            it.copy(
+                                selectedUser = user,
+                                loading = false
+                            )
+                        }
                     }
-                } else {
+                    onSuccess()
+                },
+                onError = { error ->
                     showSnackBar(
                         response = Response(
-                            message = result.exception?.localizedMessage,
+                            message = error,
                             responseType = ResponseType.ERROR
                         )
                     )
+                    onError()
                     uiState.update { it.copy(loading = false) }
                 }
-            }
+            )
         }
     }
 
     fun getAllMentors() {
-        uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
-            val result = profileRepository.getRandomMentors(uiState.value.selectedUser.userId)
+            if (uiState.value.selectedUser != null) {
+                val result =
+                    profileRepository.getRandomMentors(uiState.value.selectedUser?.userId!!)
 
-            withContext(Dispatchers.Main) {
+                delay(500L)
                 if (result.data != null && result.exception == null && !result.loading!!) {
-                    uiState.update {
-                        it.copy(
-                            otherMentors = result.data!!,
-                            loading = result.loading!!
-                        )
+                    withContext(Dispatchers.Main) {
+                        uiState.update {
+                            it.copy(otherMentors = result.data!!)
+                        }
                     }
                 } else {
-                    showSnackBar(
-                        response = Response(
-                            message = result.exception?.localizedMessage,
-                            responseType = ResponseType.ERROR
+                    withContext(Dispatchers.Main) {
+                        showSnackBar(
+                            response = Response(
+                                message = result.exception?.localizedMessage,
+                                responseType = ResponseType.ERROR
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -271,17 +273,17 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getMentorTags(username)
 
-            withContext(Dispatchers.Main) {
-                if (result.data != null && result.exception == null && !result.loading!!) {
+            if (result.data != null && result.exception == null && !result.loading!!) {
+                withContext(Dispatchers.Main) {
                     uiState.update { it.copy(tags = result.data) }
-                } else {
-                    showSnackBar(
-                        response = Response(
-                            message = result.exception?.localizedMessage,
-                            responseType = ResponseType.ERROR
-                        )
-                    )
                 }
+            } else {
+                showSnackBar(
+                    response = Response(
+                        message = result.exception?.localizedMessage,
+                        responseType = ResponseType.ERROR
+                    )
+                )
             }
         }
     }
@@ -323,8 +325,6 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun setPassword(password: String) = uiState.update { it.copy(newPassword = password) }
-
-    fun clearSelectedUser() = uiState.update { it.copy(selectedUser = User()) }
 
     fun clearPassword() {
         viewModelScope.launch {

@@ -44,4 +44,7 @@ object Constant {
 
     /** Compression level for uploading images. */
     const val COMPRESSION_LEVEL = 70
+
+    /** Animation duration for navigation. */
+    const val IN_OUT_DURATION = 250
 }

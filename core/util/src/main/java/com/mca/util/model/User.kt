@@ -13,9 +13,6 @@
 
 package com.mca.util.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class User(
     var username: String = "",
     var name: String = "",

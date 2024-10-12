@@ -1,5 +1,3 @@
--dontobfuscate
-
 -dontwarn android.media.LoudnessCodecController$OnLoudnessCodecUpdateListener
 -dontwarn android.media.LoudnessCodecController
 -dontwarn java.lang.reflect.AnnotatedType

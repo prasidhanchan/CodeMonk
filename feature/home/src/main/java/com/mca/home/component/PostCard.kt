@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -84,6 +85,8 @@ import com.mca.util.constant.toPostId
 import com.mca.util.constant.toTimeStamp
 import com.mca.util.model.Post
 import com.mca.util.model.User
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun PostCard(
@@ -131,7 +134,13 @@ internal fun PostCard(
             description = post.description,
             username = user.username
         )
-        if (post.likes.isNotEmpty()) PostBottomBar(post = post)
+        if (post.likes.isNotEmpty()) {
+            PostBottomBar(
+                post = post,
+                currentUserId = currentUserId,
+                currentUsername = currentUsername
+            )
+        }
     }
 }
 
@@ -150,12 +159,14 @@ private fun MainContent(
     onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit
 ) {
-    var isLiked by rememberSaveable(post.likes) {
+    val scope = rememberCoroutineScope()
+
+    var isLiked by rememberSaveable {
         mutableStateOf(
             post.likes.any { it.contains(currentUserId) || it.contains(currentUsername) }
         )
     }
-    var likes by rememberSaveable(post.likes) { mutableIntStateOf(post.likes.size) }
+    var likes by rememberSaveable { mutableIntStateOf(post.likes.size) }
 
     Surface(
         modifier = modifier
@@ -201,7 +212,7 @@ private fun MainContent(
                         contentDescription = stringResource(id = R.string.edit_post),
                         modifier = Modifier.clickable(
                             indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
+                            interactionSource = remember(::MutableInteractionSource),
                             onClick = { onEditPostClick(post.toPostId()) }
                         ),
                         tint = tintColor
@@ -279,13 +290,19 @@ private fun MainContent(
                         .animatedLike(
                             onClick = {
                                 if (isLiked) {
-                                    isLiked = false
-                                    likes -= 1
-                                    onUnlikeClick(post.toPostId())
+                                    scope.launch {
+                                        isLiked = false
+                                        likes -= 1
+                                        delay(1000L) // Delay to avoid spammy notifications
+                                        onUnlikeClick(post.toPostId())
+                                    }
                                 } else {
-                                    isLiked = true
-                                    likes += 1
-                                    onLikeClick(post.toPostId(), user.token)
+                                    scope.launch {
+                                        isLiked = true
+                                        likes += 1
+                                        delay(1000L)
+                                        onLikeClick(post.toPostId(), user.token)
+                                    }
                                 }
                             }
                         )
@@ -333,7 +350,7 @@ private fun PostTopBar(
             .clickable(
                 indication = null,
                 interactionSource = interactionSource,
-                onClick = { onUsernameClick(user.username) }
+                onClick = { onUsernameClick(post.userId) }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
@@ -387,8 +404,12 @@ private fun PostTopBar(
 @Composable
 private fun PostBottomBar(
     post: Post,
+    currentUserId: String,
+    currentUsername: String,
     modifier: Modifier = Modifier
 ) {
+    val postLikes by rememberSaveable { mutableStateOf(post.likes) }
+
     Row(
         modifier = modifier
             .padding(vertical = 8.dp)
@@ -405,7 +426,9 @@ private fun PostBottomBar(
                 .size(15.dp)
         )
         Text(
-            text = post.likes.toLikedBy(),
+            text = postLikes
+                .filterNot { it == currentUserId || it == currentUsername }
+                .toLikedBy(),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -608,6 +631,7 @@ private fun PostCardPreview() {
             projectProgress = 20,
             deadline = "30 Nov, 2024",
             likes = listOf(
+                "pra_sidh_22",
                 "naruto",
                 "kakashi",
                 "sasuke",

@@ -20,7 +20,7 @@ import com.mca.util.model.User
 
 data class UiState(
     var currentUser: User = User(),
-    var selectedUser: User = User(),
+    var selectedUser: User? = null,
     var otherMentors: List<User> = emptyList(),
     var tags: List<Tag>? = null,
     var newProfileImage: String = "",

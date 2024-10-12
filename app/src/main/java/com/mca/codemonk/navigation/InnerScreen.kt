@@ -295,10 +295,7 @@ fun NavGraphBuilder.innerScreen(
                         )
                     }
                 )
-                viewProfileNavigation(
-                    viewModel = viewModelProfile,
-                    navHostController = navHostController
-                )
+                viewProfileNavigation(navHostController = navHostController)
                 searchNavigation(navHostController)
                 leaderBoardNavigation(navHostController)
                 notificationNavigation(
