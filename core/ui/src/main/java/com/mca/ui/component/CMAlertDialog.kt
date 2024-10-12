@@ -120,11 +120,13 @@ fun CMAlertDialog(
                     CMButton(
                         text = confirmText,
                         modifier = Modifier
-                            .padding(vertical = 15.dp),
+                            .padding(vertical = 15.dp)
+                            .fillMaxWidth(),
                         onClick = onConfirm
                     )
                     CMButton(
                         text = dismissText,
+                        modifier = Modifier.fillMaxWidth(),
                         color = ExtraLightBlack,
                         onClick = onDismiss
                     )

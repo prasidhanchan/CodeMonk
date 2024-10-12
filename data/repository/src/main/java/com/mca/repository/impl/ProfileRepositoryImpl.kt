@@ -242,33 +242,25 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun getSelectedUser(
         userId: String,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ): DataOrException<User, Boolean, Exception> {
-        val dataOrException: DataOrException<User, Boolean, Exception> =
-            DataOrException(loading = true)
-
+        onSuccess: (user: User?) -> Unit,
+        onError: (error: String) -> Unit
+    ) {
         try {
             userRef.document(userId).get()
                 .addOnSuccessListener { docSnap ->
                     try {
-                        dataOrException.data = docSnap.toObject<User>()
-                        onSuccess()
+                        onSuccess(docSnap.toObject<User>())
                     } catch (_: Exception) {
-                        onError()
-                        dataOrException.exception = Exception("User profile not created!")
+                        onError("User profile not created!")
                     }
                 }
                 .addOnFailureListener { error ->
-                    dataOrException.exception = error
+                    error.localizedMessage?.let(onError)
                 }
                 .await()
         } catch (e: Exception) {
-            dataOrException.exception = e
-        } finally {
-            dataOrException.loading = false
+            e.localizedMessage?.let(onError)
         }
-        return dataOrException
     }
 
     override suspend fun getRandomMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception> {
