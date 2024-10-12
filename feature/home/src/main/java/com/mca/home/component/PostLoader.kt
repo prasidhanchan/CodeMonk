@@ -39,7 +39,7 @@ internal fun PostLoader(modifier: Modifier = Modifier) {
     Column(
         modifier
             .padding(vertical = 10.dp)
-            .height(465.dp)
+            .height(455.dp)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
@@ -89,7 +89,7 @@ internal fun PostLoader(modifier: Modifier = Modifier) {
         )
         Surface(
             modifier = modifier
-                .padding(vertical = 10.dp)
+                .padding(top = 10.dp)
                 .width(250.dp)
                 .height(15.dp),
             shape = CircleShape,
