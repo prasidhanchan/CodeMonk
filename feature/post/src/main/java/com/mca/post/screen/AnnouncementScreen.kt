@@ -217,7 +217,7 @@ private fun ImagePicker(
                             append(stringResource(id = R.string.select_your_images))
                             withStyle(
                                 style = SpanStyle(
-                                    fontSize = 10.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Normal
                                 )
                             ) {
