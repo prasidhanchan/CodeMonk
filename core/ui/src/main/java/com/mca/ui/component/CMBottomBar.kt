@@ -58,7 +58,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mca.ui.R
 import com.mca.ui.theme.Black
@@ -68,7 +67,6 @@ import com.mca.ui.theme.OffWhite
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
-import com.mca.util.constant.getCurrentRoute
 import com.mca.util.constant.rotateIcon
 import com.mca.util.navigation.Route
 import kotlinx.coroutines.delay
@@ -81,12 +79,11 @@ import kotlinx.coroutines.launch
 fun CMBottomBar(
     visible: Boolean,
     navHostController: NavHostController,
+    currentRoute: Route?,
     modifier: Modifier = Modifier,
     isNewNotification: Boolean
 ) {
     val routes = Route.routes
-    val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
-    val currentScreen = navaBackStackEntry?.getCurrentRoute()
 
     val scope = rememberCoroutineScope()
 
@@ -154,13 +151,15 @@ fun CMBottomBar(
                                 if (!isOpen) {
                                     BottomBarItem(
                                         route = route,
-                                        selected = currentScreen == route,
+                                        selected = currentRoute == route,
                                         isNewNotification = isNewNotification,
                                         onClick = {
-                                            navHostController.navigate(route) {
-                                                popUpTo<Route.Home>()
-                                                launchSingleTop = true
-                                                restoreState = true
+                                            if (route != currentRoute) {
+                                                navHostController.navigate(route) {
+                                                    popUpTo<Route.Home>()
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
                                             }
                                         }
                                     )
@@ -189,7 +188,7 @@ fun CMBottomBar(
                     }
 
                     scope.launch {
-                        delay(1000)
+                        delay(1000L)
                         isOpen = false
                     }
                 },
@@ -201,7 +200,7 @@ fun CMBottomBar(
                     }
 
                     scope.launch {
-                        delay(1000)
+                        delay(1000L)
                         isOpen = false
                     }
                 }
@@ -339,6 +338,7 @@ private fun CMBottomBarPreview() {
     CMBottomBar(
         visible = true,
         isNewNotification = true,
-        navHostController = rememberNavController()
+        navHostController = rememberNavController(),
+        currentRoute = Route.Home
     )
 }

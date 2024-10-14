@@ -93,11 +93,11 @@ fun NavGraphBuilder.innerScreen(
         val uiStateNotify by viewModelNotification.uiState.collectAsStateWithLifecycle()
 
         val navHostController = rememberNavController()
+        val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
+        val currentRoute = navaBackStackEntry?.getCurrentRoute()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        val backStackEntry by navHostController.currentBackStackEntryAsState()
-        val currentRoute = backStackEntry?.getCurrentRoute()
         val showBottomBar = when (currentRoute) {
             Route.Home -> true
             Route.LeaderBoard -> true
@@ -168,7 +168,8 @@ fun NavGraphBuilder.innerScreen(
                     visible = showBottomBar,
                     isNewNotification = if (uiStateNotify.notifications.isEmpty() || uiStateProfile.currentUser.lastSeen == 0L) false
                     else uiStateNotify.notifications[0].timeStamp > uiStateProfile.currentUser.lastSeen,
-                    navHostController = navHostController
+                    navHostController = navHostController,
+                    currentRoute = currentRoute
                 )
             },
             contentColor = Black

@@ -109,7 +109,7 @@ internal fun ViewProfileScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    if (uiState.selectedUser?.isVerified!! || uiState.selectedUser?.userType == ADMIN) {
+                    if (uiState.selectedUser?.verified!! || uiState.selectedUser?.userType == ADMIN) {
                         Spacer(modifier = Modifier.size(16.dp))
                     }
                     Text(
@@ -124,7 +124,7 @@ internal fun ViewProfileScreen(
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
                     )
-                    if (uiState.selectedUser?.isVerified!! || uiState.selectedUser?.userType == ADMIN) {
+                    if (uiState.selectedUser?.verified!! || uiState.selectedUser?.userType == ADMIN) {
                         Icon(
                             painter = painterResource(id = R.drawable.tick),
                             contentDescription = stringResource(id = R.string.blue_tick),

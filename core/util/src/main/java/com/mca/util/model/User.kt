@@ -30,7 +30,7 @@ data class User(
     var xp: Int = 0,
     var attendance: Int = 0,
     var semester: String = "1",
-    var isVerified: Boolean = false,
+    var verified: Boolean = false,
     var userType: String = "",
     var mentor: String = "",
     var mentorFor: String = ""

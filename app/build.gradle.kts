@@ -59,7 +59,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            resValue("string", "app_name", "CodeMonk Debug")
+            resValue("string", "app_name", "Code Monk Debug")
         }
     }
     compileOptions {

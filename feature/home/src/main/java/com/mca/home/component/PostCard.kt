@@ -375,7 +375,7 @@ private fun PostTopBar(
             ),
             modifier = Modifier.padding(end = 5.dp)
         )
-        if (user.isVerified || user.userType == ADMIN) {
+        if (user.verified || user.userType == ADMIN) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),

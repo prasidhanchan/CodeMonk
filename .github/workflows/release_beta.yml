@@ -1,4 +1,4 @@
-name: Release Alpha
+name: Release Beta
 
 on:
   pull_request:
@@ -43,7 +43,7 @@ jobs:
       - name: Create local.properties
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          echo ${{ vars.UPDATE_CHANNEL }} >> local.properties
+          echo ${{ vars.UPDATE_CHANNEL_BETA }} >> local.properties
           echo ${{ vars.PROJECT_ID }} >> local.properties
           echo ${{ vars.NATIVE_AD_ID_POST }} >> local.properties
           echo ${{ vars.NATIVE_AD_ID_SEARCH }} >> local.properties
@@ -85,31 +85,31 @@ jobs:
         id: vars
         run: |
           VERSION_NAME=$(./gradlew -q printVersionName)
-          TAG_NAME=$(echo "v$VERSION_NAME-alpha${{ vars.ALPHA_VERSION }}" | sed 's/ /_/g')
+          TAG_NAME=$(echo "v$VERSION_NAME-rc${{ vars.RC_VERSION }}" | sed 's/ /_/g')
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
       # Rename APK
       - name: Rename APK
         run: |
-          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-alpha${{ vars.ALPHA_VERSION }}.apk
+          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}.apk
 
       # Create GitHub Release
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
-          name: v${{ env.VERSION_NAME }}-alpha${{ vars.ALPHA_VERSION }}
+          name: v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}
           prerelease: true
           draft: true
-          files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-alpha${{ vars.ALPHA_VERSION }}.apk
+          files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      # Increment alpha version
-      - name: Bump alpha version
+      # Increment rc version
+      - name: Bump  version
         uses: action-pack/increment@v2
         id: increment
         with:
-          name: 'ALPHA_VERSION'
+          name: 'RC_VERSION'
           token: ${{ secrets.TOKEN }}
