@@ -92,7 +92,7 @@ jobs:
       # Rename APK
       - name: Rename APK
         run: |
-          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}.apk
+          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-rc${{ vars.RC_VERSION }}.apk
 
       # Create GitHub Release
       - name: Create GitHub Release
@@ -102,7 +102,7 @@ jobs:
           name: v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}
           prerelease: true
           draft: true
-          files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}.apk
+          files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-rc${{ vars.RC_VERSION }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
