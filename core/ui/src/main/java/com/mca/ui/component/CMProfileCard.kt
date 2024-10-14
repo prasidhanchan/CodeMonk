@@ -134,7 +134,7 @@ fun CMProfileCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(vertical = 5.dp)
                     )
-                    if (user.isVerified || user.userType == ADMIN) {
+                    if (user.verified || user.userType == ADMIN) {
                         Spacer(modifier = Modifier.width(5.dp))
                         Icon(
                             painter = painterResource(id = R.drawable.tick),

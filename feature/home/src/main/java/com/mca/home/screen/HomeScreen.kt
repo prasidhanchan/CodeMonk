@@ -149,7 +149,7 @@ private fun HomeScreenPreview() {
                         userId = "1",
                         username = "kawaki_22",
                         profileImage = "",
-                        isVerified = true
+                        verified = true
                     )
                 )
             )

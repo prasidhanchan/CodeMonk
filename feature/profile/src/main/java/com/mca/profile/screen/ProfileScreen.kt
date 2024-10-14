@@ -138,7 +138,7 @@ internal fun ProfileScreen(
             MyUsernameCard(
                 username = uiState.currentUser.username,
                 userType = uiState.currentUser.userType,
-                isVerified = uiState.currentUser.isVerified
+                isVerified = uiState.currentUser.verified
             )
             if (uiState.currentUser.userType == ADMIN) {
                 Text(
