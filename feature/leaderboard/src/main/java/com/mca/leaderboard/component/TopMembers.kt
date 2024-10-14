@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.mca.ui.R
 import com.mca.ui.theme.BrandColor
 import com.mca.ui.theme.Green
 import com.mca.ui.theme.LightBlack
@@ -145,12 +146,6 @@ private fun CMHistogram(
                         2 -> 0.8f
                         else -> 0.6f
                     }
-                    /*when (position) {
-                        1 -> 260.dp
-                        2 -> 200.dp
-                        else -> 160.dp
-                    }
-                     */
                 )
                 .width(70.dp),
             verticalArrangement = Arrangement.SpaceBetween,
@@ -162,7 +157,7 @@ private fun CMHistogram(
                 color = LightBlack,
                 content = {
                     AsyncImage(
-                        model = profileImage,
+                        model = profileImage.ifEmpty { R.drawable.user },
                         contentDescription = position.toString(),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop

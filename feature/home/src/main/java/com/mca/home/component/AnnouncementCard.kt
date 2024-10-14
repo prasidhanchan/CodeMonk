@@ -199,7 +199,7 @@ private fun AnnouncementTopBar(
             ),
             modifier = Modifier.padding(end = 5.dp)
         )
-        if (user.userType == ADMIN || user.isVerified) {
+        if (user.userType == ADMIN || user.verified) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),

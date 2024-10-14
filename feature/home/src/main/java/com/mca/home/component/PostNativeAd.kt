@@ -19,6 +19,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -99,7 +101,7 @@ private fun PostAd(
     ) {
         PostAdTopBar(
             image = image,
-            headLine = headline
+            headline = headline
         )
         MainContent(
             mediaImage = mediaImage,
@@ -114,7 +116,7 @@ private fun PostAd(
 @Composable
 private fun PostAdTopBar(
     image: String,
-    headLine: String,
+    headline: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -124,24 +126,36 @@ private fun PostAdTopBar(
     ) {
         AsyncImage(
             model = image.ifEmpty { R.drawable.user },
-            contentDescription = headLine,
+            contentDescription = headline,
             modifier = Modifier
                 .padding(end = 8.dp)
                 .clip(CircleShape)
                 .background(LightBlack)
                 .size(30.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            filterQuality = FilterQuality.Low
         )
-        Text(
-            text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(end = 5.dp)
-        )
+        if (headline.isNotBlank()) {
+            Text(
+                text = headline,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .fillMaxWidth(0.2f)
+                    .height(10.dp)
+                    .clip(CircleShape)
+                    .background(color = LightBlack)
+            )
+        }
         Icon(
             painter = painterResource(id = R.drawable.tick),
             contentDescription = stringResource(id = R.string.blue_tick),
@@ -181,7 +195,7 @@ private fun MainContent(
                 contentDescription = headline,
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .aspectRatio(1412f/949f),
+                    .aspectRatio(1412f / 949f),
                 contentScale = ContentScale.FillBounds
             )
             Spacer(modifier = Modifier.height(20.dp))

@@ -13,6 +13,7 @@
 
 <resources>
     <string name="app_name">Code Monk</string>
+    <string name="code_monk">Code Monk</string>
     <string name="dept_of_mca">Dept of MCA</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -128,7 +129,7 @@
     <string name="post_image">Post Image</string>
     <string name="add_image">Add Image</string>
     <string name="select_your_images">Select your images\n</string>
-    <string name="recommended_size">(1412 X 949 Recommended)</string>
+    <string name="recommended_size">(1412 x 949 Recommended)</string>
     <string name="remove_image">Remove Image</string>
     <string name="whats_going_on">What\'s going on?</string>
     <string name="character_count">%1$d characters</string>

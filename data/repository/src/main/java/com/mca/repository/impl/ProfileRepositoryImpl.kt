@@ -53,7 +53,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 .addOnSuccessListener { docSnap ->
                     dataOrException.data = docSnap.toObject<User>()
                     if (dataOrException.data == null) {
-                        // Create tester details if empty
+                        // Create user details if empty
                         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
                         userRef.document(currentUserId)
                             .set(
@@ -134,7 +134,6 @@ class ProfileRepositoryImpl @Inject constructor(
                     .putFile(user.profileImage.toUri())
                     .addOnFailureListener { error ->
                         error.localizedMessage?.let(onError)
-
                     }
                     .await()
 
