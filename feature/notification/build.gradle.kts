@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.ksp)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -30,20 +30,8 @@ android {
 
     defaultConfig {
         minSdk = MIN_SDK
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
@@ -66,7 +54,6 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 

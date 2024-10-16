@@ -59,7 +59,7 @@ import java.util.Locale
 internal fun TopMemberCard(
     topMember: User,
     position: Int,
-    onCardClick: (username: String) -> Unit,
+    onCardClick: (userId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -94,7 +94,7 @@ internal fun TopMemberCard(
                 .clickable(
                     indication = null,
                     interactionSource = remember(::MutableInteractionSource),
-                    onClick = { onCardClick(topMember.username) }
+                    onClick = { onCardClick(topMember.userId) }
                 ),
             shape = RoundedCornerShape(10.dp),
             color = ExtraLightBlack
@@ -112,7 +112,7 @@ internal fun TopMemberCard(
                     color = LightBlack,
                     content = {
                         AsyncImage(
-                            model = topMember.profileImage,
+                            model = topMember.profileImage.ifEmpty { R.drawable.user },
                             contentDescription = topMember.name,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop

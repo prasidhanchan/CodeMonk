@@ -13,7 +13,12 @@
 
 package com.mca.codemonk.navigation
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +27,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -59,6 +65,7 @@ import com.mca.util.constant.Constant.LIKE_TOPIC
 import com.mca.util.constant.Constant.MAX_POST_ADS
 import com.mca.util.constant.Constant.POST_CHANNEL_ID
 import com.mca.util.constant.Constant.POST_TOPIC
+import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.constant.getCurrentRoute
 import com.mca.util.constant.loadNativeAds
 import com.mca.util.model.Android
@@ -70,6 +77,8 @@ import com.mca.util.model.Notification
 import com.mca.util.model.PushNotificationToken
 import com.mca.util.model.PushNotificationTopic
 import com.mca.util.navigation.Route
+import com.mca.util.warpper.Response
+import com.mca.util.warpper.ResponseType
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -84,11 +93,11 @@ fun NavGraphBuilder.innerScreen(
         val uiStateNotify by viewModelNotification.uiState.collectAsStateWithLifecycle()
 
         val navHostController = rememberNavController()
+        val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
+        val currentRoute = navaBackStackEntry?.getCurrentRoute()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        val backStackEntry by navHostController.currentBackStackEntryAsState()
-        val currentRoute = backStackEntry?.getCurrentRoute()
         val showBottomBar = when (currentRoute) {
             Route.Home -> true
             Route.LeaderBoard -> true
@@ -98,6 +107,31 @@ fun NavGraphBuilder.innerScreen(
         }
 
         val context = LocalContext.current
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { result ->
+                if (!result) {
+                    showSnackBar(
+                        response = Response(
+                            message = context.getString(R.string.notification_permission_denied),
+                            responseType = ResponseType.ERROR
+                        )
+                    )
+                }
+            }
+        )
+
+        LaunchedEffect(key1 = Unit) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_DENIED &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+            ) {
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
         // Load user data when the app starts
         LaunchedEffect(key1 = uiStateProfile.currentUser.userId) {
             if (uiStateProfile.currentUser.userId.isEmpty()) viewModelProfile.getUser()
@@ -134,7 +168,8 @@ fun NavGraphBuilder.innerScreen(
                     visible = showBottomBar,
                     isNewNotification = if (uiStateNotify.notifications.isEmpty() || uiStateProfile.currentUser.lastSeen == 0L) false
                     else uiStateNotify.notifications[0].timeStamp > uiStateProfile.currentUser.lastSeen,
-                    navHostController = navHostController
+                    navHostController = navHostController,
+                    currentRoute = currentRoute
                 )
             },
             contentColor = Black
@@ -261,10 +296,7 @@ fun NavGraphBuilder.innerScreen(
                         )
                     }
                 )
-                viewProfileNavigation(
-                    viewModel = viewModelProfile,
-                    navHostController = navHostController
-                )
+                viewProfileNavigation(navHostController = navHostController)
                 searchNavigation(navHostController)
                 leaderBoardNavigation(navHostController)
                 notificationNavigation(

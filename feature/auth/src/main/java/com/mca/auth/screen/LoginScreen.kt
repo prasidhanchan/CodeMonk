@@ -104,7 +104,7 @@ internal fun LoginScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.codemonk_logo),
-                    contentDescription = stringResource(id = R.string.app_name),
+                    contentDescription = stringResource(id = R.string.code_monk),
                     modifier = Modifier
                         .padding(vertical = 10.dp)
                         .size(80.dp)

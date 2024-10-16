@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.mca.profile.screen.AboutScreen
 import com.mca.profile.screen.ProfileViewModel
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.aboutNavigation(
@@ -31,10 +32,10 @@ fun NavGraphBuilder.aboutNavigation(
 ) {
     composable<Route.About>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 200))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 200))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()

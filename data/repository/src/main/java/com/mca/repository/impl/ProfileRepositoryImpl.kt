@@ -53,7 +53,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 .addOnSuccessListener { docSnap ->
                     dataOrException.data = docSnap.toObject<User>()
                     if (dataOrException.data == null) {
-                        // Create tester details if empty
+                        // Create user details if empty
                         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
                         userRef.document(currentUserId)
                             .set(
@@ -134,7 +134,6 @@ class ProfileRepositoryImpl @Inject constructor(
                     .putFile(user.profileImage.toUri())
                     .addOnFailureListener { error ->
                         error.localizedMessage?.let(onError)
-
                     }
                     .await()
 
@@ -234,41 +233,33 @@ class ProfileRepositoryImpl @Inject constructor(
                 .await()
         } catch (e: Exception) {
             dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
         }
-        dataOrException.loading = false
         return dataOrException
     }
 
     override suspend fun getSelectedUser(
-        username: String,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ): DataOrException<User, Boolean, Exception> {
-        val dataOrException: DataOrException<User, Boolean, Exception> =
-            DataOrException(loading = true)
-
+        userId: String,
+        onSuccess: (user: User?) -> Unit,
+        onError: (error: String) -> Unit
+    ) {
         try {
-            userRef.whereEqualTo("username", username).get()
-                .addOnSuccessListener { dataSnap ->
+            userRef.document(userId).get()
+                .addOnSuccessListener { docSnap ->
                     try {
-                        dataOrException.data = dataSnap.firstNotNullOf { docSnap ->
-                            docSnap.toObject<User>()
-                        }
-                        onSuccess()
-                    } catch (e: Exception) {
-                        onError()
-                        dataOrException.exception = Exception("User profile not created!")
+                        onSuccess(docSnap.toObject<User>())
+                    } catch (_: Exception) {
+                        onError("User profile not created!")
                     }
                 }
                 .addOnFailureListener { error ->
-                    dataOrException.exception = error
+                    error.localizedMessage?.let(onError)
                 }
                 .await()
         } catch (e: Exception) {
-            dataOrException.exception = e
+            e.localizedMessage?.let(onError)
         }
-        dataOrException.loading = false
-        return dataOrException
     }
 
     override suspend fun getRandomMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception> {
@@ -282,7 +273,7 @@ class ProfileRepositoryImpl @Inject constructor(
                     dataOrException.data = querySnap.documents.mapNotNull { docSnap ->
                         docSnap.toObject<User>()
                     }
-                        .filter { user -> user.userId != selectedUserId }
+                        .filterNot { user -> user.userId == selectedUserId }
                         .shuffled()
                         .take(3)
                 }

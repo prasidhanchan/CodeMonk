@@ -63,7 +63,7 @@ fun CMProfileCard(
     user: User,
     modifier: Modifier = Modifier,
     delay: Int = 200,
-    onClick: (username: String) -> Unit
+    onClick: (userId: String) -> Unit
 ) {
     Surface(
         modifier = modifier
@@ -73,7 +73,7 @@ fun CMProfileCard(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
-                onClick = { onClick(user.username) }
+                onClick = { onClick(user.userId) }
             )
             .animateAlpha(delay),
         shape = RoundedCornerShape(10.dp),
@@ -134,7 +134,7 @@ fun CMProfileCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(vertical = 5.dp)
                     )
-                    if (user.isVerified || user.userType == ADMIN) {
+                    if (user.verified || user.userType == ADMIN) {
                         Spacer(modifier = Modifier.width(5.dp))
                         Icon(
                             painter = painterResource(id = R.drawable.tick),

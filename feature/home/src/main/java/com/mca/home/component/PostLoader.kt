@@ -27,6 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mca.ui.theme.LightBlack
 
@@ -38,7 +39,7 @@ internal fun PostLoader(modifier: Modifier = Modifier) {
     Column(
         modifier
             .padding(vertical = 10.dp)
-            .height(465.dp)
+            .height(455.dp)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
@@ -88,7 +89,7 @@ internal fun PostLoader(modifier: Modifier = Modifier) {
         )
         Surface(
             modifier = modifier
-                .padding(vertical = 10.dp)
+                .padding(top = 10.dp)
                 .width(250.dp)
                 .height(15.dp),
             shape = CircleShape,
@@ -96,4 +97,10 @@ internal fun PostLoader(modifier: Modifier = Modifier) {
             content = { }
         )
     }
+}
+
+@Preview
+@Composable
+private fun PostCardLoaderPreview() {
+    PostLoader()
 }

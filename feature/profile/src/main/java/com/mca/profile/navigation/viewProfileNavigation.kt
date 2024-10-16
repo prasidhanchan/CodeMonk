@@ -18,6 +18,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -25,43 +26,40 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.profile.screen.ViewProfileScreen
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.viewProfileNavigation(
-    viewModel: ProfileViewModel,
     navHostController: NavHostController
 ) {
     composable<Route.ViewProfile>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) { backStackEntry ->
-        val username = backStackEntry.toRoute<Route.ViewProfile>().username
+        val viewModel: ProfileViewModel = hiltViewModel()
+        val userId = backStackEntry.toRoute<Route.ViewProfile>().userId
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.getSelectedUser(
-                username = username,
-                onSuccess = { viewModel.getAllMentors() },
+                userId = userId,
+                onSuccess = {
+                    if (uiState.otherMentors.isEmpty()) viewModel.getAllMentors()
+                },
                 onError = { navHostController.popBackStack() }
             )
         }
 
         ViewProfileScreen(
             uiState = uiState,
-            onProfileCardClick = { usn ->
-                navHostController.navigate(Route.ViewProfile(usn))
+            onProfileCardClick = { id ->
+                navHostController.navigate(Route.ViewProfile(id))
             },
-            onBackClick = {
-                navHostController.popBackStack()
-                // Clear the selected user when navigating back to the home screen
-                if (navHostController.previousBackStackEntry?.destination?.route == Route.Home.javaClass.simpleName) {
-                    viewModel.clearSelectedUser()
-                }
-            }
+            onBackClick = { navHostController.popBackStack() }
         )
     }
 }

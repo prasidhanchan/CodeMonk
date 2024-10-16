@@ -13,6 +13,7 @@
 
 package com.mca.repository
 
+import android.content.Context
 import com.mca.util.model.Post
 import com.mca.util.model.Tag
 import com.mca.util.warpper.DataOrException
@@ -22,7 +23,7 @@ interface PostRepository {
 
     suspend fun upsertPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
 
-    suspend fun addAnnouncement(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
+    suspend fun addAnnouncement(post: Post, context: Context, onSuccess: () -> Unit, onError: (String) -> Unit)
 
     suspend fun getPost(postId: String): Flow<DataOrException<Post, Boolean, Exception>>
 

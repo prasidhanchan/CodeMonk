@@ -69,7 +69,7 @@ fun SearchedTags(
 
     Row(
         modifier = modifier
-            .padding(all = 10.dp)
+            .padding(horizontal = 10.dp)
             .animateContentSize(animationSpec = tween(durationMillis = 600))
             .height(if (visible) 78.dp else 0.dp)
             .fillMaxWidth()
@@ -121,7 +121,7 @@ private fun TagCard(
         Row(
             modifier = Modifier.wrapContentWidth(Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = tag.username,
@@ -131,7 +131,7 @@ private fun TagCard(
                     fontFamily = dosis,
                     color = fontColor
                 ),
-                modifier = Modifier.padding(bottom = 1.dp)
+                modifier = Modifier.padding(start = 5.dp, bottom = 1.dp)
             )
             if (tag.isVerified || tag.userType == ADMIN) {
                 Icon(

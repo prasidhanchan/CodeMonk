@@ -80,11 +80,11 @@ internal fun HomeAppBar(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.codemonk_logo),
-                contentDescription = stringResource(id = R.string.app_name),
+                contentDescription = stringResource(id = R.string.code_monk),
                 modifier = Modifier.size(30.dp)
             )
             Text(
-                text = stringResource(id = R.string.app_name),
+                text = stringResource(id = R.string.code_monk),
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,

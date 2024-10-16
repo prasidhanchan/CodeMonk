@@ -19,9 +19,11 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -54,6 +57,8 @@ import coil.compose.AsyncImage
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.mca.ui.R
+import com.mca.ui.component.CMButton
+import com.mca.ui.theme.ExtraLightBlack
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
@@ -69,6 +74,7 @@ internal fun PostNativeAd(nativeAd: NativeAd?, modifier: Modifier = Modifier) {
             image = ad?.icon?.uri.toString(),
             headline = ad?.headline.orEmpty(),
             body = ad?.body.orEmpty(),
+            callToAction = ad?.callToAction.orEmpty(),
             mediaImage = ad?.mediaContent?.mainImage,
             onClick = { composeView.performClick() }
         )
@@ -81,6 +87,7 @@ private fun PostAd(
     image: String,
     headline: String,
     body: String,
+    callToAction: String,
     mediaImage: Drawable?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -92,11 +99,15 @@ private fun PostAd(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PostAdTopBar(image = image, headLine = headline)
+        PostAdTopBar(
+            image = image,
+            headline = headline
+        )
         MainContent(
             mediaImage = mediaImage,
             headline = headline,
             body = body,
+            callToAction = callToAction,
             onClick = onClick
         )
     }
@@ -105,7 +116,7 @@ private fun PostAd(
 @Composable
 private fun PostAdTopBar(
     image: String,
-    headLine: String,
+    headline: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -115,24 +126,36 @@ private fun PostAdTopBar(
     ) {
         AsyncImage(
             model = image.ifEmpty { R.drawable.user },
-            contentDescription = headLine,
+            contentDescription = headline,
             modifier = Modifier
                 .padding(end = 8.dp)
                 .clip(CircleShape)
                 .background(LightBlack)
                 .size(30.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            filterQuality = FilterQuality.Low
         )
-        Text(
-            text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(end = 5.dp)
-        )
+        if (headline.isNotBlank()) {
+            Text(
+                text = headline,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .fillMaxWidth(0.2f)
+                    .height(10.dp)
+                    .clip(CircleShape)
+                    .background(color = LightBlack)
+            )
+        }
         Icon(
             painter = painterResource(id = R.drawable.tick),
             contentDescription = stringResource(id = R.string.blue_tick),
@@ -147,12 +170,13 @@ private fun MainContent(
     mediaImage: Drawable?,
     headline: String,
     body: String,
+    callToAction: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Surface(
         modifier = modifier
-            .padding(vertical = 10.dp)
+            .padding(top = 10.dp)
             .fillMaxWidth()
             .wrapContentHeight(Alignment.CenterVertically)
             .combinedClickable(onClick = onClick),
@@ -171,10 +195,23 @@ private fun MainContent(
                 contentDescription = headline,
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .height(200.dp),
+                    .aspectRatio(1412f / 949f),
                 contentScale = ContentScale.FillBounds
             )
             Spacer(modifier = Modifier.height(20.dp))
+            if (callToAction.isNotEmpty()) {
+                CMButton(
+                    text = callToAction[0].uppercase() + callToAction.substringAfter(callToAction[0]),
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .height(35.dp)
+                        .fillMaxWidth(),
+                    fonSize = 14,
+                    color = ExtraLightBlack,
+                    cornerRadius = 6.dp,
+                    onClick = { }
+                )
+            }
             Text(
                 text = body.ifEmpty { stringResource(id = R.string.ad_body) },
                 style = TextStyle(
@@ -246,6 +283,7 @@ private fun PostAdPreview() {
         image = "",
         headline = "Test Ad: Google Ads",
         body = "Stay up to date with your Ads Check how your ads are performing",
+        callToAction = "Install",
         mediaImage = null,
         onClick = { }
     )

@@ -100,7 +100,7 @@ internal fun SendNotificationScreen(
                 value = uiState.message,
                 onValueChange = onMessageChange,
                 placeHolder = stringResource(id = R.string.body),
-                imeAction = ImeAction.Send,
+                imeAction = ImeAction.Default,
                 keyboardActions = KeyboardActions(
                     onSend = {
                         if (uiState.title.isNotBlank() &&

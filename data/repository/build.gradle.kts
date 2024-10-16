@@ -30,24 +30,16 @@ android {
     defaultConfig {
         minSdk = MIN_SDK
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
 
-        buildConfigField("String", "UPDATE_CHANNEL", "\"${properties.getProperty("UPDATE_CHANNEL")}\"")
+        buildConfigField(
+            "String",
+            "UPDATE_CHANNEL",
+            "\"${properties.getProperty("UPDATE_CHANNEL")}\""
+        )
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
@@ -70,7 +62,6 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
 
     // Firebase

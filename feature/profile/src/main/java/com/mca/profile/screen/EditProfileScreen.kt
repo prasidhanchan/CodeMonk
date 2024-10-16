@@ -81,6 +81,7 @@ import com.mca.ui.theme.Red
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.LinkType
 import com.mca.util.model.User
 import kotlinx.coroutines.launch
@@ -158,9 +159,9 @@ internal fun EditProfileScreen(
             Spacer(modifier = Modifier.height(10.dp))
             CMTextBox(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
                     .focusable(enabled = true)
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .fillMaxWidth(),
                 value = uiState.currentUser.username,
                 onValueChange = onUsernameChange,
                 placeHolder = stringResource(id = R.string.username_placeholder),
@@ -181,9 +182,9 @@ internal fun EditProfileScreen(
                 capitalization = KeyboardCapitalization.None
             )
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = uiState.currentUser.name,
                 onValueChange = onNameChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.name_placeholder),
                 leadingIcon = {
                     Icon(
@@ -199,10 +200,9 @@ internal fun EditProfileScreen(
                 capitalization = KeyboardCapitalization.Words
             )
             CMTextBox(
-                modifier = Modifier
-                    .padding(vertical = 8.dp),
                 value = uiState.currentUser.bio,
                 onValueChange = onBioChange,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.add_a_bio_placeholder),
                 leadingIcon = {
                     Icon(
@@ -219,11 +219,11 @@ internal fun EditProfileScreen(
                 singleLine = false,
                 maxLines = 4
             )
-            if (uiState.currentUser.userType != "Admin") {
+            if (uiState.currentUser.userType != ADMIN) {
                 CMTextBox(
-                    modifier = Modifier.padding(vertical = 8.dp),
                     value = uiState.currentUser.currentProject,
                     onValueChange = onCurrentProjectChange,
+                    modifier = Modifier.fillMaxWidth(),
                     placeHolder = stringResource(id = R.string.current_project_placeholder),
                     leadingIcon = {
                         Icon(
@@ -245,9 +245,9 @@ internal fun EditProfileScreen(
                     capitalization = KeyboardCapitalization.Words
                 )
                 CMTextBox(
-                    modifier = Modifier.padding(vertical = 8.dp),
                     value = uiState.currentUser.mentor,
                     onValueChange = onMentorChange,
+                    modifier = Modifier.fillMaxWidth(),
                     placeHolder = stringResource(id = R.string.mentor_username),
                     leadingIcon = {
                         Icon(
@@ -269,9 +269,9 @@ internal fun EditProfileScreen(
             }
 
             CMTextBox(
-                modifier = Modifier.padding(vertical = 8.dp),
                 value = linkState,
                 onValueChange = { linkState = it },
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = stringResource(id = R.string.add_a_link_placeholder),
                 leadingIcon = {
                     Icon(
@@ -319,6 +319,7 @@ internal fun EditProfileScreen(
             Spacer(modifier = Modifier.height(10.dp))
             CMButton(
                 text = stringResource(id = R.string.update),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.loading,
                 loading = uiState.loading,
                 onClick = onUpdateClick

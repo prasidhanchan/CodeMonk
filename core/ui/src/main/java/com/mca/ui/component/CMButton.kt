@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mca.ui.theme.BrandColor
@@ -51,6 +52,7 @@ fun CMButton(
     textColor: Color = fontColor,
     color: Color = BrandColor,
     loading: Boolean = false,
+    cornerRadius: Dp = 10.dp,
     onClick: () -> Unit
 ) {
     Surface(
@@ -62,7 +64,7 @@ fun CMButton(
                 onClick = onClick
             )
             .semantics { contentDescription = text },
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(cornerRadius),
         color = color
     ) {
         Box(

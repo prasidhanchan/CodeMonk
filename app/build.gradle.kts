@@ -23,7 +23,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.google.services)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -34,7 +34,7 @@ android {
         applicationId = "com.mca.codemonk"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = 9
+        versionCode = 12
         versionName = "1.0.0"
 
         testInstrumentationRunner = "com.mca.codemonk.HiltRunner"
@@ -44,16 +44,22 @@ android {
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
-        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
+        }
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            resValue("string", "app_name", "Code Monk Debug")
         }
     }
     compileOptions {
@@ -84,7 +90,6 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
@@ -100,7 +105,7 @@ dependencies {
     // Admob
     implementation(libs.play.services.ads)
 
-    //InApp Update
+    // InApp Update
     implementation(libs.app.update)
     implementation(libs.app.update.ktx)
 

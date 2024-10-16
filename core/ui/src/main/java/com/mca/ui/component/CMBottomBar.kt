@@ -18,9 +18,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -46,6 +45,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,7 +58,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mca.ui.R
 import com.mca.ui.theme.Black
@@ -68,9 +67,10 @@ import com.mca.ui.theme.OffWhite
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
-import com.mca.util.constant.getCurrentRoute
 import com.mca.util.constant.rotateIcon
 import com.mca.util.navigation.Route
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * BottomBar composable to display navigation screens.
@@ -79,12 +79,13 @@ import com.mca.util.navigation.Route
 fun CMBottomBar(
     visible: Boolean,
     navHostController: NavHostController,
+    currentRoute: Route?,
     modifier: Modifier = Modifier,
     isNewNotification: Boolean
 ) {
     val routes = Route.routes
-    val navaBackStackEntry by navHostController.currentBackStackEntryAsState()
-    val currentScreen = navaBackStackEntry?.getCurrentRoute()
+
+    val scope = rememberCoroutineScope()
 
     var isOpen by remember { mutableStateOf(false) }
     val animateHeight by animateDpAsState(
@@ -97,13 +98,22 @@ fun CMBottomBar(
     )
 
     LaunchedEffect(key1 = visible) {
-        if (!visible) isOpen = false
+        if (!visible) {
+            scope.launch {
+                delay(1000)
+                isOpen = false
+            }
+        }
     }
 
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = tween(durationMillis = 200)),
-        exit = fadeOut(animationSpec = tween(durationMillis = 200)),
+        enter = slideInVertically(
+            initialOffsetY = { it }
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { it }
+        ),
     ) {
         Box(
             modifier = Modifier
@@ -141,13 +151,15 @@ fun CMBottomBar(
                                 if (!isOpen) {
                                     BottomBarItem(
                                         route = route,
-                                        selected = currentScreen == route,
+                                        selected = currentRoute == route,
                                         isNewNotification = isNewNotification,
                                         onClick = {
-                                            navHostController.navigate(route) {
-                                                popUpTo<Route.Home>()
-                                                launchSingleTop = true
-                                                restoreState = true
+                                            if (route != currentRoute) {
+                                                navHostController.navigate(route) {
+                                                    popUpTo<Route.Home>()
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
                                             }
                                         }
                                     )
@@ -173,6 +185,10 @@ fun CMBottomBar(
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true
+                    }
+
+                    scope.launch {
+                        delay(1000L)
                         isOpen = false
                     }
                 },
@@ -181,6 +197,10 @@ fun CMBottomBar(
                         popUpTo<Route.Home>()
                         launchSingleTop = true
                         restoreState = true
+                    }
+
+                    scope.launch {
+                        delay(1000L)
                         isOpen = false
                     }
                 }
@@ -256,7 +276,7 @@ private fun AddIcon(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = stringResource(id = R.string.add_post),
+                contentDescription = stringResource(id = R.string.new_post),
                 modifier = Modifier.rotateIcon(isOpen),
                 tint = tintColor
             )
@@ -287,11 +307,13 @@ private fun PostOptions(
     ) {
         CMButton(
             text = stringResource(id = R.string.project_post),
+            modifier = Modifier.fillMaxWidth(0.8f),
             onClick = onProjectOptionClick
         )
         Spacer(modifier = Modifier.height(10.dp))
         CMButton(
             text = stringResource(id = R.string.announcement),
+            modifier = Modifier.fillMaxWidth(0.8f),
             textColor = Black,
             color = tintColor,
             onClick = onAnnouncementClick
@@ -316,6 +338,7 @@ private fun CMBottomBarPreview() {
     CMBottomBar(
         visible = true,
         isNewNotification = true,
-        navHostController = rememberNavController()
+        navHostController = rememberNavController(),
+        currentRoute = Route.Home
     )
 }

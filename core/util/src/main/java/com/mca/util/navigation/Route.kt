@@ -60,7 +60,7 @@ sealed class Route(val icon: Int = 0, val newNotificationIcon: Int = 0) {
     data object Announcement : Route()
 
     @Serializable
-    data class ViewProfile(val username: String) : Route()
+    data class ViewProfile(val userId: String) : Route()
 
     @Serializable
     data object About : Route()

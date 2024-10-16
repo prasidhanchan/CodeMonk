@@ -47,10 +47,10 @@ interface ProfileRepository {
     suspend fun getUpdate(): DataOrException<Update, Boolean, Exception>
 
     suspend fun getSelectedUser(
-        username: String,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ): DataOrException<User, Boolean, Exception>
+        userId: String,
+        onSuccess: (user: User?) -> Unit,
+        onError: (error: String) -> Unit
+    )
 
     suspend fun getRandomMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception>
 

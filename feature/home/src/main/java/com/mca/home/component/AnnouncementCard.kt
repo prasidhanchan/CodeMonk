@@ -22,9 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -40,18 +38,24 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,12 +71,15 @@ import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.animateAlpha
 import com.mca.util.constant.animatedLike
+import com.mca.util.constant.extractUrl
 import com.mca.util.constant.toLikedBy
 import com.mca.util.constant.toLikes
 import com.mca.util.constant.toPostId
 import com.mca.util.constant.toTimeStamp
 import com.mca.util.model.Post
 import com.mca.util.model.User
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun AnnouncementCard(
@@ -142,7 +149,13 @@ internal fun AnnouncementCard(
             }
         }
 
-        if (post.likes.isNotEmpty()) AnnouncementBottomBar(likes = post.likes)
+        if (post.likes.isNotEmpty()) {
+            AnnouncementBottomBar(
+                likes = post.likes,
+                currentUserId = currentUserId,
+                currentUsername = currentUsername
+            )
+        }
     }
 }
 
@@ -162,7 +175,7 @@ private fun AnnouncementTopBar(
             .clickable(
                 indication = null,
                 interactionSource = remember(::MutableInteractionSource),
-                onClick = { onUsernameClick(user.username) }
+                onClick = { onUsernameClick(post.userId) }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
@@ -186,7 +199,7 @@ private fun AnnouncementTopBar(
             ),
             modifier = Modifier.padding(end = 5.dp)
         )
-        if (user.userType == ADMIN || user.isVerified) {
+        if (user.userType == ADMIN || user.verified) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
@@ -212,11 +225,16 @@ private fun AnnouncementTopBar(
 @Composable
 private fun AnnouncementBottomBar(
     likes: List<String>,
+    currentUserId: String,
+    currentUsername: String,
     modifier: Modifier = Modifier
 ) {
-    Spacer(modifier = Modifier.height(20.dp))
+    val postLikes by rememberSaveable { mutableStateOf(likes) }
+
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .padding(top = 20.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -227,7 +245,9 @@ private fun AnnouncementBottomBar(
             tint = Red
         )
         Text(
-            text = likes.toLikedBy(),
+            text = postLikes
+                .filterNot { it == currentUserId || it == currentUsername }
+                .toLikedBy(),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -247,6 +267,8 @@ private fun MainContent(
     alpha: Float,
     onTransform: (Boolean) -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
+
     val state = rememberPagerState { post.images.size }
     var isOpen by remember { mutableStateOf(false) }
 
@@ -255,13 +277,31 @@ private fun MainContent(
             images = post.images,
             state = state,
             modifier = modifier,
-            contentScale = ContentScale.Crop,
             onTransform = onTransform
         )
     }
 
     Text(
-        text = post.description,
+        text = buildAnnotatedString {
+            val link = post.description.extractUrl()
+            if (!link.isNullOrBlank()) {
+                append(post.description.substringBefore(link))
+                withLink(
+                    link = LinkAnnotation.Clickable(
+                        tag = "URL",
+                        styles = TextLinkStyles(
+                            style = SpanStyle(color = LinkBlue)
+                        ),
+                        linkInteractionListener = { uriHandler.openUri(link) }
+                    )
+                ) {
+                    append(link)
+                }
+                append(post.description.substringAfter(link))
+            } else {
+                append(post.description)
+            }
+        },
         style = TextStyle(
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold,
@@ -294,12 +334,14 @@ private fun LikesAndTimeStamp(
     onLikeCLick: (postId: String, token: String) -> Unit,
     onUnlikeCLick: (postId: String) -> Unit
 ) {
-    var isLiked by rememberSaveable(post.likes) {
+    val scope = rememberCoroutineScope()
+
+    var isLiked by rememberSaveable {
         mutableStateOf(
             post.likes.any { it.contains(currentUserId) || it.contains(currentUsername) }
         )
     }
-    var likes by rememberSaveable(post.likes) { mutableIntStateOf(post.likes.size) }
+    var likes by rememberSaveable { mutableIntStateOf(post.likes.size) }
 
     Column(
         modifier = modifier
@@ -323,13 +365,19 @@ private fun LikesAndTimeStamp(
                     .animatedLike(
                         onClick = {
                             if (isLiked) {
-                                onUnlikeCLick(post.toPostId())
-                                isLiked = false
-                                likes -= 1
+                                scope.launch {
+                                    isLiked = false
+                                    likes -= 1
+                                    delay(1000L) // Delay to avoid spammy notifications
+                                    onUnlikeCLick(post.toPostId())
+                                }
                             } else {
-                                onLikeCLick(post.toPostId(), token)
-                                isLiked = true
-                                likes += 1
+                                scope.launch {
+                                    isLiked = true
+                                    likes += 1
+                                    delay(1000L)
+                                    onLikeCLick(post.toPostId(), token)
+                                }
                             }
                         }
                     )
@@ -367,10 +415,10 @@ private fun AnnouncementCardPreview() {
         post = Post(
             userId = "1",
             description = "Introducing CodeLab! \uD83D\uDE80\n\n" +
-                    "After months of hard work, I'm excited to announce the launch of CodeLab, an app designed to simplify coding project management for developers. " +
+                    "\n\nAfter months of hard work, I'm excited to announce the launch of CodeLab, an app designed to simplify coding project management for developers. " +
                     "Whether you're a beginner or a pro, CodeLab helps you create, track, and collaborate on coding projects effortlessly. With real-time updates, progress tracking, and an intuitive interface, this app is here to streamline your workflow. " +
                     "Stay tuned for the official release—let's code smarter, together! ✨",
-            likes = listOf("1", "2"),
+            likes = listOf("uchiha_sasuke", "uzumaki_naruto"),
             images = listOf("image1", "image2")
         ),
         user = User(

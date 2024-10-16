@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,11 +31,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mca.ui.R
 import com.mca.leaderboard.UiState
 import com.mca.leaderboard.component.CMBottomSheet
 import com.mca.leaderboard.component.TopMemberCard
 import com.mca.leaderboard.component.TopMembers
+import com.mca.ui.R
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.Loader
 import com.mca.ui.theme.Black
@@ -66,29 +65,29 @@ internal fun LeaderBoardScreen(
                     modifier = Modifier.fillMaxHeight(0.35f)
                 )
             }
-        }
-        CMBottomSheet(modifier= Modifier.fillMaxHeight(0.6f)) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(all = 20.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp)),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
-            ) {
-                itemsIndexed(
-                    key = { _, member -> member.userId },
-                    items = uiState.topMembers
-                ) { index, member ->
-                    TopMemberCard(
-                        topMember = member,
-                        position = index + 1,
-                        onCardClick = onCardClick
-                    )
-                }
+            CMBottomSheet(modifier = Modifier.fillMaxHeight()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(all = 20.dp)
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(10.dp)),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    itemsIndexed(
+                        key = { _, member -> member.userId },
+                        items = uiState.topMembers
+                    ) { index, member ->
+                        TopMemberCard(
+                            topMember = member,
+                            position = index + 1,
+                            onCardClick = onCardClick
+                        )
+                    }
 
-                item {
-                    Spacer(modifier = Modifier.height(80.dp))
+                    item {
+                        Spacer(modifier = Modifier.height(80.dp))
+                    }
                 }
             }
         }

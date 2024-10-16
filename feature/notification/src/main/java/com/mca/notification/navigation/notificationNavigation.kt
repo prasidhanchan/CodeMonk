@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.mca.notification.screen.NotificationScreen
 import com.mca.notification.screen.NotificationViewModel
+import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
 fun NavGraphBuilder.notificationNavigation(
@@ -33,15 +34,13 @@ fun NavGraphBuilder.notificationNavigation(
 ) {
     composable<Route.Notification>(
         enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 400))
+            fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 400))
+            fadeOut(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         }
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-        val lastSeen = System.currentTimeMillis()
 
         NotificationScreen(
             uiState = uiState,
@@ -49,7 +48,7 @@ fun NavGraphBuilder.notificationNavigation(
             onSendNotificationClick = { navHostController.navigate(Route.SendNotification) },
             updateLastSeen = {
                 viewModel.updateLastSeen(
-                    lastSeen = lastSeen,
+                    lastSeen = System.currentTimeMillis(),
                     onSuccess = refreshUser
                 )
             }

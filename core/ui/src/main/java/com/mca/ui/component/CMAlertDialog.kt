@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -73,7 +72,7 @@ fun CMAlertDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Black.copy(alpha = 0.6f))
+                .background(color = Black.copy(alpha = 0.7f))
                 .clickable(
                     enabled = false,
                     onClick = { }
@@ -83,7 +82,7 @@ fun CMAlertDialog(
             Surface(
                 modifier = modifier
                     .wrapContentHeight(Alignment.CenterVertically)
-                    .width(320.dp),
+                    .fillMaxWidth(0.8f),
                 shape = RoundedCornerShape(15.dp),
                 color = LightBlack
             ) {
@@ -109,8 +108,8 @@ fun CMAlertDialog(
                     Text(
                         text = message,
                         style = TextStyle(
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
                             fontFamily = dosis,
                             color = fontColor,
                             textAlign = TextAlign.Start
@@ -122,14 +121,12 @@ fun CMAlertDialog(
                         text = confirmText,
                         modifier = Modifier
                             .padding(vertical = 15.dp)
-                            .height(40.dp),
-                        fonSize = 16,
+                            .fillMaxWidth(),
                         onClick = onConfirm
                     )
                     CMButton(
                         text = dismissText,
-                        modifier = Modifier.height(40.dp),
-                        fonSize = 16,
+                        modifier = Modifier.fillMaxWidth(),
                         color = ExtraLightBlack,
                         onClick = onDismiss
                     )

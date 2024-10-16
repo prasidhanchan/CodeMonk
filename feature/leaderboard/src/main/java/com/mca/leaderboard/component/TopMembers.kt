@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.mca.ui.R
 import com.mca.ui.theme.BrandColor
 import com.mca.ui.theme.Green
 import com.mca.ui.theme.LightBlack
@@ -100,7 +102,7 @@ internal fun TopMembers(
 }
 
 @Composable
-internal fun CMHistogram(
+private fun CMHistogram(
     position: Int,
     color: Color,
     profileImage: String,
@@ -138,11 +140,11 @@ internal fun CMHistogram(
         Column(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
-                .height(
+                .fillMaxHeight(
                     when (position) {
-                        1 -> 260.dp
-                        2 -> 200.dp
-                        else -> 160.dp
+                        1 -> 1f
+                        2 -> 0.8f
+                        else -> 0.6f
                     }
                 )
                 .width(70.dp),
@@ -155,7 +157,7 @@ internal fun CMHistogram(
                 color = LightBlack,
                 content = {
                     AsyncImage(
-                        model = profileImage,
+                        model = profileImage.ifEmpty { R.drawable.user },
                         contentDescription = position.toString(),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
