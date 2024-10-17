@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mca.home.BuildConfig.NATIVE_AD_ID_POST
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.leaderboard.navigation.leaderBoardNavigation
@@ -154,7 +155,7 @@ fun NavGraphBuilder.innerScreen(
         LaunchedEffect(key1 = Unit) {
             loadNativeAds(
                 context = context,
-                adUnitId = NATIVE_AD_ID_SEARCH,
+                adUnitId = NATIVE_AD_ID_POST,
                 onAdLoaded = { ad ->
                     nativeAds.add(ad)
                 },
