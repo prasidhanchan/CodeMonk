@@ -14,11 +14,11 @@
 package com.mca.search.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,12 +27,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +46,7 @@ import com.mca.ui.component.EmptyResponseIndicator
 import com.mca.ui.theme.Black
 import com.mca.ui.theme.tintColor
 import com.mca.util.constant.Constant.MAX_SEARCH_ADS
+import com.mca.util.constant.animateAlpha
 
 @Composable
 internal fun SearchScreen(
@@ -60,11 +57,6 @@ internal fun SearchScreen(
     nativeAds: List<NativeAd?>
 ) {
     val focusManager = LocalFocusManager.current
-
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
-    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -82,9 +74,7 @@ internal fun SearchScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier
-                    .focusable(enabled = true)
-                    .focusRequester(focusRequester),
+                modifier = Modifier.fillMaxWidth(),
                 value = uiState.search,
                 onValueChange = onSearchChange,
                 placeHolder = stringResource(id = R.string.search),
@@ -117,14 +107,15 @@ internal fun SearchScreen(
                     ) { index, user ->
                         CMProfileCard(
                             user = user,
-                            modifier = Modifier.padding(bottom = 5.dp),
-                            delay = index * 100,
+                            modifier = Modifier
+                                .padding(bottom = 5.dp)
+                                .animateAlpha(delay = index * 100),
                             onClick = onProfileClick
                         )
                         if (index < MAX_SEARCH_ADS && nativeAds.size == MAX_SEARCH_ADS) {
                             ProfileCardNativeAd(
                                 nativeAd = nativeAds[index],
-                                delay = index * 100
+                                modifier = Modifier.animateAlpha(delay = 100)
                             )
                         }
                     }

@@ -347,7 +347,7 @@ private fun TeamMemberChip(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = stringResource(id = R.string.username, member),
+                text = stringResource(id = R.string.username_tag, member),
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,

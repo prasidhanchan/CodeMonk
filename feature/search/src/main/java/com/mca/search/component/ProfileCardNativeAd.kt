@@ -57,12 +57,10 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
-import com.mca.util.constant.animateAlpha
 
 @Composable
 internal fun ProfileCardNativeAd(
     nativeAd: NativeAd?,
-    delay: Int,
     modifier: Modifier = Modifier
 ) {
     NativeAdView(
@@ -70,10 +68,10 @@ internal fun ProfileCardNativeAd(
         modifier = modifier
     ) { ad, composeView ->
         SearchAd(
-            headLine = ad?.headline.orEmpty(),
+            headline = ad?.headline.orEmpty(),
             body = ad?.body.orEmpty(),
             icon = ad?.icon?.uri.toString(),
-            delay = delay,
+            callToAction = ad?.callToAction.orEmpty(),
             onClick = { composeView.performClick() }
         )
     }
@@ -81,11 +79,11 @@ internal fun ProfileCardNativeAd(
 
 @Composable
 private fun SearchAd(
-    headLine: String,
+    headline: String,
     body: String,
     icon: String,
+    callToAction: String,
     modifier: Modifier = Modifier,
-    delay: Int = 200,
     onClick: () -> Unit
 ) {
     Surface(
@@ -97,8 +95,7 @@ private fun SearchAd(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onClick
-            )
-            .animateAlpha(delay),
+            ),
         shape = RoundedCornerShape(10.dp),
         color = LightBlack
     ) {
@@ -119,7 +116,7 @@ private fun SearchAd(
                 content = {
                     AsyncImage(
                         model = icon.ifEmpty { R.drawable.user },
-                        contentDescription = headLine,
+                        contentDescription = headline,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -132,22 +129,37 @@ private fun SearchAd(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = stringResource(id = R.string.sponsored),
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.sponsored),
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = dosis,
+                            color = fontColor
+                        )
                     )
-                )
+                    Text(
+                        text = callToAction,
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = dosis,
+                            color = LinkBlue
+                        )
+                    )
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
+                        text = headline.ifEmpty { stringResource(id = R.string.ad_username) },
                         style = TextStyle(
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
@@ -216,9 +228,10 @@ private fun NativeAdView(
 @Composable
 private fun ProfileCardNativeAdPreview() {
     SearchAd(
-        headLine = "Test ads from google",
+        headline = "Test ads from google",
         body = "Test Ad: Google Ads",
         icon = "",
+        callToAction = "Install",
         onClick = { }
     )
 }

@@ -100,7 +100,6 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: v${{ env.VERSION_NAME }}
-          prerelease: true
           draft: true
           files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}.apk
         env:

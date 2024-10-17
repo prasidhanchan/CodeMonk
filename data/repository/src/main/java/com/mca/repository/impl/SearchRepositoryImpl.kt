@@ -27,7 +27,7 @@ class SearchRepositoryImpl @Inject constructor(
     val userRef: CollectionReference
 ) : SearchRepository {
 
-    override suspend fun getSearchUser(search: String): DataOrException<List<User>?, Boolean, Exception> {
+    override suspend fun getAllUsers(search: String): DataOrException<List<User>?, Boolean, Exception> {
         val dataOrException: DataOrException<List<User>?, Boolean, Exception> =
             DataOrException(loading = true)
 

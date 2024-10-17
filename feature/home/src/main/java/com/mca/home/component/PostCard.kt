@@ -472,7 +472,7 @@ private fun UsernameChip(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.username, username),
+                text = stringResource(R.string.username_tag, username),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
