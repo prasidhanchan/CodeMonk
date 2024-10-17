@@ -16,7 +16,9 @@ package com.mca.repository.impl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mca.repository.AuthRepository
+import com.mca.util.constant.Constant.EMAIL_REGEX
 import com.mca.util.constant.convertToMap
 import com.mca.util.constant.trimAll
 import com.mca.util.model.User
@@ -39,6 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
         onError: (Response) -> Unit
     ) {
         try {
+            val token = FirebaseMessaging.getInstance().token.await()
             val querySnap = userRef.get().await()
             querySnap.forEach { docSnap ->
                 if (docSnap.data["username"] == username) throw Exception("Username already exists.")
@@ -48,6 +51,7 @@ class AuthRepositoryImpl @Inject constructor(
                 name.isBlank() -> throw Exception("Please enter your name.")
                 username.isBlank() -> throw Exception("Please enter your username.")
                 email.isBlank() -> throw Exception("Please enter your email.")
+                !email.matches(EMAIL_REGEX) -> throw Exception("Please enter a valid email.")
                 password.isBlank() -> throw Exception("Please enter your password.")
                 rePassword.isBlank() -> throw Exception("Please re-enter your password.")
                 password != rePassword -> throw Exception("Passwords do not match.")
@@ -55,13 +59,16 @@ class AuthRepositoryImpl @Inject constructor(
                     FirebaseAuth.getInstance()
                         .createUserWithEmailAndPassword(email, password)
                         .addOnSuccessListener {
-                            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
+                            val currentUserId =
+                                FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
                             userRef.document(currentUserId).set(
                                 User(
                                     userId = currentUserId,
                                     name = name,
                                     username = username,
-                                    email = email
+                                    email = email,
+                                    token = token,
+                                    userType = "student"
                                 )
                                     .trimAll()
                                     .convertToMap()

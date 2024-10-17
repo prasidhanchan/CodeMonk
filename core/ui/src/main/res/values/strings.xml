@@ -20,6 +20,7 @@
     <string name="name">Name</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
+    <string name="email_format">nu24mcXXX@nmamit.in</string>
     <string name="password">Password</string>
     <string name="re_password">Re-Type Password</string>
     <string name="show_hide_password">Show/Hide Password</string>

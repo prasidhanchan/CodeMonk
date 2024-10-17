@@ -86,7 +86,7 @@ internal fun LoginScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(all = 15.dp)
+                .padding(horizontal = 15.dp)
                 .imePadding()
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
@@ -205,7 +205,9 @@ internal fun LoginScreen(
             }
 
             Box(
-                modifier= Modifier.weight(1f),
+                modifier= Modifier
+                    .weight(1f)
+                    .padding(bottom = 10.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Text(

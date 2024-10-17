@@ -156,7 +156,7 @@ internal fun SignUpScreen(
             CMTextBox(
                 value = uiState.email,
                 onValueChange = onEmailChange,
-                placeHolder = stringResource(id = R.string.email),
+                placeHolder = stringResource(id = R.string.email_format),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.email),
@@ -168,7 +168,8 @@ internal fun SignUpScreen(
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 ),
-                capitalization = KeyboardCapitalization.None
+                capitalization = KeyboardCapitalization.None,
+                headerTitle = stringResource(id = R.string.email)
             )
             CMTextBox(
                 value = uiState.password,
