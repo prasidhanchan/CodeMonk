@@ -57,15 +57,17 @@ fun NavGraphBuilder.searchNavigation(
 
         val nativeAds = remember { mutableStateListOf<NativeAd?>() }
         LaunchedEffect(key1 = Unit) {
-            loadNativeAds(
-                context = context,
-                adUnitId = NATIVE_AD_ID_SEARCH,
-                onAdLoaded = { ad ->
-                    nativeAds.add(ad)
-                },
-                maxAds = MAX_SEARCH_ADS,
-                adChoicesPlacement = 1
-            )
+            if (nativeAds.isEmpty()) {
+                loadNativeAds(
+                    context = context,
+                    adUnitId = NATIVE_AD_ID_SEARCH,
+                    onAdLoaded = { ad ->
+                        nativeAds.add(ad)
+                    },
+                    maxAds = MAX_SEARCH_ADS,
+                    adChoicesPlacement = 1
+                )
+            }
         }
 
         SearchScreen(

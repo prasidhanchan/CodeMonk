@@ -85,7 +85,7 @@ internal fun ViewProfileScreen(
             ) {
                 CMRegularAppBar(
                     text = stringResource(
-                        id = R.string.username,
+                        id = R.string.username_tag,
                         uiState.selectedUser?.username!!
                     ),
                     onBackClick = onBackClick

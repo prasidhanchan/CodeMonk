@@ -265,7 +265,7 @@ private fun MyUsernameCard(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(id = R.string.username, username),
+                text = stringResource(id = R.string.username_tag, username),
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 5.dp)
                     .padding(bottom = 2.dp),

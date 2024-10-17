@@ -14,6 +14,8 @@
 package com.mca.auth
 
 data class UiState(
+    var name: String = "",
+    var username: String = "",
     var email: String = "",
     var password: String = "",
     var testers: List<String> = emptyList(),

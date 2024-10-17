@@ -109,7 +109,7 @@ fun CMProfileCard(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = stringResource(id = R.string.username, user.username),
+                    text = stringResource(id = R.string.username_tag, user.username),
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,

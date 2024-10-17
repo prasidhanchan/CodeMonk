@@ -169,7 +169,7 @@ internal fun EditProfileScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.username),
                         contentDescription = stringResource(
-                            id = R.string.username,
+                            id = R.string.username_tag,
                             uiState.currentUser.username
                         ),
                         tint = tintColor
