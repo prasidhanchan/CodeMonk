@@ -16,12 +16,14 @@
     <string name="code_monk">Code Monk</string>
     <string name="dept_of_mca">Dept of MCA</string>
     <string name="sign_up">Sign Up</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
     <string name="name">Name</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="re_password">Re-Type Password</string>
     <string name="show_hide_password">Show/Hide Password</string>
+    <string name="show_hide_re_password">Show/Hide RePassword</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="forgot_password_heading">Forgot Password</string>

@@ -118,7 +118,6 @@ internal fun ProfileScreen(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = uiState.currentUser.bio,
                 style = TextStyle(
@@ -252,7 +251,7 @@ private fun MyUsernameCard(
 ) {
     Surface(
         modifier = modifier
-            .padding(top = 10.dp, bottom = 10.dp)
+            .padding(bottom = 10.dp)
             .wrapContentSize(Alignment.Center),
         shape = CircleShape,
         color = LightBlack,

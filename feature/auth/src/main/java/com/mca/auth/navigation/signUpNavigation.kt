@@ -22,15 +22,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.mca.auth.screen.AuthViewModel
-import com.mca.auth.screen.LoginScreen
+import com.mca.auth.screen.SignUpScreen
 import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
-fun NavGraphBuilder.loginNavigation(
+fun NavGraphBuilder.signUpNavigation(
     viewModel: AuthViewModel,
     navController: NavController
 ) {
-    composable<Route.Login>(
+    composable<Route.SignUp>(
         enterTransition = {
             fadeIn(animationSpec = tween(durationMillis = IN_OUT_DURATION))
         },
@@ -40,26 +40,30 @@ fun NavGraphBuilder.loginNavigation(
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LoginScreen(
+        SignUpScreen(
             uiState = uiState,
+            onNameChange = viewModel::setName,
+            onUsernameChange = viewModel::setUsername,
             onEmailChange = viewModel::setEmail,
             onPasswordChange = viewModel::setPassword,
-            onLoginClick = {
-                viewModel.login(
-                    email = uiState.email.trim(),
+            onRePasswordChange = viewModel::setRePassword,
+            onSignUpClick = {
+                viewModel.signUp(
+                    name = uiState.name,
+                    username = uiState.username,
+                    email = uiState.email,
                     password = uiState.password,
+                    rePassword = uiState.rePassword,
                     onSuccess = {
                         navController.navigate(Route.InnerScreen) {
                             popUpTo(Route.Login) {
                                 inclusive = true
                             }
                         }
-                        viewModel.clearUiState()
                     }
                 )
             },
-            onForgotPasswordClick = { navController.navigate(Route.ForgotPassword) },
-            onSignUpClick = { navController.navigate(Route.SignUp) }
+            onBackClick = { navController.popBackStack() }
         )
     }
 }

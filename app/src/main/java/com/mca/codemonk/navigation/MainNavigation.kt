@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.auth.navigation.forgotPasswordNavigation
 import com.mca.auth.navigation.loginNavigation
+import com.mca.auth.navigation.signUpNavigation
 import com.mca.auth.screen.AuthViewModel
 import com.mca.splash.navigation.splashNavigation
 import com.mca.ui.component.CMSnackBar
@@ -68,6 +69,10 @@ fun MainNavigation(
             splashNavigation(
                 navController = navController,
                 isLoggedIn = currentUser != null
+            )
+            signUpNavigation(
+                viewModel = viewModelAuth,
+                navController = navController
             )
             loginNavigation(
                 viewModel = viewModelAuth,

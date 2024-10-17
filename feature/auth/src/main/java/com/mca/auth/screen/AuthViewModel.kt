@@ -35,6 +35,37 @@ class AuthViewModel @Inject constructor(
         private set
 
     /**
+     * Function to sign up to firebase auth.
+     */
+    fun signUp(
+        name: String,
+        username: String,
+        email: String,
+        password: String,
+        rePassword: String,
+        onSuccess: () -> Unit
+    ) {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            authRepository.signUp(
+                name = name,
+                username = username,
+                email = email,
+                password = password,
+                rePassword = rePassword,
+                onSuccess = {
+                    uiState.update { it.copy(loading = false) }
+                    onSuccess()
+                },
+                onError = { response ->
+                    showSnackBar(response)
+                    uiState.update { it.copy(loading = false) }
+                }
+            )
+        }
+    }
+
+    /**
      * Function to login into firebase auth.
      */
     fun login(
@@ -76,9 +107,15 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun setName(value: String) = uiState.update { it.copy(name = value) }
+
+    fun setUsername(value: String) = uiState.update { it.copy(username = value) }
+
     fun setEmail(value: String) = uiState.update { it.copy(email = value) }
 
     fun setPassword(value: String) = uiState.update { it.copy(password = value) }
+
+    fun setRePassword(value: String) = uiState.update { it.copy(rePassword = value) }
 
     fun clearUiState() {
         viewModelScope.launch(Dispatchers.Main) {

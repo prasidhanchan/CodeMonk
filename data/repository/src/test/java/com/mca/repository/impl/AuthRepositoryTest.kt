@@ -36,7 +36,7 @@ class AuthRepositoryTest {
         fireStore = mock(FirebaseFirestore::class.java)
         collectionReference = mock(CollectionReference::class.java)
         Mockito.`when`(fireStore.collection("testing")).thenReturn(collectionReference)
-        authRepository = AuthRepositoryImpl(testRef = collectionReference)
+        authRepository = AuthRepositoryImpl(userRef = collectionReference)
     }
 
     @Test
