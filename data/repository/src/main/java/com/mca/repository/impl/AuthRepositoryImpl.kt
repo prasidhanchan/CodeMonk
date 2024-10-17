@@ -51,7 +51,7 @@ class AuthRepositoryImpl @Inject constructor(
                 name.isBlank() -> throw Exception("Please enter your name.")
                 username.isBlank() -> throw Exception("Please enter your username.")
                 email.isBlank() -> throw Exception("Please enter your email.")
-                !email.matches(EMAIL_REGEX) -> throw Exception("Please enter a valid email.")
+                !email.matches(EMAIL_REGEX) -> throw Exception("Enter a valid email.")
                 password.isBlank() -> throw Exception("Please enter your password.")
                 rePassword.isBlank() -> throw Exception("Please re-enter your password.")
                 password != rePassword -> throw Exception("Passwords do not match.")
