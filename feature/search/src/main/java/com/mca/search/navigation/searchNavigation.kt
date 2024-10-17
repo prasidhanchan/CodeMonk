@@ -18,28 +18,23 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.google.android.gms.ads.nativead.NativeAd
-import com.mca.search.BuildConfig.NATIVE_AD_ID_SEARCH
 import com.mca.search.screen.SearchScreen
 import com.mca.search.screen.SearchViewModel
 import com.mca.util.constant.Constant.IN_OUT_DURATION
-import com.mca.util.constant.Constant.MAX_SEARCH_ADS
-import com.mca.util.constant.loadNativeAds
 import com.mca.util.navigation.Route
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.searchNavigation(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    nativeAds: List<NativeAd?>
 ) {
     composable<Route.Search>(
         enterTransition = {
@@ -52,22 +47,11 @@ fun NavGraphBuilder.searchNavigation(
         val viewModel: SearchViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val context = LocalContext.current
         val scope = rememberCoroutineScope()
 
-        val nativeAds = remember { mutableStateListOf<NativeAd?>() }
-        LaunchedEffect(key1 = Unit) {
-            if (nativeAds.isEmpty()) {
-                loadNativeAds(
-                    context = context,
-                    adUnitId = NATIVE_AD_ID_SEARCH,
-                    onAdLoaded = { ad ->
-                        nativeAds.add(ad)
-                    },
-                    maxAds = MAX_SEARCH_ADS,
-                    adChoicesPlacement = 1
-                )
-            }
+        // Clear list
+        LaunchedEffect(key1 = uiState.users) {
+            if (uiState.search.isBlank()) viewModel.clearUsers()
         }
 
         SearchScreen(
@@ -78,8 +62,8 @@ fun NavGraphBuilder.searchNavigation(
             onSearchChange = { search ->
                 viewModel.setSearch(search)
                 scope.launch {
+                    delay(1000L)
                     viewModel.getSearchUser(search)
-                    delay(2000L)
                 }
             },
             onBackClick = { navHostController.popBackStack() },

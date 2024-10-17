@@ -13,11 +13,11 @@
 
 package com.mca.notification.screen
 
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -27,12 +27,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -55,7 +52,6 @@ internal fun SendNotificationScreen(
     onMessageChange: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     Surface(
@@ -64,7 +60,7 @@ internal fun SendNotificationScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 15.dp)
                 .imePadding()
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
@@ -76,9 +72,7 @@ internal fun SendNotificationScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier
-                    .focusable(enabled = true)
-                    .focusRequester(focusRequester),
+                modifier = Modifier.fillMaxWidth(),
                 value = uiState.title,
                 onValueChange = onTitleChange,
                 placeHolder = stringResource(id = R.string.title),
@@ -94,9 +88,11 @@ internal fun SendNotificationScreen(
                 ),
                 singleLine = false,
                 maxLines = 4,
-                enableHeader = false
+                enableHeader = false,
+                autoFocus = true
             )
             CMTextBox(
+                modifier = Modifier.fillMaxWidth(),
                 value = uiState.message,
                 onValueChange = onMessageChange,
                 placeHolder = stringResource(id = R.string.body),
@@ -125,7 +121,8 @@ internal fun SendNotificationScreen(
                         focusManager.clearFocus()
                     }
                     onSendClick()
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
         }

@@ -38,7 +38,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
-import com.mca.home.BuildConfig.NATIVE_AD_ID_POST
 import com.mca.home.navigation.homeNavigation
 import com.mca.home.screen.HomeViewModel
 import com.mca.leaderboard.navigation.leaderBoardNavigation
@@ -53,6 +52,7 @@ import com.mca.profile.navigation.editProfileNavigation
 import com.mca.profile.navigation.profileNavigation
 import com.mca.profile.navigation.viewProfileNavigation
 import com.mca.profile.screen.ProfileViewModel
+import com.mca.search.BuildConfig.NATIVE_AD_ID_SEARCH
 import com.mca.search.navigation.searchNavigation
 import com.mca.ui.R
 import com.mca.ui.component.CMBottomBar
@@ -63,6 +63,7 @@ import com.mca.util.constant.Constant.EVENT_TOPIC
 import com.mca.util.constant.Constant.LIKE_CHANNEL_ID
 import com.mca.util.constant.Constant.LIKE_TOPIC
 import com.mca.util.constant.Constant.MAX_POST_ADS
+import com.mca.util.constant.Constant.MAX_SEARCH_ADS
 import com.mca.util.constant.Constant.POST_CHANNEL_ID
 import com.mca.util.constant.Constant.POST_TOPIC
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
@@ -149,14 +150,24 @@ fun NavGraphBuilder.innerScreen(
         }
 
         val nativeAds = remember { mutableStateListOf<NativeAd?>() }
+        val nativeAdsSearch = remember { mutableStateListOf<NativeAd?>() }
         LaunchedEffect(key1 = Unit) {
             loadNativeAds(
                 context = context,
-                adUnitId = NATIVE_AD_ID_POST,
+                adUnitId = NATIVE_AD_ID_SEARCH,
                 onAdLoaded = { ad ->
                     nativeAds.add(ad)
                 },
                 maxAds = MAX_POST_ADS
+            )
+            loadNativeAds(
+                context = context,
+                adUnitId = NATIVE_AD_ID_SEARCH,
+                onAdLoaded = { ad ->
+                    nativeAdsSearch.add(ad)
+                },
+                maxAds = MAX_SEARCH_ADS,
+                adChoicesPlacement = 1
             )
         }
 
@@ -297,7 +308,10 @@ fun NavGraphBuilder.innerScreen(
                     }
                 )
                 viewProfileNavigation(navHostController = navHostController)
-                searchNavigation(navHostController)
+                searchNavigation(
+                    navHostController = navHostController,
+                    nativeAds = nativeAdsSearch
+                )
                 leaderBoardNavigation(navHostController)
                 notificationNavigation(
                     viewModel = viewModelNotification,

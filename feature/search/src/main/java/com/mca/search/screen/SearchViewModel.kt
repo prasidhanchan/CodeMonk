@@ -37,9 +37,10 @@ class SearchViewModel @Inject constructor(
         private set
 
     fun getSearchUser(search: String) {
-        if (search.isNotBlank()) {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.update { it.copy(loading = true) }
             viewModelScope.launch(Dispatchers.IO) {
-                val result = searchRepository.getSearchUser(search)
+                val result = searchRepository.getAllUsers(search)
 
                 withContext(Dispatchers.Main) {
                     if (result.exception == null && !result.loading!!) {
@@ -60,12 +61,12 @@ class SearchViewModel @Inject constructor(
                     }
                 }
             }
-        } else {
-            uiState.update { it.copy(users = emptyList()) }
         }
     }
 
     fun setSearch(search: String) {
         uiState.update { it.copy(search = search) }
     }
+
+    fun clearUsers() = uiState.update { it.copy(users = emptyList()) }
 }

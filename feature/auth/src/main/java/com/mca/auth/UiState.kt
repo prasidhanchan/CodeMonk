@@ -18,6 +18,7 @@ data class UiState(
     var username: String = "",
     var email: String = "",
     var password: String = "",
+    var rePassword: String = "",
     var testers: List<String> = emptyList(),
     var loading: Boolean = false
 )

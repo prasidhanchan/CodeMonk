@@ -19,7 +19,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +41,6 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,8 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -114,11 +110,6 @@ internal fun EditProfileScreen(
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
 
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
-    }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Black
@@ -158,10 +149,7 @@ internal fun EditProfileScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
             CMTextBox(
-                modifier = Modifier
-                    .focusable(enabled = true)
-                    .focusRequester(focusRequester)
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 value = uiState.currentUser.username,
                 onValueChange = onUsernameChange,
                 placeHolder = stringResource(id = R.string.username_placeholder),
@@ -322,7 +310,10 @@ internal fun EditProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !uiState.loading,
                 loading = uiState.loading,
-                onClick = onUpdateClick
+                onClick = {
+                    focusManager.clearFocus()
+                    onUpdateClick()
+                }
             )
             Spacer(modifier = Modifier.height(50.dp))
         }

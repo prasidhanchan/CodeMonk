@@ -63,6 +63,7 @@ import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.util.constant.Constant.ADMIN
+import com.mca.util.constant.animateAlpha
 import com.mca.util.model.User
 
 @Composable
@@ -86,7 +87,7 @@ internal fun ViewProfileScreen(
                 CMRegularAppBar(
                     text = stringResource(
                         id = R.string.username_tag,
-                        uiState.selectedUser?.username!!
+                        uiState.selectedUser?.username.orEmpty()
                     ),
                     onBackClick = onBackClick
                 )
@@ -96,7 +97,7 @@ internal fun ViewProfileScreen(
                     color = LightBlack,
                     content = {
                         AsyncImage(
-                            model = uiState.selectedUser?.profileImage,
+                            model = uiState.selectedUser?.profileImage?.ifEmpty { R.drawable.user },
                             contentDescription = uiState.selectedUser?.username,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
@@ -251,7 +252,7 @@ private fun OtherMentorsSection(
             mentors.forEachIndexed { index, mentor ->
                 CMProfileCard(
                     user = mentor,
-                    delay = index * 100,
+                    modifier = Modifier.animateAlpha(index * 100),
                     onClick = onProfileCardClick
                 )
             }

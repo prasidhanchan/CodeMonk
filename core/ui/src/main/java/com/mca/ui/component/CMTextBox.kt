@@ -26,9 +26,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -66,9 +70,12 @@ fun CMTextBox(
     singleLine: Boolean = true,
     maxLines: Int = 1,
     enabled: Boolean = true,
+    autoFocus: Boolean = false,
     headerTitle: String = "",
     enableHeader: Boolean = true
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     Column(
         modifier = modifier
             .padding(vertical = 5.dp)
@@ -92,6 +99,8 @@ fun CMTextBox(
             value = value,
             onValueChange = onValueChange,
             modifier = modifier
+                .onGloballyPositioned { if (autoFocus) focusRequester.requestFocus() }
+                .focusRequester(focusRequester)
                 .padding(vertical = 7.dp)
                 .wrapContentHeight(Alignment.CenterVertically)
                 .defaultMinSize(minHeight = 52.dp)
