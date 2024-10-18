@@ -147,18 +147,22 @@ private fun SearchAd(
                             color = fontColor
                         )
                     )
-                    Text(
-                        text = callToAction,
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = dosis,
-                            color = LinkBlue
+                    if (callToAction.isNotBlank()) {
+                        Text(
+                            text = callToAction,
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = dosis,
+                                color = LinkBlue
+                            )
                         )
-                    )
+                    }
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(vertical = 5.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -172,14 +176,13 @@ private fun SearchAd(
                                 color = fontColor
                             ),
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(vertical = 5.dp)
+                            overflow = TextOverflow.Ellipsis
                         )
                     } else {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth(0.2f)
-                                .height(8.dp)
+                                .height(10.dp)
                                 .clip(CircleShape)
                                 .background(color = ExtraLightBlack)
                         )
@@ -188,20 +191,31 @@ private fun SearchAd(
                     Icon(
                         painter = painterResource(id = R.drawable.tick),
                         contentDescription = stringResource(id = R.string.blue_tick),
+                        modifier = Modifier.padding(bottom = 1.dp),
                         tint = LinkBlue
                     )
                 }
-                Text(
-                    text = body.ifEmpty { stringResource(id = R.string.ad_body) },
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontFamily = dosis,
-                        color = fontColor.copy(alpha = 0.8f)
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (body.isNotBlank()) {
+                    Text(
+                        text = body,
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = dosis,
+                            color = fontColor.copy(alpha = 0.8f)
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .height(8.dp)
+                            .clip(CircleShape)
+                            .background(color = ExtraLightBlack)
+                    )
+                }
             }
         }
     }
@@ -242,7 +256,7 @@ private fun NativeAdView(
 @Composable
 private fun ProfileCardNativeAdPreview() {
     SearchAd(
-        headline = "",
+        headline = "google_ad",
         body = "Test Ad: Google Ads",
         icon = "",
         callToAction = "Install",
