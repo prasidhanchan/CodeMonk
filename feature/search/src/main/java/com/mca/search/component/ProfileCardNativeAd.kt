@@ -14,14 +14,17 @@
 package com.mca.search.component
 
 import android.view.View
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,6 +40,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -57,12 +61,10 @@ import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
-import com.mca.util.constant.animateAlpha
 
 @Composable
 internal fun ProfileCardNativeAd(
     nativeAd: NativeAd?,
-    delay: Int,
     modifier: Modifier = Modifier
 ) {
     NativeAdView(
@@ -70,10 +72,10 @@ internal fun ProfileCardNativeAd(
         modifier = modifier
     ) { ad, composeView ->
         SearchAd(
-            headLine = ad?.headline.orEmpty(),
+            headline = ad?.headline.orEmpty(),
             body = ad?.body.orEmpty(),
             icon = ad?.icon?.uri.toString(),
-            delay = delay,
+            callToAction = ad?.callToAction.orEmpty(),
             onClick = { composeView.performClick() }
         )
     }
@@ -81,11 +83,11 @@ internal fun ProfileCardNativeAd(
 
 @Composable
 private fun SearchAd(
-    headLine: String,
+    headline: String,
     body: String,
     icon: String,
+    callToAction: String,
     modifier: Modifier = Modifier,
-    delay: Int = 200,
     onClick: () -> Unit
 ) {
     Surface(
@@ -97,8 +99,7 @@ private fun SearchAd(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onClick
-            )
-            .animateAlpha(delay),
+            ),
         shape = RoundedCornerShape(10.dp),
         color = LightBlack
     ) {
@@ -119,7 +120,7 @@ private fun SearchAd(
                 content = {
                     AsyncImage(
                         model = icon.ifEmpty { R.drawable.user },
-                        contentDescription = headLine,
+                        contentDescription = headline,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -132,50 +133,89 @@ private fun SearchAd(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = stringResource(id = R.string.sponsored),
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
-                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.sponsored),
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = dosis,
+                            color = fontColor
+                        )
+                    )
+                    if (callToAction.isNotBlank()) {
+                        Text(
+                            text = callToAction,
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = dosis,
+                                color = LinkBlue
+                            )
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 5.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = headLine.ifEmpty { stringResource(id = R.string.ad_username) },
-                        style = TextStyle(
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontFamily = dosis,
-                            color = fontColor
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(vertical = 5.dp)
-                    )
+                    if (headline.isNotBlank()) {
+                        Text(
+                            text = headline,
+                            style = TextStyle(
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontFamily = dosis,
+                                color = fontColor
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.2f)
+                                .height(10.dp)
+                                .clip(CircleShape)
+                                .background(color = ExtraLightBlack)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.tick),
                         contentDescription = stringResource(id = R.string.blue_tick),
+                        modifier = Modifier.padding(bottom = 1.dp),
                         tint = LinkBlue
                     )
                 }
-                Text(
-                    text = body.ifEmpty { stringResource(id = R.string.ad_body) },
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontFamily = dosis,
-                        color = fontColor.copy(alpha = 0.8f)
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (body.isNotBlank()) {
+                    Text(
+                        text = body,
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = dosis,
+                            color = fontColor.copy(alpha = 0.8f)
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .height(8.dp)
+                            .clip(CircleShape)
+                            .background(color = ExtraLightBlack)
+                    )
+                }
             }
         }
     }
@@ -216,9 +256,10 @@ private fun NativeAdView(
 @Composable
 private fun ProfileCardNativeAdPreview() {
     SearchAd(
-        headLine = "Test ads from google",
+        headline = "google_ad",
         body = "Test Ad: Google Ads",
         icon = "",
+        callToAction = "Install",
         onClick = { }
     )
 }

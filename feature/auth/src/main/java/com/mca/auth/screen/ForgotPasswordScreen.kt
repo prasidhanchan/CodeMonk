@@ -13,23 +13,18 @@
 
 package com.mca.auth.screen
 
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -52,13 +47,7 @@ internal fun ForgotPasswordScreen(
     onEmailChange: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val localKeyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
-    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -76,9 +65,6 @@ internal fun ForgotPasswordScreen(
                 onBackClick = onBackClick
             )
             CMTextBox(
-                modifier = Modifier
-                    .focusable(enabled = true)
-                    .focusRequester(focusRequester),
                 value = uiState.email,
                 onValueChange = onEmailChange,
                 placeHolder = stringResource(id = R.string.email),
@@ -93,18 +79,21 @@ internal fun ForgotPasswordScreen(
                 keyboardType = KeyboardType.Email,
                 keyboardActions = KeyboardActions(
                     onGo = {
-                        focusManager.clearFocus()
+                        if (uiState.email.isNotBlank()) focusManager.clearFocus()
                         onFindAccountClick()
                     }
                 ),
                 capitalization = KeyboardCapitalization.None,
-                enableHeader = false
+                enableHeader = false,
+                autoFocus = true
             )
             CMButton(
                 text = stringResource(id = R.string.find_account),
-                modifier = Modifier.padding(vertical = 20.dp),
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .fillMaxWidth(),
                 onClick = {
-                    localKeyboard?.hide()
+                    if (uiState.email.isNotBlank()) focusManager.clearFocus()
                     onFindAccountClick()
                 }
             )

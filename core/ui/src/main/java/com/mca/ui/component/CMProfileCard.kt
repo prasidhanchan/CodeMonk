@@ -52,7 +52,6 @@ import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.util.constant.Constant.ADMIN
-import com.mca.util.constant.animateAlpha
 import com.mca.util.model.User
 
 /**
@@ -62,11 +61,10 @@ import com.mca.util.model.User
 fun CMProfileCard(
     user: User,
     modifier: Modifier = Modifier,
-    delay: Int = 200,
     onClick: (userId: String) -> Unit
 ) {
     Surface(
-        modifier = modifier
+        modifier = Modifier
             .padding(vertical = 5.dp)
             .fillMaxWidth()
             .height(90.dp)
@@ -75,7 +73,7 @@ fun CMProfileCard(
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = { onClick(user.userId) }
             )
-            .animateAlpha(delay),
+            .then(modifier),
         shape = RoundedCornerShape(10.dp),
         color = LightBlack
     ) {
@@ -109,7 +107,7 @@ fun CMProfileCard(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = stringResource(id = R.string.username, user.username),
+                    text = stringResource(id = R.string.username_tag, user.username),
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,

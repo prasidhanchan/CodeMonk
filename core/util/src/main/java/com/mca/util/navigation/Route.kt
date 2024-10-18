@@ -23,6 +23,9 @@ sealed class Route(val icon: Int = 0, val newNotificationIcon: Int = 0) {
     data object Splash : Route()
 
     @Serializable
+    data object SignUp : Route()
+
+    @Serializable
     data object Login : Route()
 
     @Serializable

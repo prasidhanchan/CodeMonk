@@ -72,7 +72,7 @@ fun Modifier.animatedLike(onClick: () -> Unit) = composed {
  */
 fun Modifier.animateAlpha(
     delay: Int,
-    duration: Int = 800,
+    duration: Int = 1000,
     condition: Boolean = true
 ) = composed {
     var alpha by rememberSaveable { mutableFloatStateOf(0f) }

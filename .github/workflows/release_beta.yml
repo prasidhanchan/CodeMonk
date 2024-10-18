@@ -99,7 +99,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
-          name: v${{ env.VERSION_NAME }}-${{ vars.RC_VERSION }}
+          name: v${{ env.VERSION_NAME }}-rc${{ vars.RC_VERSION }}
           prerelease: true
           draft: true
           files: app/build/outputs/apk/release/Code_Monk_v${{ env.VERSION_NAME }}-rc${{ vars.RC_VERSION }}.apk

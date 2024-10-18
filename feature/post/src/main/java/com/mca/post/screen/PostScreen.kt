@@ -91,7 +91,6 @@ internal fun PostScreen(
     onPostClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     val context = LocalContext.current
 
     val teamMembers = remember { mutableStateListOf<String>() }
@@ -159,23 +158,6 @@ internal fun PostScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.team),
                         contentDescription = stringResource(id = R.string.team_member),
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.add),
-                        contentDescription = stringResource(id = R.string.add_member),
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            onClick = {
-                                if (newMember.isNotBlank() && !teamMembers.contains(newMember)) {
-                                    teamMembers.add(newMember.trim())
-                                    onTeamMemberListChange(teamMembers.toList())
-                                }
-                                newMember = ""
-                            },
-                            interactionSource = interactionSource
-                        )
                     )
                 },
                 imeAction = ImeAction.Next,
@@ -284,7 +266,7 @@ internal fun PostScreen(
                 value = uiState.deadline,
                 onValueChange = onDeadlineChange,
                 modifier = Modifier.fillMaxWidth(),
-                placeHolder = stringResource(id = R.string.deadline_placeholder),
+                placeHolder = stringResource(id = R.string.deadline_date),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.deadline),
@@ -300,6 +282,7 @@ internal fun PostScreen(
                     }
                 ),
                 capitalization = KeyboardCapitalization.Sentences,
+                headerTitle = stringResource(id = R.string.deadline_placeholder),
                 enabled = userType == ADMIN
             )
             CMButton(
@@ -347,7 +330,7 @@ private fun TeamMemberChip(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = stringResource(id = R.string.username, member),
+                text = stringResource(id = R.string.username_tag, member),
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,

@@ -15,9 +15,16 @@
     <string name="app_name">Code Monk</string>
     <string name="code_monk">Code Monk</string>
     <string name="dept_of_mca">Dept of MCA</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
     <string name="email">Email</string>
+    <string name="email_format">nu24mcXXX@nmamit.in</string>
     <string name="password">Password</string>
+    <string name="re_password">Re-Type Password</string>
     <string name="show_hide_password">Show/Hide Password</string>
+    <string name="show_hide_re_password">Show/Hide RePassword</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="forgot_password_heading">Forgot Password</string>
@@ -37,7 +44,7 @@
     <string name="progress_percentage">%1$s%%</string>
     <string name="deadline">"Deadline: "</string>
     <string name="not_set">"Not set"</string>
-    <string name="username">\@%1$s</string>
+    <string name="username_tag">\@%1$s</string>
     <string name="search">Search</string>
     <string name="search_something">Search Something</string>
     <string name="profile">Profile</string>
@@ -84,6 +91,7 @@
     <string name="team_member">Team Member</string>
     <string name="me">me</string>
     <string name="deadline_placeholder">Deadline</string>
+    <string name="deadline_date">24 Apr 2024</string>
     <string name="progress">Progress</string>
     <string name="percent">Percentage</string>
     <string name="post">Post</string>
@@ -123,7 +131,6 @@
     <string name="sponsored">Sponsored</string>
     <string name="ad_description">This is a sponsored content that you might find interesting.</string>
     <string name="install">Install</string>
-    <string name="ad_username">google_ad</string>
     <string name="ad_body">Stay up to date with your Ads Check how your ads are performing.</string>
     <string name="not_registered">You are not registered for alpha testing!</string>
     <string name="post_image">Post Image</string>

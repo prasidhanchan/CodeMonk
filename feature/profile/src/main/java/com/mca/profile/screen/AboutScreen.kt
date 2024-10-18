@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mca.profile.UiState
+import com.mca.repository.BuildConfig.UPDATE_CHANNEL
 import com.mca.ui.R
 import com.mca.ui.component.CMRegularAppBar
 import com.mca.ui.component.Loader
@@ -91,7 +92,7 @@ internal fun AboutScreen(
                 text = stringResource(
                     id = R.string.current_version,
                     context.getCurrentVersion(),
-                    uiState.update.versionInfo
+                    UPDATE_CHANNEL
                 ),
                 icon = painterResource(id = R.drawable.version),
                 enabled = false

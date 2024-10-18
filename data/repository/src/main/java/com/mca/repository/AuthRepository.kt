@@ -17,6 +17,16 @@ import com.mca.util.warpper.Response
 
 interface AuthRepository {
 
+    suspend fun signUp(
+        name: String,
+        username: String,
+        email: String,
+        password: String,
+        rePassword: String,
+        onSuccess: (Response) -> Unit,
+        onError: (Response) -> Unit
+    )
+
     suspend fun login(
         email: String,
         password: String,

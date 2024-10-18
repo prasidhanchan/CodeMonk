@@ -18,5 +18,5 @@ import com.mca.util.warpper.DataOrException
 
 interface SearchRepository {
 
-    suspend fun getSearchUser(search: String): DataOrException<List<User>?, Boolean, Exception>
+    suspend fun getAllUsers(search: String): DataOrException<List<User>?, Boolean, Exception>
 }

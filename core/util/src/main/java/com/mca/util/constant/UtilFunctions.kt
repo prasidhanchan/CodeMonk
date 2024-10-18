@@ -249,16 +249,20 @@ fun Post.toPostId(): String {
  */
 fun User.matchUsernameAndName(search: String): Boolean {
     return when {
-        username.contains(search, ignoreCase = true) &&
+        username.length >= 3 &&
+                username.contains(search, ignoreCase = true) &&
                 username.startsWith(search, ignoreCase = true) -> true
 
-        name.contains(search, ignoreCase = true) &&
+        username.length >= 3 &&
+                name.contains(search, ignoreCase = true) &&
                 name.startsWith(search, ignoreCase = true) -> true
 
-        name.contains(search, ignoreCase = true) &&
+        username.length >= 3 &&
+                name.contains(search, ignoreCase = true) &&
                 name.substringAfter(" ").startsWith(search, ignoreCase = true) -> true
 
-        name.contains(search, ignoreCase = true) &&
+        username.length >= 3 &&
+                name.contains(search, ignoreCase = true) &&
                 name.substringAfterLast(" ").startsWith(search, ignoreCase = true) -> true
 
         else -> false

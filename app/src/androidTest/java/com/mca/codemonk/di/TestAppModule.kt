@@ -47,7 +47,8 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl(testRef = FirebaseFirestore.getInstance().collection("testing"))
+    fun provideAuthRepository(): AuthRepository =
+        AuthRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
 
     @Provides
     @Singleton
