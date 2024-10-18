@@ -91,6 +91,7 @@
     <string name="team_member">Team Member</string>
     <string name="me">me</string>
     <string name="deadline_placeholder">Deadline</string>
+    <string name="deadline_date">24 Apr 2024</string>
     <string name="progress">Progress</string>
     <string name="percent">Percentage</string>
     <string name="post">Post</string>

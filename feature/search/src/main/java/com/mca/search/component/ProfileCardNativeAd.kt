@@ -14,14 +14,17 @@
 package com.mca.search.component
 
 import android.view.View
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,6 +40,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -158,18 +162,28 @@ private fun SearchAd(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = headline.ifEmpty { stringResource(id = R.string.ad_username) },
-                        style = TextStyle(
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontFamily = dosis,
-                            color = fontColor
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(vertical = 5.dp)
-                    )
+                    if (headline.isNotBlank()) {
+                        Text(
+                            text = headline,
+                            style = TextStyle(
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontFamily = dosis,
+                                color = fontColor
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(vertical = 5.dp)
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.2f)
+                                .height(8.dp)
+                                .clip(CircleShape)
+                                .background(color = ExtraLightBlack)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.tick),
@@ -228,7 +242,7 @@ private fun NativeAdView(
 @Composable
 private fun ProfileCardNativeAdPreview() {
     SearchAd(
-        headline = "Test ads from google",
+        headline = "",
         body = "Test Ad: Google Ads",
         icon = "",
         callToAction = "Install",
