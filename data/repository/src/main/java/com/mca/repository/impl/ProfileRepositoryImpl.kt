@@ -69,11 +69,6 @@ class ProfileRepositoryImpl @Inject constructor(
                                     .convertToMap()
                             )
                     }
-                    if (dataOrException.data?.username?.isBlank() == true) {
-                        // Generate a random username if empty
-                        userRef.document(currentUserId)
-                            .update("username", "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}")
-                    }
                 }
                 .addOnFailureListener { error ->
                     dataOrException.exception = error
