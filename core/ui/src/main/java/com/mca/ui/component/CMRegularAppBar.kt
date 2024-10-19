@@ -61,7 +61,7 @@ fun CMRegularAppBar(
         when {
             enableBackButton && trailingIcon != null -> BackButton(onClick = onBackClick)
             enableBackButton -> BackButton(onClick = onBackClick)
-            trailingIcon != null -> Spacer(modifier = Modifier.size(36.dp))
+            trailingIcon != null -> Spacer(modifier = Modifier.size(45.dp))
         }
         Text(
             text = text,
@@ -77,7 +77,7 @@ fun CMRegularAppBar(
         when {
             enableBackButton && trailingIcon != null -> {
                 Box(
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(45.dp),
                     contentAlignment = Alignment.Center,
                     content = { trailingIcon() }
                 )
@@ -87,13 +87,13 @@ fun CMRegularAppBar(
 
             trailingIcon != null -> {
                 Box(
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(45.dp),
                     contentAlignment = Alignment.Center,
                     content = { trailingIcon() }
                 )
             }
 
-            else -> Spacer(modifier = Modifier.size(36.dp))
+            else -> Spacer(modifier = Modifier.size(45.dp))
         }
     }
 }
