@@ -136,9 +136,7 @@ internal fun PostCard(
         )
         if (post.likes.isNotEmpty()) {
             PostBottomBar(
-                post = post,
-                currentUserId = currentUserId,
-                currentUsername = currentUsername
+                post = post
             )
         }
     }
@@ -365,16 +363,27 @@ private fun PostTopBar(
                 .size(30.dp),
             contentScale = ContentScale.Crop
         )
-        Text(
-            text = user.username,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(end = 5.dp)
-        )
+        if (!post.userLoading) {
+            Text(
+                text = user.username,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth(0.3f)
+                    .height(14.dp)
+                    .clip(CircleShape)
+                    .background(color = LightBlack)
+            )
+        }
         if (user.verified || user.userType == ADMIN) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
@@ -404,37 +413,43 @@ private fun PostTopBar(
 @Composable
 private fun PostBottomBar(
     post: Post,
-    currentUserId: String,
-    currentUsername: String,
     modifier: Modifier = Modifier
 ) {
-    val postLikes by rememberSaveable { mutableStateOf(post.likes) }
-
-    Row(
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.like),
-            contentDescription = stringResource(id = R.string.like),
-            tint = Red,
-            modifier = Modifier
-                .padding(end = 5.dp)
-                .size(15.dp)
-        )
-        Text(
-            text = postLikes
-                .filterNot { it == currentUserId || it == currentUsername }
-                .toLikedBy(),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = dosis,
-                color = fontColor
+    if (!post.likesLoading) {
+        Row(
+            modifier = modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.like),
+                contentDescription = stringResource(id = R.string.like),
+                tint = Red,
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .size(15.dp)
             )
+            Text(
+                text = post.likes
+                    .toLikedBy(),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                )
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(0.55f)
+                .height(14.dp)
+                .clip(CircleShape)
+                .background(color = LightBlack)
         )
     }
 }
@@ -638,7 +653,8 @@ private fun PostCardPreview() {
                 "minato",
                 "itachi"
             ),
-            timeStamp = 1690885200000L
+            timeStamp = 1690885200000L,
+            likesLoading = false
         ),
         user = User(
             username = "pra_sidh_22"

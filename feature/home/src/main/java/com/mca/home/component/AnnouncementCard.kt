@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -149,13 +150,7 @@ internal fun AnnouncementCard(
             }
         }
 
-        if (post.likes.isNotEmpty()) {
-            AnnouncementBottomBar(
-                likes = post.likes,
-                currentUserId = currentUserId,
-                currentUsername = currentUsername
-            )
-        }
+        if (post.likes.isNotEmpty()) AnnouncementBottomBar(post = post)
     }
 }
 
@@ -189,16 +184,27 @@ private fun AnnouncementTopBar(
                 .background(color = LightBlack)
                 .size(30.dp)
         )
-        Text(
-            text = user.username,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(end = 5.dp)
-        )
+        if (!post.userLoading) {
+            Text(
+                text = user.username,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .fillMaxWidth(0.3f)
+                    .height(14.dp)
+                    .clip(CircleShape)
+                    .background(color = LightBlack)
+            )
+        }
         if (user.userType == ADMIN || user.verified) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
@@ -224,38 +230,44 @@ private fun AnnouncementTopBar(
 
 @Composable
 private fun AnnouncementBottomBar(
-    likes: List<String>,
-    currentUserId: String,
-    currentUsername: String,
+    post: Post,
     modifier: Modifier = Modifier
 ) {
-    val postLikes by rememberSaveable { mutableStateOf(likes) }
-
-    Row(
-        modifier = modifier
-            .padding(top = 20.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.like),
-            contentDescription = stringResource(id = R.string.like),
-            modifier = Modifier.size(15.dp),
-            tint = Red
-        )
-        Text(
-            text = postLikes
-                .filterNot { it == currentUserId || it == currentUsername }
-                .toLikedBy(),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(start = 5.dp),
-            textAlign = TextAlign.End
+    if (!post.likesLoading) {
+        Row(
+            modifier = modifier
+                .padding(top = 20.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.like),
+                contentDescription = stringResource(id = R.string.like),
+                modifier = Modifier.size(15.dp),
+                tint = Red
+            )
+            Text(
+                text = post.likes
+                    .toLikedBy(),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(start = 5.dp),
+                textAlign = TextAlign.End
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .fillMaxWidth(0.55f)
+                .height(14.dp)
+                .clip(CircleShape)
+                .background(color = LightBlack)
         )
     }
 }
