@@ -290,17 +290,17 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getMentorTags(username)
 
-            if (result.data != null && result.exception == null && !result.loading!!) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
                     uiState.update { it.copy(tags = result.data) }
-                }
-            } else {
-                showSnackBar(
-                    response = Response(
-                        message = result.exception?.localizedMessage,
-                        responseType = ResponseType.ERROR
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
                     )
-                )
+                }
             }
         }
     }

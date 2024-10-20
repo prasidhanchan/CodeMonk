@@ -62,8 +62,8 @@ fun NavGraphBuilder.editProfileNavigation(
             onMentorChange = { mentor ->
                 scope.launch {
                     viewModel.setMentor(mentor)
+                    delay(1000L)
                     viewModel.getMentorTags(mentor)
-                    delay(2000L)
                 }
             },
             onAddLinkCLick = { link ->
