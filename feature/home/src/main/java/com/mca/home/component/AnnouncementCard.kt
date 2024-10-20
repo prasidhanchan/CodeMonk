@@ -66,6 +66,7 @@ import com.mca.ui.component.CMPager
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
+import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
@@ -88,6 +89,7 @@ internal fun AnnouncementCard(
     user: User,
     currentUserId: String,
     currentUsername: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onUsernameClick: (username: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit,
@@ -109,6 +111,7 @@ internal fun AnnouncementCard(
             post = post,
             user = user,
             currentUserId = currentUserId,
+            topMembers = topMembers,
             onUsernameClick = onUsernameClick,
             onDeleteClick = onDeleteClick
         )
@@ -159,6 +162,7 @@ private fun AnnouncementTopBar(
     post: Post,
     user: User,
     currentUserId: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onUsernameClick: (username: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
@@ -176,7 +180,7 @@ private fun AnnouncementTopBar(
         horizontalArrangement = Arrangement.Start
     ) {
         AsyncImage(
-            model = user.profileImage,
+            model = user.profileImage.ifEmpty { R.drawable.user },
             contentDescription = user.username,
             modifier = Modifier
                 .padding(end = 8.dp)
@@ -198,7 +202,7 @@ private fun AnnouncementTopBar(
         } else {
             Box(
                 modifier = Modifier
-                    .padding(vertical = 10.dp)
+                    .padding(vertical = 10.dp, horizontal = 5.dp)
                     .fillMaxWidth(0.3f)
                     .height(14.dp)
                     .clip(CircleShape)
@@ -210,6 +214,12 @@ private fun AnnouncementTopBar(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
                 tint = LinkBlue
+            )
+        } else if (topMembers.any { member -> member == user.userId }) {
+            Icon(
+                painter = painterResource(id = R.drawable.crown),
+                contentDescription = stringResource(id = R.string.crown),
+                tint = Yellow
             )
         }
         if (currentUserId == user.userId) {
@@ -440,6 +450,7 @@ private fun AnnouncementCardPreview() {
         ),
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
+        topMembers = listOf(),
         onUsernameClick = { },
         onDeleteClick = { },
         onLikeClick = { _, _ -> },

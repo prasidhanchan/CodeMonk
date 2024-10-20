@@ -202,6 +202,7 @@ fun NavGraphBuilder.innerScreen(
                     currentUserId = currentUser?.uid ?: "",
                     currentUsername = uiStateProfile.currentUser.username,
                     currentUserType = uiStateProfile.currentUser.userType,
+                    topMembers = uiStateProfile.topMembers,
                     onDeletedClick = { postId ->
                         viewModelHome.deletePost(
                             postId = postId,
@@ -335,7 +336,7 @@ fun NavGraphBuilder.innerScreen(
                                                 id = "$XP_BOOST_TOPIC-$notificationId",
                                                 channel_name = XP_BOOST_TOPIC,
                                                 time_stamp = System.currentTimeMillis().toString(),
-                                                user_id = ""
+                                                user_id = "NULL"
                                             ),
                                             android = Android(
                                                 notification = AndroidNotification(

@@ -95,6 +95,7 @@ internal fun PostCard(
     currentUserId: String,
     currentUsername: String,
     currentUserType: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit,
@@ -115,6 +116,7 @@ internal fun PostCard(
             post = post,
             user = user,
             currentUserId = currentUserId,
+            topMembers = topMembers,
             onUsernameClick = onUsernameClick,
             onDeleteClick = onDeleteClick
         )
@@ -335,6 +337,7 @@ private fun PostTopBar(
     post: Post,
     user: User,
     currentUserId: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
@@ -377,7 +380,7 @@ private fun PostTopBar(
         } else {
             Box(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp, horizontal = 5.dp)
                     .fillMaxWidth(0.3f)
                     .height(14.dp)
                     .clip(CircleShape)
@@ -389,6 +392,12 @@ private fun PostTopBar(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
                 tint = LinkBlue
+            )
+        } else if (topMembers.any { member -> member == user.userId }) {
+            Icon(
+                painter = painterResource(id = R.drawable.crown),
+                contentDescription = stringResource(id = R.string.crown),
+                tint = Yellow
             )
         }
 
@@ -657,11 +666,13 @@ private fun PostCardPreview() {
             likesLoading = false
         ),
         user = User(
+            userId = "1",
             username = "pra_sidh_22"
         ),
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
         currentUserType = "student",
+        topMembers = listOf("1"),
         onLikeClick = { _, _ -> },
         onUnlikeClick = { },
         onUsernameClick = { },
