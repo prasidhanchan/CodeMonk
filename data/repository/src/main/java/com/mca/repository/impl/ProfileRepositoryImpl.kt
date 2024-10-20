@@ -29,6 +29,7 @@ import com.mca.util.constant.isLocalUriAndNotBlank
 import com.mca.util.constant.matchUsername
 import com.mca.util.constant.trimAll
 import com.mca.util.model.Tag
+import com.mca.util.model.TopMember
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
@@ -40,6 +41,7 @@ import kotlin.random.Random
 class ProfileRepositoryImpl @Inject constructor(
     val userRef: CollectionReference,
     val updateRef: CollectionReference,
+    val leaderBoardRef: CollectionReference,
     val userStorage: StorageReference
 ) : ProfileRepository {
 
@@ -68,11 +70,6 @@ class ProfileRepositoryImpl @Inject constructor(
                                     .trimAll()
                                     .convertToMap()
                             )
-                    }
-                    if (dataOrException.data?.username?.isBlank() == true) {
-                        // Generate a random username if empty
-                        userRef.document(currentUserId)
-                            .update("username", "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}")
                     }
                 }
                 .addOnFailureListener { error ->
@@ -314,5 +311,44 @@ class ProfileRepositoryImpl @Inject constructor(
             dataOrException.loading = false
         }
         return dataOrException
+    }
+
+    override suspend fun getTopMembers(): DataOrException<TopMember, Boolean, Exception> {
+        val dataOrException: DataOrException<TopMember, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            leaderBoardRef.document("topMembers").get()
+                .addOnSuccessListener { docSnap ->
+                    dataOrException.data = docSnap.toObject<TopMember>()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
+    }
+
+    override suspend fun updatePoints(
+        newPoints: Int,
+        userId: String,
+        onSuccess: () -> Unit
+    ) {
+        var points: Int = newPoints
+        userRef.document(userId).get()
+            .addOnSuccessListener { docSnap ->
+                if (points < 100) points += docSnap.get("xp", Int::class.java)!!
+                userRef.document(userId)
+                    .update(mapOf("xp" to points))
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+            }
+            .await()
     }
 }

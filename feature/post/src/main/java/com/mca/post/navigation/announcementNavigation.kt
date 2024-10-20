@@ -35,7 +35,8 @@ import kotlin.random.Random
 
 fun NavGraphBuilder.announcementNavigation(
     navHostController: NavHostController,
-    sendNotification: () -> Unit
+    sendNotification: () -> Unit,
+    updatePoints: () -> Unit
 ) {
     composable<Route.Announcement>(
         enterTransition = {
@@ -71,6 +72,7 @@ fun NavGraphBuilder.announcementNavigation(
                     onSuccess = {
                         sendNotification()
                         navHostController.popBackStack()
+                        updatePoints()
                     }
                 )
             },

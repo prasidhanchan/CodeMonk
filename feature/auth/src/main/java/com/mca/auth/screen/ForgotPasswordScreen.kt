@@ -16,7 +16,6 @@ package com.mca.auth.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
@@ -89,9 +88,7 @@ internal fun ForgotPasswordScreen(
             )
             CMButton(
                 text = stringResource(id = R.string.find_account),
-                modifier = Modifier
-                    .padding(vertical = 20.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(vertical = 20.dp),
                 onClick = {
                     if (uiState.email.isNotBlank()) focusManager.clearFocus()
                     onFindAccountClick()

@@ -122,10 +122,10 @@ internal fun ProfileProgress(
         Text(
             text = header,
             style = TextStyle(
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = dosis,
-                color = fontColor
+                color = fontColor.copy(alpha = 0.6f)
             )
         )
         ProfileProgress(icon = icon,

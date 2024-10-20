@@ -91,6 +91,7 @@
     <string name="team_member">Team Member</string>
     <string name="me">me</string>
     <string name="deadline_placeholder">Deadline</string>
+    <string name="deadline_date">24 Apr 2024</string>
     <string name="progress">Progress</string>
     <string name="percent">Percentage</string>
     <string name="post">Post</string>
@@ -98,9 +99,9 @@
     <string name="project_post">Project Post</string>
     <string name="announcement">Announcement</string>
     <string name="feature_not_available">Feature not available yet!</string>
-    <string name="dev_experience">Dev experience:</string>
+    <string name="dev_experience">Dev Experience</string>
     <string name="xp_points">%1$s pts</string>
-    <string name="current_project_progress">Current project progress:</string>
+    <string name="current_project_progress">Current Project Progress</string>
     <string name="other_mentors">Other mentors:</string>
     <string name="delete_post">Delete Post</string>
     <string name="delete_post_message">Are you sure you want to delete this post?</string>
@@ -130,7 +131,6 @@
     <string name="sponsored">Sponsored</string>
     <string name="ad_description">This is a sponsored content that you might find interesting.</string>
     <string name="install">Install</string>
-    <string name="ad_username">google_ad</string>
     <string name="ad_body">Stay up to date with your Ads Check how your ads are performing.</string>
     <string name="not_registered">You are not registered for alpha testing!</string>
     <string name="post_image">Post Image</string>
@@ -142,4 +142,7 @@
     <string name="character_count">%1$d characters</string>
     <string name="announcement_note">Once you make an announcement it cannot be edited later. \nMake sure it\'s accurate!</string>
     <string name="update_field_message">Fields below will be updated by your mentor after a review</string>
+    <string name="crown">Crown</string>
+    <string name="xp_boost">XP Boost!</string>
+    <string name="xp_boost_body">You\'ve just earned %1$d XP points. Keep it up!</string>
 </resources>

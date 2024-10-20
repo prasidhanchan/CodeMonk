@@ -34,6 +34,7 @@ fun NavGraphBuilder.homeNavigation(
     currentUserId: String,
     currentUsername: String,
     currentUserType: String,
+    topMembers: List<String>,
     onDeletedClick: (postId: String) -> Unit,
     sendLikeNotification: (token: String) -> Unit,
     nativeAds: List<NativeAd?>
@@ -54,6 +55,7 @@ fun NavGraphBuilder.homeNavigation(
             currentUserId = currentUserId,
             currentUsername = currentUsername,
             currentUserType = currentUserType,
+            topMembers = topMembers,
             onProfileClick = { navHostController.navigate(Route.EditProfile) },
             onSearchClick = { navHostController.navigate(Route.Search) },
             onUsernameClick = { userId ->

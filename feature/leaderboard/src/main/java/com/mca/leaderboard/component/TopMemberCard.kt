@@ -125,15 +125,29 @@ internal fun TopMemberCard(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Text(
-                        text = topMember.name,
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = dosis,
-                            color = fontColor
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = topMember.name,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = dosis,
+                                color = fontColor
+                            )
                         )
-                    )
+                        if (position == 1 || position == 2 || position == 3) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.crown),
+                                contentDescription = stringResource(id = R.string.crown),
+                                modifier = Modifier.padding(start = 5.dp),
+                                tint = Yellow
+                            )
+                        }
+                    }
                     XPPoints(xp = topMember.xp)
                 }
             }
@@ -163,7 +177,7 @@ private fun XPPoints(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = dosis,
-                color = fontColor
+                color = Yellow
             )
         )
     }

@@ -151,7 +151,7 @@ private fun PostAdTopBar(
                 modifier = Modifier
                     .padding(end = 5.dp)
                     .fillMaxWidth(0.2f)
-                    .height(10.dp)
+                    .height(14.dp)
                     .clip(CircleShape)
                     .background(color = LightBlack)
             )
@@ -200,8 +200,10 @@ private fun MainContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
             if (callToAction.isNotEmpty()) {
+                val buttonText = callToAction[0].uppercase() +
+                        callToAction.substringAfter(callToAction[0]).lowercase()
                 CMButton(
-                    text = callToAction[0].uppercase() + callToAction.substringAfter(callToAction[0]),
+                    text = buttonText,
                     modifier = Modifier
                         .padding(bottom = 20.dp)
                         .height(35.dp)

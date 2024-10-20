@@ -95,6 +95,7 @@ internal fun PostCard(
     currentUserId: String,
     currentUsername: String,
     currentUserType: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onLikeClick: (postId: String, token: String) -> Unit,
     onUnlikeClick: (postId: String) -> Unit,
@@ -115,6 +116,7 @@ internal fun PostCard(
             post = post,
             user = user,
             currentUserId = currentUserId,
+            topMembers = topMembers,
             onUsernameClick = onUsernameClick,
             onDeleteClick = onDeleteClick
         )
@@ -136,9 +138,7 @@ internal fun PostCard(
         )
         if (post.likes.isNotEmpty()) {
             PostBottomBar(
-                post = post,
-                currentUserId = currentUserId,
-                currentUsername = currentUsername
+                post = post
             )
         }
     }
@@ -337,6 +337,7 @@ private fun PostTopBar(
     post: Post,
     user: User,
     currentUserId: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onUsernameClick: (String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
@@ -365,21 +366,38 @@ private fun PostTopBar(
                 .size(30.dp),
             contentScale = ContentScale.Crop
         )
-        Text(
-            text = user.username,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(end = 5.dp)
-        )
+        if (!post.userLoading) {
+            Text(
+                text = user.username,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 8.dp, horizontal = 5.dp)
+                    .fillMaxWidth(0.3f)
+                    .height(14.dp)
+                    .clip(CircleShape)
+                    .background(color = LightBlack)
+            )
+        }
         if (user.verified || user.userType == ADMIN) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
                 tint = LinkBlue
+            )
+        } else if (topMembers.any { member -> member == user.userId }) {
+            Icon(
+                painter = painterResource(id = R.drawable.crown),
+                contentDescription = stringResource(id = R.string.crown),
+                tint = Yellow
             )
         }
 
@@ -404,37 +422,43 @@ private fun PostTopBar(
 @Composable
 private fun PostBottomBar(
     post: Post,
-    currentUserId: String,
-    currentUsername: String,
     modifier: Modifier = Modifier
 ) {
-    val postLikes by rememberSaveable { mutableStateOf(post.likes) }
-
-    Row(
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.like),
-            contentDescription = stringResource(id = R.string.like),
-            tint = Red,
-            modifier = Modifier
-                .padding(end = 5.dp)
-                .size(15.dp)
-        )
-        Text(
-            text = postLikes
-                .filterNot { it == currentUserId || it == currentUsername }
-                .toLikedBy(),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = dosis,
-                color = fontColor
+    if (!post.likesLoading) {
+        Row(
+            modifier = modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.like),
+                contentDescription = stringResource(id = R.string.like),
+                tint = Red,
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .size(15.dp)
             )
+            Text(
+                text = post.likes
+                    .toLikedBy(),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                )
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(0.55f)
+                .height(14.dp)
+                .clip(CircleShape)
+                .background(color = LightBlack)
         )
     }
 }
@@ -638,14 +662,17 @@ private fun PostCardPreview() {
                 "minato",
                 "itachi"
             ),
-            timeStamp = 1690885200000L
+            timeStamp = 1690885200000L,
+            likesLoading = false
         ),
         user = User(
+            userId = "1",
             username = "pra_sidh_22"
         ),
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
         currentUserType = "student",
+        topMembers = listOf("1"),
         onLikeClick = { _, _ -> },
         onUnlikeClick = { },
         onUsernameClick = { },

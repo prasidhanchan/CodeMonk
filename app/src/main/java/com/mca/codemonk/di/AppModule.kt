@@ -56,6 +56,7 @@ object AppModule {
         ProfileRepositoryImpl(
             userRef = FirebaseFirestore.getInstance().collection("users"),
             updateRef = FirebaseFirestore.getInstance().collection("updates"),
+            leaderBoardRef = FirebaseFirestore.getInstance().collection("leaderboard"),
             userStorage = FirebaseStorage.getInstance().getReference("users")
         )
 
@@ -85,7 +86,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideLeaderBoardRepository(): LeaderBoardRepository =
-        LeaderBoardRepositoryImpl(userRef = FirebaseFirestore.getInstance().collection("users"))
+        LeaderBoardRepositoryImpl(
+            userRef = FirebaseFirestore.getInstance().collection("users"),
+            leaderBoardRef = FirebaseFirestore.getInstance().collection("leaderboard")
+        )
 
     @Singleton
     @Provides
