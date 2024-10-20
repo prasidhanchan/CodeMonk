@@ -22,6 +22,7 @@ data class UiState(
     var currentUser: User = User(),
     var selectedUser: User? = null,
     var otherMentors: List<User> = emptyList(),
+    var topMembers: List<String> = emptyList(),
     var tags: List<Tag>? = null,
     var newProfileImage: String = "",
     var newPassword: String = "",

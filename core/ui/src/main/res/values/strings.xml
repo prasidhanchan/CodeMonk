@@ -99,9 +99,9 @@
     <string name="project_post">Project Post</string>
     <string name="announcement">Announcement</string>
     <string name="feature_not_available">Feature not available yet!</string>
-    <string name="dev_experience">Dev experience:</string>
+    <string name="dev_experience">Dev Experience</string>
     <string name="xp_points">%1$s pts</string>
-    <string name="current_project_progress">Current project progress:</string>
+    <string name="current_project_progress">Current Project Progress</string>
     <string name="other_mentors">Other mentors:</string>
     <string name="delete_post">Delete Post</string>
     <string name="delete_post_message">Are you sure you want to delete this post?</string>
@@ -142,4 +142,5 @@
     <string name="character_count">%1$d characters</string>
     <string name="announcement_note">Once you make an announcement it cannot be edited later. \nMake sure it\'s accurate!</string>
     <string name="update_field_message">Fields below will be updated by your mentor after a review</string>
+    <string name="crown">Crown</string>
 </resources>

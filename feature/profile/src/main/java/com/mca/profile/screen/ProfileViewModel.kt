@@ -42,14 +42,15 @@ class ProfileViewModel @Inject constructor(
     private val currentUser = FirebaseAuth.getInstance().currentUser
 
     init {
-        getUser()
+        getCurrentUser()
         getUpdate()
     }
 
-    fun getUser() {
+    fun getCurrentUser() {
         if (currentUser != null) {
             uiState.update { it.copy(loading = true) }
             viewModelScope.launch(Dispatchers.IO) {
+                getTopMembers()
                 delay(1000L)
                 val result = profileRepository.getUser(currentUser.uid)
 
@@ -187,23 +188,23 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getUpdate()
 
-            if (result.data != null && !result.loading!! && result.exception == null) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (result.data != null && !result.loading!! && result.exception == null) {
                     uiState.update {
                         it.copy(
                             update = result.data!!,
                             loading = result.loading!!
                         )
                     }
-                }
-            } else {
-                showSnackBar(
-                    response = Response(
-                        message = result.exception?.localizedMessage,
-                        responseType = ResponseType.ERROR
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
                     )
-                )
-                uiState.update { it.copy(loading = false) }
+                    uiState.update { it.copy(loading = false) }
+                }
             }
         }
     }
@@ -215,6 +216,7 @@ class ProfileViewModel @Inject constructor(
     ) {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
+            getTopMembers()
             profileRepository.getSelectedUser(
                 userId = userId,
                 onSuccess = { user ->
@@ -248,15 +250,12 @@ class ProfileViewModel @Inject constructor(
                 val result =
                     profileRepository.getRandomMentors(uiState.value.selectedUser?.userId!!)
 
-                delay(500L)
-                if (result.data != null && result.exception == null && !result.loading!!) {
-                    withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
+                    if (result.data != null && result.exception == null && !result.loading!!) {
                         uiState.update {
                             it.copy(otherMentors = result.data!!)
                         }
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
+                    } else {
                         showSnackBar(
                             response = Response(
                                 message = result.exception?.localizedMessage,
@@ -284,6 +283,17 @@ class ProfileViewModel @Inject constructor(
                         responseType = ResponseType.ERROR
                     )
                 )
+            }
+        }
+    }
+
+    private suspend fun getTopMembers() {
+        val result = profileRepository.getTopMembers()
+
+        delay(800L)
+        withContext(Dispatchers.Main) {
+            if (result.data != null && result.exception == null && !result.loading!!) {
+                uiState.update { it.copy(topMembers = result.data?.members!!) }
             }
         }
     }

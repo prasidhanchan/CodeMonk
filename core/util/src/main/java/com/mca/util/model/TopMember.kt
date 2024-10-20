@@ -11,14 +11,8 @@
  *
  */
 
-package com.mca.repository
+package com.mca.util.model
 
-import com.mca.util.model.User
-import com.mca.util.warpper.DataOrException
-
-interface LeaderBoardRepository {
-
-    suspend fun getTopMembers(): DataOrException<List<User>, Boolean, Exception>
-
-    suspend fun updateTopMembers(topMembers: List<String>)
-}
+data class TopMember(
+    var members: List<String> = emptyList()
+)

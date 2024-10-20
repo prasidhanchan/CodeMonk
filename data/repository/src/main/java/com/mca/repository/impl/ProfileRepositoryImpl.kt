@@ -29,6 +29,7 @@ import com.mca.util.constant.isLocalUriAndNotBlank
 import com.mca.util.constant.matchUsername
 import com.mca.util.constant.trimAll
 import com.mca.util.model.Tag
+import com.mca.util.model.TopMember
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
@@ -40,6 +41,7 @@ import kotlin.random.Random
 class ProfileRepositoryImpl @Inject constructor(
     val userRef: CollectionReference,
     val updateRef: CollectionReference,
+    val leaderBoardRef: CollectionReference,
     val userStorage: StorageReference
 ) : ProfileRepository {
 
@@ -303,6 +305,27 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 .await()
                 .asFlow()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
+    }
+
+    override suspend fun getTopMembers(): DataOrException<TopMember, Boolean, Exception> {
+        val dataOrException: DataOrException<TopMember, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            leaderBoardRef.document("topMembers").get()
+                .addOnSuccessListener { docSnap ->
+                    dataOrException.data = docSnap.toObject<TopMember>()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
         } catch (e: Exception) {
             dataOrException.exception = e
         } finally {

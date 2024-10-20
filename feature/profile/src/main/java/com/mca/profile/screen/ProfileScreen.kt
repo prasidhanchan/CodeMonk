@@ -77,6 +77,10 @@ internal fun ProfileScreen(
 ) {
     var visible by remember { mutableStateOf(false) }
 
+    val isTopMember by remember(uiState.loading) {
+        mutableStateOf(uiState.topMembers.any { member -> member == uiState.currentUser.userId })
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Black
@@ -130,14 +134,12 @@ internal fun ProfileScreen(
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
-            LinkSection(
-                user = uiState.currentUser,
-                modifier = Modifier.padding(top = 10.dp)
-            )
+            LinkSection(user = uiState.currentUser)
             MyUsernameCard(
                 username = uiState.currentUser.username,
                 userType = uiState.currentUser.userType,
-                isVerified = uiState.currentUser.verified
+                isVerified = uiState.currentUser.verified,
+                isTopMember = isTopMember
             )
             if (uiState.currentUser.userType == ADMIN) {
                 Text(
@@ -239,7 +241,7 @@ internal fun ProfileScreen(
         onDismiss = { visible = false }
     )
 
-    Loader(loading = uiState.loading)
+    Loader(loading = uiState.loading || uiState.topMembers.isEmpty())
 }
 
 @Composable
@@ -247,6 +249,7 @@ private fun MyUsernameCard(
     username: String,
     userType: String,
     isVerified: Boolean,
+    isTopMember: Boolean,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -284,6 +287,13 @@ private fun MyUsernameCard(
                     contentDescription = stringResource(id = R.string.blue_tick),
                     modifier = Modifier.padding(bottom = 1.dp),
                     tint = LinkBlue
+                )
+            } else if (isTopMember) {
+                Icon(
+                    painter = painterResource(id = R.drawable.crown),
+                    contentDescription = stringResource(id = R.string.crown),
+                    modifier = Modifier.padding(bottom = 1.dp),
+                    tint = Yellow
                 )
             }
         }

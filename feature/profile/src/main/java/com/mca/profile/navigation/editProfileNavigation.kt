@@ -94,7 +94,7 @@ fun NavGraphBuilder.editProfileNavigation(
             onRemoveProfileImage = {
                 viewModel.removeProfileImage(
                     onSuccess = {
-                        viewModel.getUser()
+                        viewModel.getCurrentUser()
                         navHostController.popBackStack()
                         viewModel.setProfileImage("")
                     }
@@ -103,14 +103,14 @@ fun NavGraphBuilder.editProfileNavigation(
             onUpdateClick = {
                 viewModel.updateUser(
                     onSuccess = {
-                        viewModel.getUser()
+                        viewModel.getCurrentUser()
                         navHostController.popBackStack()
                     }
                 )
             },
             onBackClick = {
                 navHostController.popBackStack()
-                viewModel.getUser() // Reset state for all fields if not updated
+                viewModel.getCurrentUser() // Reset state for all fields if not updated
                 viewModel.getMentorTags(username = "") // Clear searched tags
             }
         )

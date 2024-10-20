@@ -113,7 +113,7 @@ private fun CMHistogram(
 
     LaunchedEffect(key1 = Unit) {
         launch {
-            delay(1200L)
+            delay(1250L)
             visible = true
             delay = when (position) {
                 1 -> 600

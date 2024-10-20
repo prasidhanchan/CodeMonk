@@ -53,6 +53,8 @@ class LeaderBoardViewModel @Inject constructor(
                             loading = false
                         )
                     }
+
+                    updateTopMembers()
                 } else {
                     showSnackBar(
                         response = Response(
@@ -63,6 +65,16 @@ class LeaderBoardViewModel @Inject constructor(
                     uiState.update { it.copy(loading = false) }
                 }
             }
+        }
+    }
+
+    private fun updateTopMembers() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val members = mutableListOf<String>()
+            uiState.value.topMembers.take(3).map { member ->
+                members.add(member.userId)
+            }
+            leaderBoardRepository.updateTopMembers(members)
         }
     }
 }

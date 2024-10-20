@@ -31,6 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -72,6 +75,10 @@ internal fun ViewProfileScreen(
     onProfileCardClick: (username: String) -> Unit,
     onBackClick: () -> Unit
 ) {
+    val isTopMember by remember(uiState.selectedUser) {
+        mutableStateOf(uiState.topMembers.any { member -> member == uiState.selectedUser?.userId })
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Black
@@ -110,7 +117,10 @@ internal fun ViewProfileScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    if (uiState.selectedUser?.verified!! || uiState.selectedUser?.userType == ADMIN) {
+                    if (uiState.selectedUser?.verified!! ||
+                        uiState.selectedUser?.userType == ADMIN ||
+                        isTopMember
+                    ) {
                         Spacer(modifier = Modifier.size(16.dp))
                     }
                     Text(
@@ -132,10 +142,18 @@ internal fun ViewProfileScreen(
                             modifier = Modifier.padding(top = 2.dp, start = 5.dp),
                             tint = LinkBlue
                         )
+                    } else if (isTopMember) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.crown),
+                            contentDescription = stringResource(id = R.string.crown),
+                            modifier = Modifier
+                                .padding(top = 2.dp, start = 5.dp)
+                                .size(18.dp),
+                            tint = Yellow
+                        )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = uiState.selectedUser?.bio!!,
                     style = TextStyle(
@@ -147,10 +165,8 @@ internal fun ViewProfileScreen(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.height(10.dp))
                 LinkSection(user = uiState.selectedUser!!)
                 if (uiState.selectedUser?.userType != ADMIN) {
-                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = if (uiState.selectedUser?.currentProject?.isNotBlank()!!) {
                             buildAnnotatedString {

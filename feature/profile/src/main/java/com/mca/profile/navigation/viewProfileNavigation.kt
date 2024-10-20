@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.mca.profile.screen.ProfileViewModel
 import com.mca.profile.screen.ViewProfileScreen
+import com.mca.util.constant.Constant.ADMIN
 import com.mca.util.constant.Constant.IN_OUT_DURATION
 import com.mca.util.navigation.Route
 
@@ -48,7 +49,9 @@ fun NavGraphBuilder.viewProfileNavigation(
             viewModel.getSelectedUser(
                 userId = userId,
                 onSuccess = {
-                    if (uiState.otherMentors.isEmpty()) viewModel.getAllMentors()
+                    if (uiState.otherMentors.isEmpty() && uiState.selectedUser?.userType == ADMIN) {
+                        viewModel.getAllMentors()
+                    }
                 },
                 onError = { navHostController.popBackStack() }
             )

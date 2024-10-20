@@ -24,7 +24,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class LeaderBoardRepositoryImpl @Inject constructor(
-    val userRef: CollectionReference
+    val userRef: CollectionReference,
+    val leaderBoardRef: CollectionReference
 ) : LeaderBoardRepository {
 
     override suspend fun getTopMembers(): DataOrException<List<User>, Boolean, Exception> {
@@ -52,5 +53,9 @@ class LeaderBoardRepositoryImpl @Inject constructor(
             dataOrException.loading = false
         }
         return dataOrException
+    }
+
+    override suspend fun updateTopMembers(topMembers: List<String>) {
+        leaderBoardRef.document("topMembers").set(mapOf("members" to topMembers)).await()
     }
 }

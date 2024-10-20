@@ -136,7 +136,7 @@ fun NavGraphBuilder.innerScreen(
 
         // Load user data when the app starts
         LaunchedEffect(key1 = uiStateProfile.currentUser.userId) {
-            if (uiStateProfile.currentUser.userId.isEmpty()) viewModelProfile.getUser()
+            if (uiStateProfile.currentUser.userId.isEmpty()) viewModelProfile.getCurrentUser()
 
             // Subscribe to topics
             FirebaseMessaging.getInstance().apply {
@@ -318,7 +318,7 @@ fun NavGraphBuilder.innerScreen(
                     viewModel = viewModelNotification,
                     userType = uiStateProfile.currentUser.userType,
                     navHostController = navHostController,
-                    refreshUser = viewModelProfile::getUser
+                    refreshUser = viewModelProfile::getCurrentUser
                 )
                 sendNotificationNavigation(
                     viewModel = viewModelNotification,
