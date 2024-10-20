@@ -34,8 +34,8 @@ android {
         applicationId = "com.mca.codemonk"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = 13
-        versionName = "1.0.0"
+        versionCode = 14
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "com.mca.codemonk.HiltRunner"
         vectorDrawables {
