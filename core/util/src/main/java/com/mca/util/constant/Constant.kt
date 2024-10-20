@@ -22,7 +22,7 @@ object Constant {
     val DEADLINE_REGEX = Regex("\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\\s\\d{4}")
 
     /** Regex for email */
-    val EMAIL_REGEX = Regex("^(nnm|nu)(23|24)mc(0[0-9][1-9]|0[1-9][0-9]|1[0-7][0-9]|180)@nmamit\\.in\$")
+    val EMAIL_REGEX = Regex("^(nnm)(23|24)(mc)(0[0-9][1-9]|0[1-9][0-9]|1[0-7][0-9]|180)@nmamit\\.in\$")
 
     /** Admin role variable */
     const val ADMIN = "Admin"
