@@ -31,7 +31,7 @@ interface HomeRepository {
         userId2: String?
     ): DataOrException<List<String>, Boolean, Exception>
 
-    suspend fun deletePost(postId: String, onError: (String) -> Unit)
+    suspend fun deletePost(postId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 
     suspend fun like(
         postId: String,

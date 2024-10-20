@@ -58,4 +58,6 @@ interface ProfileRepository {
     suspend fun getMentorTags(username: String): DataOrException<List<Tag>, Boolean, Exception>
 
     suspend fun getTopMembers(): DataOrException<TopMember, Boolean, Exception>
+
+    suspend fun updatePoints(points: Int, userId: String, onSuccess: () -> Unit)
 }

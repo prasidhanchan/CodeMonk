@@ -333,4 +333,22 @@ class ProfileRepositoryImpl @Inject constructor(
         }
         return dataOrException
     }
+
+    override suspend fun updatePoints(
+        newPoints: Int,
+        userId: String,
+        onSuccess: () -> Unit
+    ) {
+        var points: Int = newPoints
+        userRef.document(userId).get()
+            .addOnSuccessListener { docSnap ->
+                if (points < 100) points += docSnap.get("xp", Int::class.java)!!
+                userRef.document(userId)
+                    .update(mapOf("xp" to points))
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+            }
+            .await()
+    }
 }

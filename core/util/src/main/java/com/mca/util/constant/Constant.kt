@@ -41,6 +41,8 @@ object Constant {
     const val ANNOUNCEMENT_TOPIC = "Announcement"
     const val LIKE_CHANNEL_ID = "LikeChannel"
     const val LIKE_TOPIC = "Like"
+    const val XP_BOOST_CHANNEL_ID = "XpBoostChannel"
+    const val XP_BOOST_TOPIC = "XP Boost"
 
     const val MAX_POST_ADS = 4
     const val MAX_SEARCH_ADS = 2

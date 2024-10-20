@@ -102,10 +102,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun deletePost(postId: String) {
+    fun deletePost(postId: String, onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             homeRepository.deletePost(
                 postId = postId,
+                onSuccess = onSuccess,
                 onError = { error ->
                     showSnackBar(
                         response = Response(

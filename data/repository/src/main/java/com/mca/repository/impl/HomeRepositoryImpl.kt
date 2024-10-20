@@ -140,7 +140,11 @@ class HomeRepositoryImpl @Inject constructor(
         return dataOrException
     }
 
-    override suspend fun deletePost(postId: String, onError: (String) -> Unit) {
+    override suspend fun deletePost(
+        postId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
             postDB.child(postId).removeValue()
                 .addOnSuccessListener {
@@ -149,6 +153,7 @@ class HomeRepositoryImpl @Inject constructor(
                             result.items.forEach { item ->
                                 item.delete()
                             }
+                            onSuccess()
                         }
                 }
                 .addOnFailureListener { error ->
