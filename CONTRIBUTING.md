@@ -15,7 +15,7 @@ You need to ask for an assignment so others are aware you are working on it.
 
 ## Prerequisites
 
-Before you start, You nedd to know the following technologies.
+Before you start, You need to know the following technologies.
 
 - [Android development](https://developer.android.com/)
 - [Kotlin](https://kotlinlang.org/)
@@ -30,7 +30,7 @@ Before you start, You nedd to know the following technologies.
 
 - Forks are allowed so long as they abide by [the project's LICENSE](https://github.com/prasidhanchan/CodeMonk/blob/master/LICENSE.md).
 - While forking uncheck `copy only the master branch`
-  - Contribute your code to the next version branch. Ex: If the latest version is v.1.0.0 there should be a branch named v1.0.1.
+  - Contribute your code and make a PR to the dev branch not the master branch.
 - Your working branch should have a name like:
   - fix-issue-<issue_number>/<issue_name>
   - feature-<issue_number>/<feature_added>
@@ -38,13 +38,11 @@ Before you start, You nedd to know the following technologies.
 When working on a feature or a bug, remember:
 
 - To avoid confusion with the main app (Optional):
-    - Change the app name
     - Change the app icon
-- To avoid installation conflicts:
-    - Change the `applicationId` in [`build.gradle.kts`](https://github.com/prasidhanchan/CodeMonk/blob/master/app/build.gradle.kts)
 - To avoid having your data polluting the main app's analytics:
-    - To setup Firebase services, place [`google-services.json`](https://github.com/prasidhanchan/CodeMonk/blob/master/app/) with your own.
+    - Setup Firebase services, place [`google-services.json`](https://github.com/prasidhanchan/CodeMonk/blob/master/app/) with your own.
+    - Your json should have additional config for the debug version which will have a different package name.
  
 # Pull requests
 
-- Make a pull request to the same branch you made a change not the master branch.
+- Make a pull request to the same branch you made a change i.e dev not the master branch.
