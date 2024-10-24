@@ -6,7 +6,15 @@
 
 </div>
 
-**Code Monk** is an Android application designed for the MCA coding club to enhance collaboration and track project progress among members. The app provides a platform for members to share updates, track their achievements, and engage with the club community.
+<p align="center">
+ <strong>Code Monk</strong> is an Android application designed for the MCA coding club to enhance collaboration and track project progress among members. The app provides a platform for members to share updates, track their achievements, and engage with the club community.
+</p>
+
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.mca.codemonk">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="70">
+  </a>
+</p>
 
 ## Features
 
@@ -19,11 +27,11 @@
 ## Screenshots
 <div align="center">
 <div>
-  <img src="https://github.com/user-attachments/assets/94ac129d-e835-437f-8ac9-5f2d104de961" width="30%"/>
-  <img src="https://github.com/user-attachments/assets/aee576c6-1865-4a08-8166-a5f7a8904db5" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/94ac129d-e835-437f-8ac9-5f2d104de961" width="45%"/>
+  <img src="https://github.com/user-attachments/assets/aee576c6-1865-4a08-8166-a5f7a8904db5" width="45%"/>
   <div>
-  <img src="https://github.com/user-attachments/assets/210384aa-6d74-412c-9d91-1f0be112327c" width="30%"/>
-  <img src="https://github.com/user-attachments/assets/df4192a8-a0a0-4bc0-a27d-e971e699cc91" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/210384aa-6d74-412c-9d91-1f0be112327c" width="45%"/>
+  <img src="https://github.com/user-attachments/assets/df4192a8-a0a0-4bc0-a27d-e971e699cc91" width="45%"/>
   </div>
 </div>
 </div>
