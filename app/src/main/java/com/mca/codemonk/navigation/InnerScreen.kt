@@ -210,7 +210,7 @@ fun NavGraphBuilder.innerScreen(
                                 viewModelProfile.updatePoints(points = -1)
                             }
                         )
-                                     },
+                    },
                     sendLikeNotification = { token ->
                         viewModelNotification.sendNotificationToToken(
                             pushNotification = PushNotificationToken(

@@ -59,5 +59,5 @@ interface ProfileRepository {
 
     suspend fun getTopMembers(): DataOrException<TopMember, Boolean, Exception>
 
-    suspend fun updatePoints(points: Int, userId: String, onSuccess: () -> Unit)
+    suspend fun updatePoints(newPoints: Int, userId: String, onSuccess: () -> Unit)
 }

@@ -320,7 +320,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             delay(2000L)
             profileRepository.updatePoints(
-                points = points,
+                newPoints = points,
                 userId = currentUser?.uid!!,
                 onSuccess = onSuccess
             )

@@ -22,7 +22,7 @@ interface HomeRepository {
 
     suspend fun getPosts(): Flow<DataOrException<List<Post>, Boolean, Exception>>
 
-    suspend fun getUsernames(usernames: List<String>): DataOrException<List<String>, Boolean, Exception>
+    suspend fun getUsernames(userIds: List<String>): DataOrException<List<String>, Boolean, Exception>
 
     suspend fun getUserDetail(userId: String): DataOrException<User, Boolean, Exception>
 
