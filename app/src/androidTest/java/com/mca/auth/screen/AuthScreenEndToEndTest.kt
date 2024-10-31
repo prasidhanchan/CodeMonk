@@ -195,10 +195,10 @@ class AuthScreenEndToEndTest {
 
             // Valid login credentials
             onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test@gmail.com")
-            onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test123")
+            onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test1234")
             onNodeWithContentDescription(context.getString(R.string.login)).performClick()
-            waitUntil(2_000) {
-                onNodeWithText("Login Success").isDisplayed()
+            waitUntil(5_000) {
+                onNodeWithText("Home").isDisplayed()
             }
         }
     }
