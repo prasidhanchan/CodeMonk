@@ -40,6 +40,111 @@ class AuthRepositoryTest {
     }
 
     @Test
+    fun `signUp without name throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "",
+            username = "test",
+            email = "test@mail.com",
+            password = "test123",
+            rePassword = "test123",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Please enter your name.")
+            }
+        )
+    }
+
+    @Test
+    fun `signUp without username throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "Test",
+            username = "",
+            email = "test@mail.com",
+            password = "test123",
+            rePassword = "test123",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Please enter your username.")
+            }
+        )
+    }
+
+    @Test
+    fun `signUp without email throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "Test",
+            username = "test_123",
+            email = "",
+            password = "test123",
+            rePassword = "test123",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Please enter your email.")
+            }
+        )
+    }
+
+    @Test
+    fun `signUp with invalid email throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "Test",
+            username = "test_123",
+            email = "test@gmail.com",
+            password = "test123",
+            rePassword = "test123",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Enter a valid email.")
+            }
+        )
+    }
+
+    @Test
+    fun `signUp without password throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "Test",
+            username = "test_123",
+            email = "nnm23mc101@nmamit.in",
+            password = "",
+            rePassword = "test123",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Please enter your password.")
+            }
+        )
+    }
+
+    @Test
+    fun `signUp without re-password throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "Test",
+            username = "test_123",
+            email = "nnm23mc101@nmamit.in",
+            password = "test123",
+            rePassword = "",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Please re-enter your password.")
+            }
+        )
+    }
+
+    @Test
+    fun `signUp with different passwords throws error`() = runBlocking {
+        authRepository.signUp(
+            name = "Test",
+            username = "test_123",
+            email = "nnm23mc101@nmamit.in",
+            password = "test123",
+            rePassword = "test1234",
+            onSuccess = { },
+            onError = { error ->
+                assertThat(error.message).isEqualTo("Passwords do not match.")
+            }
+        )
+    }
+
+    @Test
     fun `login without email throws error`() = runBlocking {
         authRepository.login(
             email = "",
