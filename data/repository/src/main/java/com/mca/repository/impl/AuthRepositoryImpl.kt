@@ -187,6 +187,7 @@ class AuthRepositoryImpl @Inject constructor(
     ) {
         try {
             if (email.isEmpty()) throw Exception("Please enter your email.")
+            if (email.isNotBlank() && !email.matches(EMAIL_REGEX)) throw Exception("Enter a valid email.")
 
             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                 .addOnSuccessListener {
