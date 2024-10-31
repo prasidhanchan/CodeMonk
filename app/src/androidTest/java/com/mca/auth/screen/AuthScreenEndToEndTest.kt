@@ -15,15 +15,21 @@ package com.mca.auth.screen
 
 import android.content.Context
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.click
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.codemonk.MainActivity
 import com.mca.codemonk.navigation.MainNavigation
@@ -63,6 +69,90 @@ class AuthScreenEndToEndTest {
     @After
     fun tearDown() {
         FirebaseAuth.getInstance().signOut()
+        FirebaseAuth.getInstance().currentUser?.delete()
+    }
+
+    @Test
+    fun user_signUp_works() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+
+        composeRule.apply {
+            waitUntil(2_000) {
+                onNodeWithContentDescription(context.getString(R.string.email)).isDisplayed()
+                onNodeWithContentDescription(context.getString(R.string.password)).isDisplayed()
+            }
+            closeSoftKeyboard()
+            mainClock.advanceTimeByFrame()
+            // Navigate to Sign Up
+            onNode(hasContentDescription(context.getString(R.string.sign_up)))
+                .performTouchInput { click(percentOffset(0.9f, 0.5f)) }
+            mainClock.advanceTimeBy(2_000)
+
+            // Fill all the fields
+            onNodeWithContentDescription(context.getString(R.string.name))
+                .performTextInput("")
+            onNodeWithContentDescription(context.getString(R.string.username))
+                .performTextInput("test_1234")
+            onNodeWithContentDescription(context.getString(R.string.email_format))
+                .performTextInput("nnm23mc101@nmamit.in")
+            onNodeWithContentDescription(context.getString(R.string.password))
+                .performTextInput("test1234")
+            onNodeWithContentDescription(context.getString(R.string.re_password))
+                .performTextInput("test12345")
+            onNodeWithContentDescription(context.getString(R.string.sign_up))
+                .performScrollTo()
+                .assertIsDisplayed()
+                .performClick()
+            waitUntil(2_000) {
+                onNodeWithText("Please enter your name.").isDisplayed()
+            }
+
+            onNodeWithContentDescription(context.getString(R.string.name)).performTextInput("Test")
+            onNodeWithContentDescription(context.getString(R.string.username)).performTextClearance()
+            onNodeWithContentDescription(context.getString(R.string.sign_up))
+                .performScrollTo()
+                .assertIsDisplayed()
+                .performClick()
+            waitUntil(2_000) {
+                onNodeWithText("Please enter your username.").isDisplayed()
+            }
+
+            onNodeWithContentDescription(context.getString(R.string.username)).performTextInput("test_1234")
+            onNodeWithContentDescription(context.getString(R.string.email_format)).performTextClearance()
+            onNodeWithContentDescription(context.getString(R.string.sign_up))
+                .performScrollTo()
+                .assertIsDisplayed()
+                .performClick()
+            waitUntil(2_000) {
+                onNodeWithText("Please enter your email.").isDisplayed()
+            }
+
+            onNodeWithContentDescription(context.getString(R.string.email_format))
+                .performTextInput("nnm23mc101@nmamit.in")
+            onNodeWithContentDescription(context.getString(R.string.password))
+                .performTextClearance()
+            onNodeWithContentDescription(context.getString(R.string.sign_up))
+                .performScrollTo()
+                .assertIsDisplayed()
+                .performClick()
+            waitUntil(2_000) {
+                onNodeWithText("Please enter your password.").isDisplayed()
+            }
+
+            onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test1234")
+            onNodeWithContentDescription(context.getString(R.string.re_password)).performTextClearance()
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
+            waitUntil(2_000) {
+                onNodeWithText("Please re-enter your password.").isDisplayed()
+            }
+
+            onNodeWithContentDescription(context.getString(R.string.re_password)).performTextInput("test12345")
+            mainClock.advanceTimeBy(5_000)
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
+            waitUntil(2_000) {
+                onNodeWithText("Passwords do not match.").isDisplayed()
+            }
+        }
     }
 
     @Test
