@@ -22,7 +22,9 @@
     <string name="email">Email</string>
     <string name="email_format">nu24mcXXX@nmamit.in</string>
     <string name="password">Password</string>
+    <string name="password_icon">Password Icon</string>
     <string name="re_password">Re-Type Password</string>
+    <string name="re_password_icon">Re-Type Password Icon</string>
     <string name="show_hide_password">Show/Hide Password</string>
     <string name="show_hide_re_password">Show/Hide RePassword</string>
     <string name="login">Login</string>
