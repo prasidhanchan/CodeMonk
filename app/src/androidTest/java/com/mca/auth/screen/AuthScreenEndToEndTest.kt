@@ -69,7 +69,6 @@ class AuthScreenEndToEndTest {
     @After
     fun tearDown() {
         FirebaseAuth.getInstance().signOut()
-        FirebaseAuth.getInstance().currentUser?.delete()
     }
 
     @Test
@@ -77,16 +76,13 @@ class AuthScreenEndToEndTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
         composeRule.apply {
-            waitUntil(2_000) {
-                onNodeWithContentDescription(context.getString(R.string.email)).isDisplayed()
-                onNodeWithContentDescription(context.getString(R.string.password)).isDisplayed()
-            }
+            mainClock.advanceTimeBy(5_000) // Skip splash screen
+
             closeSoftKeyboard()
-            mainClock.advanceTimeByFrame()
             // Navigate to Sign Up
             onNode(hasContentDescription(context.getString(R.string.sign_up)))
                 .performTouchInput { click(percentOffset(0.9f, 0.5f)) }
-            mainClock.advanceTimeBy(2_000)
+            mainClock.advanceTimeBy(5_000)
 
             // Fill all the fields
             onNodeWithContentDescription(context.getString(R.string.name))
@@ -160,10 +156,8 @@ class AuthScreenEndToEndTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
         composeRule.apply {
-            waitUntil(2_000) {
-                onNodeWithContentDescription(context.getString(R.string.email)).isDisplayed()
-                onNodeWithContentDescription(context.getString(R.string.password)).isDisplayed()
-            }
+            mainClock.advanceTimeBy(5_000) // Skip splash screen
+
             // Login without email
             onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test123")
             onNodeWithContentDescription(context.getString(R.string.login)).performClick()
@@ -208,10 +202,8 @@ class AuthScreenEndToEndTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
         composeRule.apply {
-            waitUntil(2_000) {
-                onNodeWithContentDescription(context.getString(R.string.email)).isDisplayed()
-                onNodeWithContentDescription(context.getString(R.string.password)).isDisplayed()
-            }
+            mainClock.advanceTimeBy(5_000) // Skip splash screen
+
             // Navigate to forgot password
             onNodeWithText(context.getString(R.string.forgot_password)).performClick()
             waitUntil {
@@ -226,6 +218,7 @@ class AuthScreenEndToEndTest {
 
             // Forgot password with invalid email
             onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test")
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.find_account)).performClick()
             waitUntil(2_000) {
                 onNodeWithText("Enter a valid email.").isDisplayed()
@@ -233,7 +226,8 @@ class AuthScreenEndToEndTest {
 
             // Valid email
             onNodeWithContentDescription(context.getString(R.string.email)).performTextClearance() // Clear email
-            onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test@gmail.com")
+            onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("nnm23mc101@nmamit.in")
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.find_account)).performClick()
             waitUntil(2_000) {
                 onNodeWithText("Password reset link sent to your email.").isDisplayed()
