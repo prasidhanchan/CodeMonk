@@ -15,7 +15,7 @@ package com.mca.auth.screen
 
 import android.content.Context
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.isDisplayed
@@ -29,7 +29,6 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import com.google.firebase.auth.FirebaseAuth
 import com.mca.codemonk.MainActivity
 import com.mca.codemonk.navigation.MainNavigation
@@ -78,13 +77,15 @@ class AuthScreenEndToEndTest {
         composeRule.apply {
             mainClock.advanceTimeBy(5_000) // Skip splash screen
 
-            closeSoftKeyboard()
+            waitUntil(timeoutMillis = 5_000) {
+                onNode(hasContentDescription(context.getString(R.string.sign_up))).isDisplayed()
+            }
             // Navigate to Sign Up
             onNode(hasContentDescription(context.getString(R.string.sign_up)))
                 .performTouchInput { click(percentOffset(0.9f, 0.5f)) }
             mainClock.advanceTimeBy(5_000)
 
-            // Fill all the fields
+            // Without name
             onNodeWithContentDescription(context.getString(R.string.name))
                 .performTextInput("")
             onNodeWithContentDescription(context.getString(R.string.username))
@@ -94,58 +95,90 @@ class AuthScreenEndToEndTest {
             onNodeWithContentDescription(context.getString(R.string.password))
                 .performTextInput("test1234")
             onNodeWithContentDescription(context.getString(R.string.re_password))
-                .performTextInput("test12345")
-            onNodeWithContentDescription(context.getString(R.string.sign_up))
-                .performScrollTo()
-                .assertIsDisplayed()
-                .performClick()
-            waitUntil(2_000) {
+                .performTextInput("test1234")
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performScrollTo()
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.sign_up))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your name.").isDisplayed()
             }
 
+            // Without username
             onNodeWithContentDescription(context.getString(R.string.name)).performTextInput("Test")
             onNodeWithContentDescription(context.getString(R.string.username)).performTextClearance()
-            onNodeWithContentDescription(context.getString(R.string.sign_up))
-                .performScrollTo()
-                .assertIsDisplayed()
-                .performClick()
-            waitUntil(2_000) {
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performScrollTo()
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.sign_up))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your username.").isDisplayed()
             }
 
+            // Without email
             onNodeWithContentDescription(context.getString(R.string.username)).performTextInput("test_1234")
             onNodeWithContentDescription(context.getString(R.string.email_format)).performTextClearance()
-            onNodeWithContentDescription(context.getString(R.string.sign_up))
-                .performScrollTo()
-                .assertIsDisplayed()
-                .performClick()
-            waitUntil(2_000) {
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performScrollTo()
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.sign_up))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your email.").isDisplayed()
             }
 
+            // Without password
             onNodeWithContentDescription(context.getString(R.string.email_format))
                 .performTextInput("nnm23mc101@nmamit.in")
             onNodeWithContentDescription(context.getString(R.string.password))
                 .performTextClearance()
-            onNodeWithContentDescription(context.getString(R.string.sign_up))
-                .performScrollTo()
-                .assertIsDisplayed()
-                .performClick()
-            waitUntil(2_000) {
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performScrollTo()
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.sign_up))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
+            onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your password.").isDisplayed()
             }
 
+            // Without re-password
             onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test1234")
             onNodeWithContentDescription(context.getString(R.string.re_password)).performTextClearance()
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.sign_up))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
-            waitUntil(2_000) {
+            waitUntil(5_000) {
                 onNodeWithText("Please re-enter your password.").isDisplayed()
             }
 
+            // With different passwords
             onNodeWithContentDescription(context.getString(R.string.re_password)).performTextInput("test12345")
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.sign_up))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
             mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.sign_up)).performClick()
-            waitUntil(2_000) {
+            waitUntil(5_000) {
                 onNodeWithText("Passwords do not match.").isDisplayed()
             }
         }
@@ -160,16 +193,28 @@ class AuthScreenEndToEndTest {
 
             // Login without email
             onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test123")
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.login))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.login)).performClick()
-            waitUntil {
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your email.").isDisplayed()
             }
 
             // Login without password
             onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test@gmail.com")
             onNodeWithContentDescription(context.getString(R.string.password)).performTextClearance() // Clear password
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.login))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.login)).performClick()
-            waitUntil {
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your password.").isDisplayed()
             }
 
@@ -178,8 +223,14 @@ class AuthScreenEndToEndTest {
             onNodeWithContentDescription(context.getString(R.string.password)).performTextClearance() // Clear password
             onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test@gmail.com")
             onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("testing123")
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.login))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.login)).performClick()
-            waitUntil(2_000) {
+            waitUntil(5_000) {
                 onNodeWithText("Invalid credentials.").isDisplayed()
             }
 
@@ -190,6 +241,12 @@ class AuthScreenEndToEndTest {
             // Valid login credentials
             onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test@gmail.com")
             onNodeWithContentDescription(context.getString(R.string.password)).performTextInput("test1234")
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.login))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.login)).performClick()
             waitUntil(5_000) {
                 onNodeWithText("Home").isDisplayed()
@@ -206,30 +263,44 @@ class AuthScreenEndToEndTest {
 
             // Navigate to forgot password
             onNodeWithText(context.getString(R.string.forgot_password)).performClick()
-            waitUntil {
-                onNodeWithContentDescription(context.getString(R.string.find_account)).isDisplayed()
-            }
+            mainClock.advanceTimeBy(5_000)
 
             // Forgot password without email
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.find_account))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
+            mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.find_account)).performClick()
-            waitUntil {
+            waitUntil(5_000) {
                 onNodeWithText("Please enter your email.").isDisplayed()
             }
 
             // Forgot password with invalid email
             onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("test")
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.find_account))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
             mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.find_account)).performClick()
-            waitUntil(2_000) {
+            waitUntil(5_000) {
                 onNodeWithText("Enter a valid email.").isDisplayed()
             }
 
             // Valid email
             onNodeWithContentDescription(context.getString(R.string.email)).performTextClearance() // Clear email
-            onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("nnm23mc101@nmamit.in")
+            onNodeWithContentDescription(context.getString(R.string.email)).performTextInput("nnm24mc101@nmamit.in")
+            waitUntil(5_000) {
+                onNodeWithContentDescription(context.getString(R.string.find_account))
+                    .assertIsEnabled()
+                    .isDisplayed()
+            }
             mainClock.advanceTimeBy(5_000)
             onNodeWithContentDescription(context.getString(R.string.find_account)).performClick()
-            waitUntil(2_000) {
+            waitUntil(5_000) {
                 onNodeWithText("Password reset link sent to your email.").isDisplayed()
             }
         }
