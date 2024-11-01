@@ -201,47 +201,44 @@ internal fun LoginScreen(
                     enabled = !uiState.loading,
                     loading = uiState.loading,
                     onClick = {
-                        focusManager.clearFocus()
+                        if (uiState.name.isNotBlank() && uiState.password.isNotBlank()) {
+                            focusManager.clearFocus()
+                        }
                         onLoginClick()
                     }
                 )
             }
 
-            Box(
+            Box(modifier = Modifier.weight(1f))
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.dont_have_account))
+                    append(" ")
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "SignUp",
+                            styles = TextLinkStyles(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    color = LinkBlue
+                                )
+                            ),
+                            linkInteractionListener = { onSignUpClick() }
+                        )
+                    ) {
+                        append(stringResource(R.string.sign_up))
+                    }
+                },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(bottom = 10.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        append(stringResource(R.string.dont_have_account))
-                        append(" ")
-                        withLink(
-                            LinkAnnotation.Clickable(
-                                tag = "SignUp",
-                                styles = TextLinkStyles(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        color = LinkBlue
-                                    )
-                                ),
-                                linkInteractionListener = { onSignUpClick() }
-                            )
-                        ) {
-                            append(stringResource(R.string.sign_up))
-                        }
-                    },
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    ),
-                    modifier = Modifier
-                        .semantics { contentDescription = context.getString(R.string.sign_up) }
-                )
-            }
+                    .padding(bottom = 20.dp)
+                    .semantics { contentDescription = context.getString(R.string.sign_up) }
+            )
         }
     }
 }
