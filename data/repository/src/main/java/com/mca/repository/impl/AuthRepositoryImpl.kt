@@ -49,14 +49,13 @@ class AuthRepositoryImpl @Inject constructor(
                 password.isBlank() -> throw Exception("Please enter your password.")
                 rePassword.isBlank() -> throw Exception("Please re-enter your password.")
                 password != rePassword -> throw Exception("Passwords do not match.")
-                username.isNotEmpty() -> {
+
+                else -> {
                     val querySnap = userRef.get().await()
                     querySnap.forEach { docSnap ->
                         if (docSnap.data["username"] == username) throw Exception("Username already exists.")
                     }
-                }
 
-                else -> {
                     val token = FirebaseMessaging.getInstance().token.await()
                     FirebaseAuth.getInstance()
                         .createUserWithEmailAndPassword(email, password)

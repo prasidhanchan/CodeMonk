@@ -96,16 +96,15 @@ class ProfileRepositoryImpl @Inject constructor(
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
                 user.mentor.isEmpty() && user.userType != ADMIN -> throw Exception("Please add a mentor.")
-                user.username.isNotEmpty() -> {
+
+                else -> {
                     val querySnap = userRef.get().await()
                     querySnap.forEach { docSnap ->
                         if (docSnap.data["userId"] != user.userId && docSnap.data["username"] == user.username) {
                             throw Exception("Username already exists.")
                         }
                     }
-                }
 
-                else -> {
                     userRef.document(user.userId)
                         .update(user.trimAll().convertToMap())
                         .addOnSuccessListener {

@@ -115,13 +115,13 @@ class ProfileViewModel @Inject constructor(
                             uiState.update { it.copy(loading = false) }
                         },
                         onError = { error ->
-                            uiState.update { it.copy(loading = false) }
                             showSnackBar(
                                 response = Response(
                                     message = error,
                                     responseType = ResponseType.ERROR
                                 )
                             )
+                            uiState.update { it.copy(loading = false) }
                         }
                     )
                 }
