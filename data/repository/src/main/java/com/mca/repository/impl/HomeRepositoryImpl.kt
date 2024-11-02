@@ -72,7 +72,7 @@ class HomeRepositoryImpl @Inject constructor(
     override suspend fun getUsernames(userIds: List<String>): DataOrException<List<String>, Boolean, Exception> {
         val dataOrException: DataOrException<List<String>, Boolean, Exception> =
             DataOrException(loading = true)
-        var usernames: MutableList<String> = mutableListOf()
+        val usernames: MutableList<String> = mutableListOf()
 
         try {
             userIds.forEach { userId ->

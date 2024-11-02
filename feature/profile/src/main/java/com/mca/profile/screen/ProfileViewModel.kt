@@ -115,13 +115,13 @@ class ProfileViewModel @Inject constructor(
                             uiState.update { it.copy(loading = false) }
                         },
                         onError = { error ->
-                            uiState.update { it.copy(loading = false) }
                             showSnackBar(
                                 response = Response(
                                     message = error,
                                     responseType = ResponseType.ERROR
                                 )
                             )
+                            uiState.update { it.copy(loading = false) }
                         }
                     )
                 }
@@ -320,7 +320,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             delay(2000L)
             profileRepository.updatePoints(
-                points = points,
+                newPoints = points,
                 userId = currentUser?.uid!!,
                 onSuccess = onSuccess
             )

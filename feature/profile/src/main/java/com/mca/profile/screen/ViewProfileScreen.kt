@@ -37,8 +37,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -75,6 +78,8 @@ internal fun ViewProfileScreen(
     onProfileCardClick: (username: String) -> Unit,
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val isTopMember by remember(uiState.selectedUser) {
         mutableStateOf(uiState.topMembers.any { member -> member == uiState.selectedUser?.userId })
     }
@@ -131,6 +136,9 @@ internal fun ViewProfileScreen(
                             fontFamily = dosis,
                             color = fontColor
                         ),
+                        modifier = Modifier.semantics {
+                            contentDescription = context.getString(R.string.name)
+                        },
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
@@ -162,10 +170,16 @@ internal fun ViewProfileScreen(
                         fontFamily = dosis,
                         color = fontColor.copy(alpha = 0.8f)
                     ),
+                    modifier = Modifier.semantics {
+                        contentDescription = context.getString(R.string.bio_placeholder)
+                    },
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
-                LinkSection(user = uiState.selectedUser!!)
+                LinkSection(
+                    user = uiState.selectedUser!!,
+                    modifier = Modifier.padding(top = 15.dp)
+                )
                 if (uiState.selectedUser?.userType != ADMIN) {
                     Text(
                         text = if (uiState.selectedUser?.currentProject?.isNotBlank()!!) {
@@ -184,6 +198,9 @@ internal fun ViewProfileScreen(
                             buildAnnotatedString {
                                 append(stringResource(id = R.string.not_working_on_project))
                             }
+                        },
+                        modifier = Modifier.semantics {
+                            contentDescription = context.getString(R.string.currently_working_on)
                         },
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,

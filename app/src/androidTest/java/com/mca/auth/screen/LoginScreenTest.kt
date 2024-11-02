@@ -97,7 +97,7 @@ class LoginScreenTest {
     }
 
     @Test
-    fun textBoxes_and_loginButton_areVisible() {
+    fun textBoxes_and_loginButton_are_displayed() {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
         composeRule.apply {

@@ -14,7 +14,7 @@
 package com.mca.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -50,8 +50,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -257,6 +260,7 @@ private fun AddIcon(
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
 
     Surface(
         modifier = modifier
@@ -265,7 +269,8 @@ private fun AddIcon(
                 indication = null,
                 interactionSource = interactionSource,
                 onClick = onClick
-            ),
+            )
+            .semantics { contentDescription = context.getString(R.string.add_a_new_post) },
         tonalElevation = 10.dp,
         shape = CircleShape,
         color = BrandColor
@@ -276,7 +281,7 @@ private fun AddIcon(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = stringResource(id = R.string.new_post),
+                contentDescription = null,
                 modifier = Modifier.rotateIcon(isOpen),
                 tint = tintColor
             )
@@ -291,34 +296,40 @@ private fun PostOptions(
     onAnnouncementClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .animateContentSize(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            )
-            .fillMaxWidth()
-            .height(if (visible) 130.dp else 0.dp)
-            .background(color = BottomBarBlack),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            ),
+            initialOffsetY = { it }
+        ),
+        exit = ExitTransition.None
     ) {
-        CMButton(
-            text = stringResource(id = R.string.project_post),
-            modifier = Modifier.fillMaxWidth(0.8f),
-            onClick = onProjectOptionClick
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        CMButton(
-            text = stringResource(id = R.string.announcement),
-            modifier = Modifier.fillMaxWidth(0.8f),
-            textColor = Black,
-            color = tintColor,
-            onClick = onAnnouncementClick
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(130.dp)
+                .background(color = BottomBarBlack),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CMButton(
+                text = stringResource(id = R.string.project_post),
+                modifier = Modifier.fillMaxWidth(0.8f),
+                onClick = onProjectOptionClick
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            CMButton(
+                text = stringResource(id = R.string.announcement),
+                modifier = Modifier.fillMaxWidth(0.8f),
+                textColor = Black,
+                color = tintColor,
+                onClick = onAnnouncementClick
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 

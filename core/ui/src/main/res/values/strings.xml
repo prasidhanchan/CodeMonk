@@ -22,7 +22,9 @@
     <string name="email">Email</string>
     <string name="email_format">nu24mcXXX@nmamit.in</string>
     <string name="password">Password</string>
+    <string name="password_icon">Password Icon</string>
     <string name="re_password">Re-Type Password</string>
+    <string name="re_password_icon">Re-Type Password Icon</string>
     <string name="show_hide_password">Show/Hide Password</string>
     <string name="show_hide_re_password">Show/Hide RePassword</string>
     <string name="login">Login</string>
@@ -36,6 +38,7 @@
     <string name="unlike">Unlike</string>
     <string name="currently_working_on">"Currently working on "</string>
     <string name="team_members">Team members:</string>
+    <string name="top_member">Top member %1$d</string>
     <string name="progress_header">Project progress:</string>
     <string name="progress_progress">Project progress</string>
     <string name="description_header">Project description:</string>
@@ -48,6 +51,7 @@
     <string name="search">Search</string>
     <string name="search_something">Search Something</string>
     <string name="profile">Profile</string>
+    <string name="my_profile">My Profile</string>
     <string name="delete">Delete</string>
     <string name="linkedin">LinkedIn</string>
     <string name="github">GitHub</string>
@@ -65,7 +69,6 @@
     <string name="cancel">Cancel</string>
     <string name="remove_profile">Remove Profile</string>
     <string name="username_placeholder">Username</string>
-    <string name="name_placeholder">Name</string>
     <string name="bio_placeholder">Bio</string>
     <string name="add_a_bio_placeholder">Add a Bio</string>
     <string name="current_project_placeholder">Current Project</string>
@@ -123,6 +126,7 @@
     <string name="notification_sent">Notification sent</string>
     <string name="no_notifications">No notifications</string>
     <string name="new_post">New Post</string>
+    <string name="add_a_new_post">Add a New Post</string>
     <string name="new_announcement">New Announcement</string>
     <string name="new_post_body">%1$s has posted a new project</string>
     <string name="new_announcement_body">%1$s has made a new announcement</string>
