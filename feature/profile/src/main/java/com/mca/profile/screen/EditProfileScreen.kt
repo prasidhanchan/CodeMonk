@@ -41,6 +41,7 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -91,6 +92,7 @@ internal fun EditProfileScreen(
     onBioChange: (String) -> Unit,
     onCurrentProjectChange: (String) -> Unit,
     onMentorChange: (String) -> Unit,
+    setMentor: (mentor: String) -> Unit,
     onAddLinkCLick: (String) -> Unit,
     onRemoveLinkCLick: (LinkType) -> Unit,
     onRemoveProfileImage: () -> Unit,
@@ -109,6 +111,10 @@ internal fun EditProfileScreen(
     val state = rememberScrollState()
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(uiState.tags) {
+        if (!uiState.tags.isNullOrEmpty()) state.scrollTo(state.maxValue)
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -173,7 +179,7 @@ internal fun EditProfileScreen(
                 value = uiState.currentUser.name,
                 onValueChange = onNameChange,
                 modifier = Modifier.fillMaxWidth(),
-                placeHolder = stringResource(id = R.string.name_placeholder),
+                placeHolder = stringResource(id = R.string.name),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.profile),
@@ -252,7 +258,7 @@ internal fun EditProfileScreen(
                 )
                 SearchedTags(
                     tags = uiState.tags,
-                    onClick = onMentorChange
+                    onClick = setMentor
                 )
             }
 
@@ -448,6 +454,7 @@ private fun EditProfileScreenPreview() {
         onBioChange = { },
         onCurrentProjectChange = { },
         onMentorChange = { },
+        setMentor = { },
         onAddLinkCLick = { },
         onRemoveLinkCLick = { },
         onRemoveProfileImage = { },

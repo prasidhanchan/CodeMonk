@@ -66,6 +66,10 @@ fun NavGraphBuilder.editProfileNavigation(
                     viewModel.getMentorTags(mentor)
                 }
             },
+            setMentor = { mentor ->
+                viewModel.setMentor(mentor)
+                viewModel.getMentorTags(username = "") // Clear searched tags
+            },
             onAddLinkCLick = { link ->
                 if (link.startsWith("http://") || link.startsWith("https://")) {
                     when (link.getLinkDetail()) {
