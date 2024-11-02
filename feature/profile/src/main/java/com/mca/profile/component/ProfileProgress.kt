@@ -28,6 +28,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -115,7 +117,8 @@ internal fun ProfileProgress(
     Column(
         modifier = modifier
             .padding(vertical = 5.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .semantics { contentDescription = header },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {

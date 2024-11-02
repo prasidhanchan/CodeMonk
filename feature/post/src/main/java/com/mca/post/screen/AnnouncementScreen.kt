@@ -42,9 +42,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -175,6 +178,7 @@ private fun ImagePicker(
     modifier: Modifier = Modifier
 ) {
     val state = rememberPagerState { images.size }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -197,7 +201,10 @@ private fun ImagePicker(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                             )
                         }
-                    ),
+                    )
+                    .semantics {
+                        contentDescription = context.getString(R.string.select_your_images)
+                    },
                 shape = RoundedCornerShape(10.dp),
                 color = LightBlack
             ) {

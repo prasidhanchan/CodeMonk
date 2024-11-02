@@ -36,8 +36,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,11 +65,14 @@ internal fun TopMemberCard(
     onCardClick: (userId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Row(
         modifier = modifier
             .padding(vertical = 10.dp)
             .fillMaxWidth()
-            .height(60.dp),
+            .height(60.dp)
+            .semantics { contentDescription = context.getString(R.string.top_member, position) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -78,11 +84,11 @@ internal fun TopMemberCard(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = dosis,
-                color = when(position) {
+                color = when (position) {
                     1 -> BrandColor
                     2 -> Yellow
                     3 -> Green
-                     else -> fontColor
+                    else -> fontColor
                 }
             ),
             modifier = Modifier.size(40.dp)
