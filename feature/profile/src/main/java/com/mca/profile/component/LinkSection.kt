@@ -45,7 +45,7 @@ internal fun LinkSection(
     ) {
         Row(
             modifier = modifier
-                .padding(vertical = 15.dp)
+                .padding(bottom = 15.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
