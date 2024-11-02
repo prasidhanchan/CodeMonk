@@ -4,28 +4,28 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-31T17:24:45.493326700Z">
+        <DropdownSelection timestamp="2024-11-01T09:52:17.617153100Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Prasi\.android\avd\Pixel_5_API_34.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Prasi\.android\avd\Pixel_4a_API_30.avd" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="signUp_with_different_passwords_shows_error()">
+      <SelectionState runConfigName="updateProfile_without_bio_shows_error()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="user_signUp_works()">
+      <SelectionState runConfigName="updateProfile_without_mentor_shows_error()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="user_login_works()">
+      <SelectionState runConfigName="viewProfile_appBar_is_displayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AuthScreenEndToEndTest">
+      <SelectionState runConfigName="bottomBar_is_not_displayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="user_forgotPassword_works()">
+      <SelectionState runConfigName="viewProfile_components_are_displayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

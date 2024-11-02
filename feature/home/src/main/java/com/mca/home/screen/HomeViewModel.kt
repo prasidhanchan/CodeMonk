@@ -160,11 +160,11 @@ class HomeViewModel @Inject constructor(
 
     private fun upsertToken() {
         val newToken = getToken()
-        if (newToken != null) {
+        if (newToken != null && currentUser != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 notificationRepository.upsertToken(
                     newToken = newToken,
-                    userId = currentUser?.uid!!,
+                    userId = currentUser.uid,
                     onSuccess = { clearToken() },
                     onError = { error ->
                         showSnackBar(
