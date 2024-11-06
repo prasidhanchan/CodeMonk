@@ -43,7 +43,7 @@ fun NavGraphBuilder.profileNavigation(
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LaunchedEffect(key1 = uiState.currentUser) {
-            if (uiState.currentUser.userId.isBlank()) viewModel.getUser()
+            if (uiState.currentUser.userId.isBlank()) viewModel.getCurrentUser()
         }
 
         ProfileScreen(

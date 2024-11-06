@@ -42,15 +42,15 @@ class ProfileViewModel @Inject constructor(
     private val currentUser = FirebaseAuth.getInstance().currentUser
 
     init {
-        getUser()
+        getCurrentUser()
         getUpdate()
     }
 
-    fun getUser() {
+    fun getCurrentUser() {
         if (currentUser != null) {
             uiState.update { it.copy(loading = true) }
             viewModelScope.launch(Dispatchers.IO) {
-                delay(1000L)
+                getTopMembers()
                 val result = profileRepository.getUser(currentUser.uid)
 
                 withContext(Dispatchers.Main) {
@@ -70,6 +70,25 @@ class ProfileViewModel @Inject constructor(
                         )
                         uiState.update { it.copy(loading = result.loading!!) }
                     }
+                }
+            }
+        }
+    }
+
+    fun refreshUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = profileRepository.getUser(currentUser?.uid.orEmpty())
+
+            withContext(Dispatchers.Main) {
+                if (result.data != null && !result.loading!! && result.exception == null) {
+                    uiState.update { it.copy(currentUser = result.data!!) }
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
+                    )
                 }
             }
         }
@@ -96,13 +115,13 @@ class ProfileViewModel @Inject constructor(
                             uiState.update { it.copy(loading = false) }
                         },
                         onError = { error ->
-                            uiState.update { it.copy(loading = false) }
                             showSnackBar(
                                 response = Response(
                                     message = error,
                                     responseType = ResponseType.ERROR
                                 )
                             )
+                            uiState.update { it.copy(loading = false) }
                         }
                     )
                 }
@@ -187,23 +206,23 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getUpdate()
 
-            if (result.data != null && !result.loading!! && result.exception == null) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (result.data != null && !result.loading!! && result.exception == null) {
                     uiState.update {
                         it.copy(
                             update = result.data!!,
                             loading = result.loading!!
                         )
                     }
-                }
-            } else {
-                showSnackBar(
-                    response = Response(
-                        message = result.exception?.localizedMessage,
-                        responseType = ResponseType.ERROR
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
                     )
-                )
-                uiState.update { it.copy(loading = false) }
+                    uiState.update { it.copy(loading = false) }
+                }
             }
         }
     }
@@ -215,6 +234,7 @@ class ProfileViewModel @Inject constructor(
     ) {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
+            getTopMembers()
             profileRepository.getSelectedUser(
                 userId = userId,
                 onSuccess = { user ->
@@ -248,15 +268,12 @@ class ProfileViewModel @Inject constructor(
                 val result =
                     profileRepository.getRandomMentors(uiState.value.selectedUser?.userId!!)
 
-                delay(500L)
-                if (result.data != null && result.exception == null && !result.loading!!) {
-                    withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
+                    if (result.data != null && result.exception == null && !result.loading!!) {
                         uiState.update {
                             it.copy(otherMentors = result.data!!)
                         }
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
+                    } else {
                         showSnackBar(
                             response = Response(
                                 message = result.exception?.localizedMessage,
@@ -273,18 +290,40 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = profileRepository.getMentorTags(username)
 
-            if (result.data != null && result.exception == null && !result.loading!!) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (result.data != null && result.exception == null && !result.loading!!) {
                     uiState.update { it.copy(tags = result.data) }
-                }
-            } else {
-                showSnackBar(
-                    response = Response(
-                        message = result.exception?.localizedMessage,
-                        responseType = ResponseType.ERROR
+                } else {
+                    showSnackBar(
+                        response = Response(
+                            message = result.exception?.localizedMessage,
+                            responseType = ResponseType.ERROR
+                        )
                     )
-                )
+                }
             }
+        }
+    }
+
+    private suspend fun getTopMembers() {
+        val result = profileRepository.getTopMembers()
+
+        delay(800L)
+        withContext(Dispatchers.Main) {
+            if (result.data != null && result.exception == null && !result.loading!!) {
+                uiState.update { it.copy(topMembers = result.data?.members!!) }
+            }
+        }
+    }
+
+    fun updatePoints(points: Int, onSuccess: () -> Unit = { }) {
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(2000L)
+            profileRepository.updatePoints(
+                newPoints = points,
+                userId = currentUser?.uid!!,
+                onSuccess = onSuccess
+            )
         }
     }
 

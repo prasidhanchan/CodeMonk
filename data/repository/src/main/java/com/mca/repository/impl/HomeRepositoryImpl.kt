@@ -69,6 +69,30 @@ class HomeRepositoryImpl @Inject constructor(
         return dataOrException.asStateFlow()
     }
 
+    override suspend fun getUsernames(userIds: List<String>): DataOrException<List<String>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<String>, Boolean, Exception> =
+            DataOrException(loading = true)
+        val usernames: MutableList<String> = mutableListOf()
+
+        try {
+            userIds.forEach { userId ->
+                userRef.document(userId).get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            usernames.add(task.result.getString("username").orEmpty())
+                        }
+                    }
+                    .await()
+            }
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+            dataOrException.data = usernames
+        }
+        return dataOrException
+    }
+
     override suspend fun getUserDetail(userId: String): DataOrException<User, Boolean, Exception> {
         val dataOrException: DataOrException<User, Boolean, Exception> =
             DataOrException(loading = true)
@@ -116,7 +140,11 @@ class HomeRepositoryImpl @Inject constructor(
         return dataOrException
     }
 
-    override suspend fun deletePost(postId: String, onError: (String) -> Unit) {
+    override suspend fun deletePost(
+        postId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
             postDB.child(postId).removeValue()
                 .addOnSuccessListener {
@@ -125,6 +153,7 @@ class HomeRepositoryImpl @Inject constructor(
                             result.items.forEach { item ->
                                 item.delete()
                             }
+                            onSuccess()
                         }
                 }
                 .addOnFailureListener { error ->

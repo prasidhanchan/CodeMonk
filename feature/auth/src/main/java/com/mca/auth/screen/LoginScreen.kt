@@ -39,9 +39,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -79,6 +82,7 @@ internal fun LoginScreen(
     val interactionSource = remember { MutableInteractionSource() }
 
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +176,7 @@ internal fun LoginScreen(
                             if (uiState.email.isNotBlank() && uiState.password.isNotBlank()) {
                                 focusManager.clearFocus()
                             }
-                            onLoginClick ()
+                            onLoginClick()
                         }
                     ),
                     capitalization = KeyboardCapitalization.None,
@@ -197,46 +201,44 @@ internal fun LoginScreen(
                     enabled = !uiState.loading,
                     loading = uiState.loading,
                     onClick = {
-                        focusManager.clearFocus()
+                        if (uiState.name.isNotBlank() && uiState.password.isNotBlank()) {
+                            focusManager.clearFocus()
+                        }
                         onLoginClick()
                     }
                 )
-
             }
 
-            Box(
-                modifier= Modifier
-                    .weight(1f)
-                    .padding(bottom = 10.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        append(stringResource(R.string.dont_have_account))
-                        append(" ")
-                        withLink(
-                            LinkAnnotation.Clickable(
-                                tag = "SignUp",
-                                styles = TextLinkStyles(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        color = LinkBlue
-                                    )
-                                ),
-                                linkInteractionListener = { onSignUpClick() }
-                            )
-                        ) {
-                            append(stringResource(R.string.sign_up))
-                        }
-                    },
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = dosis,
-                        color = fontColor
-                    )
-                )
-            }
+            Box(modifier = Modifier.weight(1f))
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.dont_have_account))
+                    append(" ")
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "SignUp",
+                            styles = TextLinkStyles(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    color = LinkBlue
+                                )
+                            ),
+                            linkInteractionListener = { onSignUpClick() }
+                        )
+                    ) {
+                        append(stringResource(R.string.sign_up))
+                    }
+                },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .semantics { contentDescription = context.getString(R.string.sign_up) }
+            )
         }
     }
 }

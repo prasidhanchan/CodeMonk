@@ -67,6 +67,8 @@ import com.mca.util.constant.Constant.MAX_POST_ADS
 import com.mca.util.constant.Constant.MAX_SEARCH_ADS
 import com.mca.util.constant.Constant.POST_CHANNEL_ID
 import com.mca.util.constant.Constant.POST_TOPIC
+import com.mca.util.constant.Constant.XP_BOOST_CHANNEL_ID
+import com.mca.util.constant.Constant.XP_BOOST_TOPIC
 import com.mca.util.constant.SnackBarHelper.Companion.showSnackBar
 import com.mca.util.constant.getCurrentRoute
 import com.mca.util.constant.loadNativeAds
@@ -108,6 +110,8 @@ fun NavGraphBuilder.innerScreen(
             else -> false
         }
 
+        val notificationId = Random.nextInt(0, Int.MAX_VALUE)
+
         val context = LocalContext.current
         val launcher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
@@ -136,7 +140,7 @@ fun NavGraphBuilder.innerScreen(
 
         // Load user data when the app starts
         LaunchedEffect(key1 = uiStateProfile.currentUser.userId) {
-            if (uiStateProfile.currentUser.userId.isEmpty()) viewModelProfile.getUser()
+            if (uiStateProfile.currentUser.userId.isEmpty()) viewModelProfile.getCurrentUser()
 
             // Subscribe to topics
             FirebaseMessaging.getInstance().apply {
@@ -144,6 +148,7 @@ fun NavGraphBuilder.innerScreen(
                 subscribeToTopic(POST_TOPIC)
                 subscribeToTopic(ANNOUNCEMENT_TOPIC)
                 subscribeToTopic(LIKE_TOPIC)
+                subscribeToTopic(XP_BOOST_TOPIC)
             }
 
             // get Access token for notification
@@ -197,7 +202,15 @@ fun NavGraphBuilder.innerScreen(
                     currentUserId = currentUser?.uid ?: "",
                     currentUsername = uiStateProfile.currentUser.username,
                     currentUserType = uiStateProfile.currentUser.userType,
-                    onDeletedClick = viewModelHome::deletePost,
+                    topMembers = uiStateProfile.topMembers,
+                    onDeletedClick = { postId ->
+                        viewModelHome.deletePost(
+                            postId = postId,
+                            onSuccess = {
+                                viewModelProfile.updatePoints(points = -1)
+                            }
+                        )
+                    },
                     sendLikeNotification = { token ->
                         viewModelNotification.sendNotificationToToken(
                             pushNotification = PushNotificationToken(
@@ -265,7 +278,7 @@ fun NavGraphBuilder.innerScreen(
                                         )
                                     ),
                                     data = Data(
-                                        id = "$POST_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
+                                        id = "$POST_TOPIC-$notificationId",
                                         channel_name = POST_TOPIC,
                                         time_stamp = System.currentTimeMillis().toString(),
                                         user_id = currentUser?.uid ?: ""
@@ -294,7 +307,7 @@ fun NavGraphBuilder.innerScreen(
                                         )
                                     ),
                                     data = Data(
-                                        id = "$ANNOUNCEMENT_TOPIC-${Random.nextInt(0, Int.MAX_VALUE)}",
+                                        id = "$ANNOUNCEMENT_TOPIC-$notificationId",
                                         channel_name = ANNOUNCEMENT_TOPIC,
                                         time_stamp = System.currentTimeMillis().toString(),
                                         user_id = currentUser?.uid ?: ""
@@ -305,6 +318,37 @@ fun NavGraphBuilder.innerScreen(
                                 )
                             ),
                             accessToken = uiStateNotify.accessToken ?: ""
+                        )
+                    },
+                    updatePoints = {
+                        viewModelProfile.updatePoints(
+                            points = 1,
+                            onSuccess = {
+                                viewModelNotification.sendNotificationToToken(
+                                    pushNotification = PushNotificationToken(
+                                        message = MessageToToken(
+                                            token = uiStateProfile.currentUser.token,
+                                            notification = Notification(
+                                                title = context.getString(R.string.xp_boost),
+                                                body = context.getString(R.string.xp_boost_body, 1)
+                                            ),
+                                            data = Data(
+                                                id = "$XP_BOOST_TOPIC-$notificationId",
+                                                channel_name = XP_BOOST_TOPIC,
+                                                time_stamp = System.currentTimeMillis().toString(),
+                                                user_id = "NULL"
+                                            ),
+                                            android = Android(
+                                                notification = AndroidNotification(
+                                                    channel_id = XP_BOOST_CHANNEL_ID,
+                                                    sound = "xp_boost"
+                                                )
+                                            )
+                                        )
+                                    ),
+                                    accessToken = uiStateNotify.accessToken ?: ""
+                                )
+                            }
                         )
                     }
                 )
@@ -318,7 +362,7 @@ fun NavGraphBuilder.innerScreen(
                     viewModel = viewModelNotification,
                     userType = uiStateProfile.currentUser.userType,
                     navHostController = navHostController,
-                    refreshUser = viewModelProfile::getUser
+                    refreshUser = viewModelProfile::refreshUser
                 )
                 sendNotificationNavigation(
                     viewModel = viewModelNotification,

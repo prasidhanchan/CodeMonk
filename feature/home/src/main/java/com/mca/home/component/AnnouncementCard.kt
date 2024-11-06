@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -65,6 +66,7 @@ import com.mca.ui.component.CMPager
 import com.mca.ui.theme.LightBlack
 import com.mca.ui.theme.LinkBlue
 import com.mca.ui.theme.Red
+import com.mca.ui.theme.Yellow
 import com.mca.ui.theme.dosis
 import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
@@ -87,6 +89,7 @@ internal fun AnnouncementCard(
     user: User,
     currentUserId: String,
     currentUsername: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onUsernameClick: (username: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit,
@@ -108,6 +111,7 @@ internal fun AnnouncementCard(
             post = post,
             user = user,
             currentUserId = currentUserId,
+            topMembers = topMembers,
             onUsernameClick = onUsernameClick,
             onDeleteClick = onDeleteClick
         )
@@ -149,13 +153,7 @@ internal fun AnnouncementCard(
             }
         }
 
-        if (post.likes.isNotEmpty()) {
-            AnnouncementBottomBar(
-                likes = post.likes,
-                currentUserId = currentUserId,
-                currentUsername = currentUsername
-            )
-        }
+        if (post.likes.isNotEmpty()) AnnouncementBottomBar(post = post)
     }
 }
 
@@ -164,6 +162,7 @@ private fun AnnouncementTopBar(
     post: Post,
     user: User,
     currentUserId: String,
+    topMembers: List<String>,
     modifier: Modifier = Modifier,
     onUsernameClick: (username: String) -> Unit,
     onDeleteClick: (postId: String) -> Unit
@@ -181,7 +180,7 @@ private fun AnnouncementTopBar(
         horizontalArrangement = Arrangement.Start
     ) {
         AsyncImage(
-            model = user.profileImage,
+            model = user.profileImage.ifEmpty { R.drawable.user },
             contentDescription = user.username,
             modifier = Modifier
                 .padding(end = 8.dp)
@@ -189,21 +188,38 @@ private fun AnnouncementTopBar(
                 .background(color = LightBlack)
                 .size(30.dp)
         )
-        Text(
-            text = user.username,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(end = 5.dp)
-        )
+        if (!post.userLoading) {
+            Text(
+                text = user.username,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 10.dp, horizontal = 5.dp)
+                    .fillMaxWidth(0.3f)
+                    .height(14.dp)
+                    .clip(CircleShape)
+                    .background(color = LightBlack)
+            )
+        }
         if (user.userType == ADMIN || user.verified) {
             Icon(
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = stringResource(id = R.string.blue_tick),
                 tint = LinkBlue
+            )
+        } else if (topMembers.any { member -> member == user.userId }) {
+            Icon(
+                painter = painterResource(id = R.drawable.crown),
+                contentDescription = stringResource(id = R.string.crown),
+                tint = Yellow
             )
         }
         if (currentUserId == user.userId) {
@@ -224,38 +240,44 @@ private fun AnnouncementTopBar(
 
 @Composable
 private fun AnnouncementBottomBar(
-    likes: List<String>,
-    currentUserId: String,
-    currentUsername: String,
+    post: Post,
     modifier: Modifier = Modifier
 ) {
-    val postLikes by rememberSaveable { mutableStateOf(likes) }
-
-    Row(
-        modifier = modifier
-            .padding(top = 20.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.like),
-            contentDescription = stringResource(id = R.string.like),
-            modifier = Modifier.size(15.dp),
-            tint = Red
-        )
-        Text(
-            text = postLikes
-                .filterNot { it == currentUserId || it == currentUsername }
-                .toLikedBy(),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = dosis,
-                color = fontColor
-            ),
-            modifier = Modifier.padding(start = 5.dp),
-            textAlign = TextAlign.End
+    if (!post.likesLoading) {
+        Row(
+            modifier = modifier
+                .padding(top = 20.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.like),
+                contentDescription = stringResource(id = R.string.like),
+                modifier = Modifier.size(15.dp),
+                tint = Red
+            )
+            Text(
+                text = post.likes
+                    .toLikedBy(),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = dosis,
+                    color = fontColor
+                ),
+                modifier = Modifier.padding(start = 5.dp),
+                textAlign = TextAlign.End
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .fillMaxWidth(0.55f)
+                .height(14.dp)
+                .clip(CircleShape)
+                .background(color = LightBlack)
         )
     }
 }
@@ -428,6 +450,7 @@ private fun AnnouncementCardPreview() {
         ),
         currentUserId = "1",
         currentUsername = "pra_sidh_22",
+        topMembers = listOf(),
         onUsernameClick = { },
         onDeleteClick = { },
         onLikeClick = { _, _ -> },

@@ -63,7 +63,7 @@ internal fun HomeAppBar(
     ) {
         AsyncImage(
             model = userImage.ifEmpty { R.drawable.user },
-            contentDescription = stringResource(id = R.string.profile),
+            contentDescription = stringResource(id = R.string.my_profile),
             modifier = Modifier
                 .clip(CircleShape)
                 .size(35.dp)

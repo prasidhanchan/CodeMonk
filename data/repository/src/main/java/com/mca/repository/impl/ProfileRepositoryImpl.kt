@@ -29,6 +29,7 @@ import com.mca.util.constant.isLocalUriAndNotBlank
 import com.mca.util.constant.matchUsername
 import com.mca.util.constant.trimAll
 import com.mca.util.model.Tag
+import com.mca.util.model.TopMember
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
@@ -40,6 +41,7 @@ import kotlin.random.Random
 class ProfileRepositoryImpl @Inject constructor(
     val userRef: CollectionReference,
     val updateRef: CollectionReference,
+    val leaderBoardRef: CollectionReference,
     val userStorage: StorageReference
 ) : ProfileRepository {
 
@@ -69,11 +71,6 @@ class ProfileRepositoryImpl @Inject constructor(
                                     .convertToMap()
                             )
                     }
-                    if (dataOrException.data?.username?.isBlank() == true) {
-                        // Generate a random username if empty
-                        userRef.document(currentUserId)
-                            .update("username", "cm_user_${Random.nextInt(0, Int.MAX_VALUE)}")
-                    }
                 }
                 .addOnFailureListener { error ->
                     dataOrException.exception = error
@@ -93,20 +90,21 @@ class ProfileRepositoryImpl @Inject constructor(
         onError: (String) -> Unit
     ) {
         try {
-            val querySnap = userRef.get().await()
-            querySnap.forEach { docSnap ->
-                if (docSnap.data["userId"] != user.userId && docSnap.data["username"] == user.username) {
-                    throw Exception("Username already exists.")
-                }
-            }
-
             when {
                 user.username.isEmpty() -> throw Exception("Username cannot be empty.")
                 !user.username.matches(USERNAME_REGEX) -> throw Exception("Invalid username.")
                 user.name.isEmpty() -> throw Exception("Name cannot be empty.")
                 user.bio.isEmpty() -> throw Exception("Please add a bio.")
                 user.mentor.isEmpty() && user.userType != ADMIN -> throw Exception("Please add a mentor.")
+
                 else -> {
+                    val querySnap = userRef.get().await()
+                    querySnap.forEach { docSnap ->
+                        if (docSnap.data["userId"] != user.userId && docSnap.data["username"] == user.username) {
+                            throw Exception("Username already exists.")
+                        }
+                    }
+
                     userRef.document(user.userId)
                         .update(user.trimAll().convertToMap())
                         .addOnSuccessListener {
@@ -179,9 +177,7 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout() {
-        FirebaseAuth.getInstance().signOut()
-    }
+    override suspend fun logout() = FirebaseAuth.getInstance().signOut()
 
     override suspend fun changePassword(
         password: String,
@@ -314,5 +310,44 @@ class ProfileRepositoryImpl @Inject constructor(
             dataOrException.loading = false
         }
         return dataOrException
+    }
+
+    override suspend fun getTopMembers(): DataOrException<TopMember, Boolean, Exception> {
+        val dataOrException: DataOrException<TopMember, Boolean, Exception> =
+            DataOrException(loading = true)
+
+        try {
+            leaderBoardRef.document("topMembers").get()
+                .addOnSuccessListener { docSnap ->
+                    dataOrException.data = docSnap.toObject<TopMember>()
+                }
+                .addOnFailureListener { error ->
+                    dataOrException.exception = error
+                }
+                .await()
+        } catch (e: Exception) {
+            dataOrException.exception = e
+        } finally {
+            dataOrException.loading = false
+        }
+        return dataOrException
+    }
+
+    override suspend fun updatePoints(
+        newPoints: Int,
+        userId: String,
+        onSuccess: () -> Unit
+    ) {
+        var points: Int = newPoints
+        userRef.document(userId).get()
+            .addOnSuccessListener { docSnap ->
+                if (points < 100) points += docSnap.get("xp", Int::class.java)!!
+                userRef.document(userId)
+                    .update(mapOf("xp" to points))
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+            }
+            .await()
     }
 }

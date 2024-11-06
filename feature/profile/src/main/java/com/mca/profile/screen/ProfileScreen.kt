@@ -34,8 +34,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -75,7 +78,13 @@ internal fun ProfileScreen(
     onAboutClick: () -> Unit,
     onLogoutClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     var visible by remember { mutableStateOf(false) }
+
+    val isTopMember by remember(uiState.loading) {
+        mutableStateOf(uiState.topMembers.any { member -> member == uiState.currentUser.userId })
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -101,7 +110,7 @@ internal fun ProfileScreen(
                 content = {
                     AsyncImage(
                         model = uiState.currentUser.profileImage.ifEmpty { R.drawable.user },
-                        contentDescription = stringResource(id = R.string.profile),
+                        contentDescription = stringResource(id = R.string.my_profile),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -115,6 +124,9 @@ internal fun ProfileScreen(
                     color = fontColor,
                     textAlign = TextAlign.Center
                 ),
+                modifier = Modifier.semantics {
+                    contentDescription = context.getString(R.string.name)
+                },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -127,17 +139,18 @@ internal fun ProfileScreen(
                     color = fontColor.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center
                 ),
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .semantics { contentDescription = context.getString(R.string.bio_placeholder) },
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
-            LinkSection(
-                user = uiState.currentUser,
-                modifier = Modifier.padding(top = 10.dp)
-            )
+            LinkSection(user = uiState.currentUser)
             MyUsernameCard(
                 username = uiState.currentUser.username,
                 userType = uiState.currentUser.userType,
-                isVerified = uiState.currentUser.verified
+                isVerified = uiState.currentUser.verified,
+                isTopMember = isTopMember
             )
             if (uiState.currentUser.userType == ADMIN) {
                 Text(
@@ -171,7 +184,11 @@ internal fun ProfileScreen(
                             }
                         }
                     },
-                    modifier = Modifier.padding(all = 8.dp),
+                    modifier = Modifier
+                        .padding(all = 8.dp)
+                        .semantics {
+                            contentDescription = context.getString(R.string.currently_working_on)
+                        },
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -239,7 +256,7 @@ internal fun ProfileScreen(
         onDismiss = { visible = false }
     )
 
-    Loader(loading = uiState.loading)
+    Loader(loading = uiState.loading || uiState.topMembers.isEmpty())
 }
 
 @Composable
@@ -247,12 +264,14 @@ private fun MyUsernameCard(
     username: String,
     userType: String,
     isVerified: Boolean,
+    isTopMember: Boolean,
     modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier
             .padding(bottom = 10.dp)
-            .wrapContentSize(Alignment.Center),
+            .wrapContentSize(Alignment.Center)
+            .semantics { contentDescription = username },
         shape = CircleShape,
         color = LightBlack,
     ) {
@@ -285,6 +304,13 @@ private fun MyUsernameCard(
                     modifier = Modifier.padding(bottom = 1.dp),
                     tint = LinkBlue
                 )
+            } else if (isTopMember) {
+                Icon(
+                    painter = painterResource(id = R.drawable.crown),
+                    contentDescription = stringResource(id = R.string.crown),
+                    modifier = Modifier.padding(bottom = 1.dp),
+                    tint = Yellow
+                )
             }
         }
     }
@@ -312,6 +338,7 @@ private fun ProfileScreenPreview() {
                 mentor = "pra_sidh_22",
                 mentorFor = "Team Android"
             ),
+            topMembers = listOf("1", "2", "3"),
             loading = false
         ),
         onEditProfileClick = { },

@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,14 +56,15 @@ fun CMRegularAppBar(
                 end = 10.dp
             )
             .fillMaxWidth()
-            .height(50.dp),
+            .height(50.dp)
+            .semantics { contentDescription = "$text AppBar" },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         when {
             enableBackButton && trailingIcon != null -> BackButton(onClick = onBackClick)
             enableBackButton -> BackButton(onClick = onBackClick)
-            trailingIcon != null -> Spacer(modifier = Modifier.size(36.dp))
+            trailingIcon != null -> Spacer(modifier = Modifier.size(45.dp))
         }
         Text(
             text = text,
@@ -77,7 +80,7 @@ fun CMRegularAppBar(
         when {
             enableBackButton && trailingIcon != null -> {
                 Box(
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(45.dp),
                     contentAlignment = Alignment.Center,
                     content = { trailingIcon() }
                 )
@@ -87,13 +90,13 @@ fun CMRegularAppBar(
 
             trailingIcon != null -> {
                 Box(
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(45.dp),
                     contentAlignment = Alignment.Center,
                     content = { trailingIcon() }
                 )
             }
 
-            else -> Spacer(modifier = Modifier.size(36.dp))
+            else -> Spacer(modifier = Modifier.size(45.dp))
         }
     }
 }

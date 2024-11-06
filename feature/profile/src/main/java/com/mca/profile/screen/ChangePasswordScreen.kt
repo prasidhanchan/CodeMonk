@@ -47,7 +47,7 @@ import com.mca.ui.theme.fontColor
 import com.mca.ui.theme.tintColor
 
 @Composable
-fun ChangePasswordScreen(
+internal fun ChangePasswordScreen(
     uiState: UiState,
     onPasswordChange: (String) -> Unit,
     onChangePasswordClick: () -> Unit,

@@ -65,48 +65,11 @@ class HomeViewModel @Inject constructor(
                                     it.copy(
                                         posts = result.data?.map { post ->
                                             val user = homeRepository.getUserDetail(post.userId)
-
-                                            val likes: MutableList<String> =
-                                                mutableListOf() // Likes list of usernames converted from userIds
-                                            likes.addAll(post.likes)
-                                            val userId1 = likes.getOrNull(0)
-                                            val userId2 = likes.getOrNull(1)
-                                            val usernames = homeRepository.getUsername(
-                                                userId1 = userId1,
-                                                userId2 = userId2
-                                            ).data
-
-                                            // Replace first 2 userIds with usernames
-                                            if (!usernames.isNullOrEmpty()) {
-                                                if (!userId1.isNullOrEmpty()) {
-                                                    likes.replaceAll { id ->
-                                                        id.replace(
-                                                            userId1,
-                                                            usernames.getOrElse(
-                                                                index = 0,
-                                                                defaultValue = { "" }
-                                                            )
-                                                        )
-                                                    }
-                                                }
-                                                if (!userId2.isNullOrEmpty()) {
-                                                    likes.replaceAll { id ->
-                                                        id.replace(
-                                                            userId2,
-                                                            usernames.getOrElse(
-                                                                index = 1,
-                                                                defaultValue = { "" }
-                                                            )
-                                                        )
-                                                    }
-                                                }
-                                            }
-
                                             if (user.data != null && user.exception == null && !user.loading!!) {
                                                 // .apply { likes.toList() } Updated likes list with usernames
-                                                post.apply { this.likes = likes } to user.data!!
+                                                post.apply { userLoading = false } to user.data!!
                                             } else {
-                                                post to User(username = "cm_user")
+                                                post to User()
                                             }
                                         }.orEmpty(),
                                         loading = false
@@ -120,16 +83,30 @@ class HomeViewModel @Inject constructor(
                                     )
                                 )
                             }
+
+                            uiState.update {
+                                it.copy(
+                                    posts = uiState.value.posts.map { (post, user) ->
+                                        val likes = homeRepository.getUsernames(post.likes).data
+                                        if (!likes.isNullOrEmpty()) {
+                                            post.copy(likes = likes, likesLoading = false) to user
+                                        } else {
+                                            post to user
+                                        }
+                                    }
+                                )
+                            }
                         }
                 }
             }
         }
     }
 
-    fun deletePost(postId: String) {
+    fun deletePost(postId: String, onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             homeRepository.deletePost(
                 postId = postId,
+                onSuccess = onSuccess,
                 onError = { error ->
                     showSnackBar(
                         response = Response(
@@ -183,11 +160,11 @@ class HomeViewModel @Inject constructor(
 
     private fun upsertToken() {
         val newToken = getToken()
-        if (newToken != null) {
+        if (newToken != null && currentUser != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 notificationRepository.upsertToken(
                     newToken = newToken,
-                    userId = currentUser?.uid!!,
+                    userId = currentUser.uid,
                     onSuccess = { clearToken() },
                     onError = { error ->
                         showSnackBar(

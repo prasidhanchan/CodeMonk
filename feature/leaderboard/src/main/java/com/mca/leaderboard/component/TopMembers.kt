@@ -44,6 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -113,7 +115,7 @@ private fun CMHistogram(
 
     LaunchedEffect(key1 = Unit) {
         launch {
-            delay(1200L)
+            delay(1250L)
             visible = true
             delay = when (position) {
                 1 -> 600
@@ -147,7 +149,8 @@ private fun CMHistogram(
                         else -> 0.6f
                     }
                 )
-                .width(70.dp),
+                .width(70.dp)
+                .semantics { contentDescription = position.toString() },
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -158,7 +161,7 @@ private fun CMHistogram(
                 content = {
                     AsyncImage(
                         model = profileImage.ifEmpty { R.drawable.user },
-                        contentDescription = position.toString(),
+                        contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )

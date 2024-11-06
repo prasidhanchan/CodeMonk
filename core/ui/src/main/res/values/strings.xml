@@ -22,7 +22,9 @@
     <string name="email">Email</string>
     <string name="email_format">nu24mcXXX@nmamit.in</string>
     <string name="password">Password</string>
+    <string name="password_icon">Password Icon</string>
     <string name="re_password">Re-Type Password</string>
+    <string name="re_password_icon">Re-Type Password Icon</string>
     <string name="show_hide_password">Show/Hide Password</string>
     <string name="show_hide_re_password">Show/Hide RePassword</string>
     <string name="login">Login</string>
@@ -36,6 +38,7 @@
     <string name="unlike">Unlike</string>
     <string name="currently_working_on">"Currently working on "</string>
     <string name="team_members">Team members:</string>
+    <string name="top_member">Top member %1$d</string>
     <string name="progress_header">Project progress:</string>
     <string name="progress_progress">Project progress</string>
     <string name="description_header">Project description:</string>
@@ -48,6 +51,7 @@
     <string name="search">Search</string>
     <string name="search_something">Search Something</string>
     <string name="profile">Profile</string>
+    <string name="my_profile">My Profile</string>
     <string name="delete">Delete</string>
     <string name="linkedin">LinkedIn</string>
     <string name="github">GitHub</string>
@@ -65,7 +69,6 @@
     <string name="cancel">Cancel</string>
     <string name="remove_profile">Remove Profile</string>
     <string name="username_placeholder">Username</string>
-    <string name="name_placeholder">Name</string>
     <string name="bio_placeholder">Bio</string>
     <string name="add_a_bio_placeholder">Add a Bio</string>
     <string name="current_project_placeholder">Current Project</string>
@@ -99,9 +102,9 @@
     <string name="project_post">Project Post</string>
     <string name="announcement">Announcement</string>
     <string name="feature_not_available">Feature not available yet!</string>
-    <string name="dev_experience">Dev experience:</string>
+    <string name="dev_experience">Dev Experience</string>
     <string name="xp_points">%1$s pts</string>
-    <string name="current_project_progress">Current project progress:</string>
+    <string name="current_project_progress">Current Project Progress</string>
     <string name="other_mentors">Other mentors:</string>
     <string name="delete_post">Delete Post</string>
     <string name="delete_post_message">Are you sure you want to delete this post?</string>
@@ -123,6 +126,7 @@
     <string name="notification_sent">Notification sent</string>
     <string name="no_notifications">No notifications</string>
     <string name="new_post">New Post</string>
+    <string name="add_a_new_post">Add a New Post</string>
     <string name="new_announcement">New Announcement</string>
     <string name="new_post_body">%1$s has posted a new project</string>
     <string name="new_announcement_body">%1$s has made a new announcement</string>
@@ -142,4 +146,7 @@
     <string name="character_count">%1$d characters</string>
     <string name="announcement_note">Once you make an announcement it cannot be edited later. \nMake sure it\'s accurate!</string>
     <string name="update_field_message">Fields below will be updated by your mentor after a review</string>
+    <string name="crown">Crown</string>
+    <string name="xp_boost">XP Boost!</string>
+    <string name="xp_boost_body">You\'ve just earned %1$d XP points. Keep it up!</string>
 </resources>

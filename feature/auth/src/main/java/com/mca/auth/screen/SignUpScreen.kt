@@ -178,7 +178,7 @@ internal fun SignUpScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.password),
-                        contentDescription = stringResource(id = R.string.password),
+                        contentDescription = stringResource(id = R.string.password_icon),
                         tint = tintColor
                     )
                 },
@@ -212,7 +212,7 @@ internal fun SignUpScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.password),
-                        contentDescription = stringResource(id = R.string.re_password),
+                        contentDescription = stringResource(id = R.string.re_password_icon),
                         tint = tintColor
                     )
                 },
@@ -248,7 +248,14 @@ internal fun SignUpScreen(
                 enabled = !uiState.loading,
                 loading = uiState.loading,
                 onClick = {
-                    focusManager.clearFocus()
+                    if (uiState.name.isNotBlank() &&
+                        uiState.username.isNotBlank() &&
+                        uiState.email.isNotBlank() &&
+                        uiState.password.isNotBlank() &&
+                        uiState.rePassword.isNotBlank()
+                    ) {
+                        focusManager.clearFocus()
+                    }
                     onSignUpClick()
                 }
             )

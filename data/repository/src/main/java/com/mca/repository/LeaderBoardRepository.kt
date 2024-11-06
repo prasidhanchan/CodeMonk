@@ -19,4 +19,6 @@ import com.mca.util.warpper.DataOrException
 interface LeaderBoardRepository {
 
     suspend fun getTopMembers(): DataOrException<List<User>, Boolean, Exception>
+
+    suspend fun updateTopMembers(topMembers: List<String>)
 }

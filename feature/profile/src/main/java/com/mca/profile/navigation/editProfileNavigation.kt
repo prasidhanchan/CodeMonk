@@ -62,9 +62,13 @@ fun NavGraphBuilder.editProfileNavigation(
             onMentorChange = { mentor ->
                 scope.launch {
                     viewModel.setMentor(mentor)
+                    delay(1000L)
                     viewModel.getMentorTags(mentor)
-                    delay(2000L)
                 }
+            },
+            setMentor = { mentor ->
+                viewModel.setMentor(mentor)
+                viewModel.getMentorTags(username = "") // Clear searched tags
             },
             onAddLinkCLick = { link ->
                 if (link.startsWith("http://") || link.startsWith("https://")) {
@@ -94,7 +98,7 @@ fun NavGraphBuilder.editProfileNavigation(
             onRemoveProfileImage = {
                 viewModel.removeProfileImage(
                     onSuccess = {
-                        viewModel.getUser()
+                        viewModel.getCurrentUser()
                         navHostController.popBackStack()
                         viewModel.setProfileImage("")
                     }
@@ -103,14 +107,14 @@ fun NavGraphBuilder.editProfileNavigation(
             onUpdateClick = {
                 viewModel.updateUser(
                     onSuccess = {
-                        viewModel.getUser()
+                        viewModel.getCurrentUser()
                         navHostController.popBackStack()
                     }
                 )
             },
             onBackClick = {
                 navHostController.popBackStack()
-                viewModel.getUser() // Reset state for all fields if not updated
+                viewModel.getCurrentUser() // Reset state for all fields if not updated
                 viewModel.getMentorTags(username = "") // Clear searched tags
             }
         )

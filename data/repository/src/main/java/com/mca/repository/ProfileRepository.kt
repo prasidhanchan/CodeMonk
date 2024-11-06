@@ -14,6 +14,7 @@
 package com.mca.repository
 
 import com.mca.util.model.Tag
+import com.mca.util.model.TopMember
 import com.mca.util.model.Update
 import com.mca.util.model.User
 import com.mca.util.warpper.DataOrException
@@ -55,4 +56,8 @@ interface ProfileRepository {
     suspend fun getRandomMentors(selectedUserId: String): DataOrException<List<User>, Boolean, Exception>
 
     suspend fun getMentorTags(username: String): DataOrException<List<Tag>, Boolean, Exception>
+
+    suspend fun getTopMembers(): DataOrException<TopMember, Boolean, Exception>
+
+    suspend fun updatePoints(newPoints: Int, userId: String, onSuccess: () -> Unit)
 }
