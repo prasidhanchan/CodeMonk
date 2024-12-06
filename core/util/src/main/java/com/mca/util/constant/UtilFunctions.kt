@@ -62,7 +62,25 @@ enum class PostType {
 data class ImageData(
     val image: ByteArray?,
     val mimeType: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ImageData
+
+        if (image != null) {
+            if (other.image == null) return false
+            if (!image.contentEquals(other.image)) return false
+        } else if (other.image != null) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return image?.contentHashCode() ?: 0
+    }
+}
 
 /**
  * Function to converts a list of likes to a string of liked by.
