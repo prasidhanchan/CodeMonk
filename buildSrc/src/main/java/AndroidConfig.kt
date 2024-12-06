@@ -15,8 +15,8 @@ import org.gradle.api.JavaVersion
 
 object AndroidConfig {
     const val MIN_SDK = 28
-    const val TARGET_SDK = 34
-    const val COMPILE_SDK = 34
+    const val TARGET_SDK = 35
+    const val COMPILE_SDK = 35
     val JAVA_VERSION = JavaVersion.VERSION_21
     const val JVM_TARGET = "21"
 }
