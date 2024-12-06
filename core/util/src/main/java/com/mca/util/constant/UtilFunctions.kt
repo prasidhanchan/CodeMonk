@@ -224,7 +224,7 @@ fun Post.convertToMap(): HashMap<String, Any> {
 /**
  * Function to get the current version of the app.
  */
-fun Context.getCurrentVersion(): String {
+fun Context.getCurrentVersion(): String? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         packageManager.getPackageInfo(
             packageName,

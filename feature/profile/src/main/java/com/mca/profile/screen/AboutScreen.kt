@@ -91,7 +91,7 @@ internal fun AboutScreen(
             AboutCard(
                 text = stringResource(
                     id = R.string.current_version,
-                    context.getCurrentVersion(),
+                    context.getCurrentVersion().orEmpty(),
                     UPDATE_CHANNEL
                 ),
                 icon = painterResource(id = R.drawable.version),
