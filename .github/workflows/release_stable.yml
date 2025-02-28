@@ -12,7 +12,7 @@ jobs:
         api-level: [ 35 ]
         target: [ android-35 ]
         java-version: [ '21' ]
-        build-tools: [ '35.0.0' ]
+        build-tools: [ '29.0.3' ]
 
     steps:
       # Checkout code
@@ -34,12 +34,7 @@ jobs:
       # Ensure required build tools are installed
       - name: Install Android Build Tools
         run: |
-          sdkmanager "build-tools;35.0.0"
-          ls -al $ANDROID_HOME/build-tools/
-
-      # Verify Build Tools installation
-      - name: Verify Build Tools
-        run: ls -al $ANDROID_HOME/build-tools/35.0.0
+          sdkmanager "build-tools;29.0.3"
 
       # Set up Gradle
       - name: Set up Gradle
