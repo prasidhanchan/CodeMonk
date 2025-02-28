@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Copyright © 2024 Prasidh Gopal Anchan
+# Copyright © 2025 Prasidh Gopal Anchan
 #
 # Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
 # You may not use this file except in compliance with the License.
