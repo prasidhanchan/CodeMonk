@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 35 ]
-        target: [ android-35 ]
+        api-level: [ 34 ]
+        target: [ android-34 ]
         java-version: [ '21' ]
         build-tools: [ '31.0.0' ]
 
@@ -31,10 +31,20 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      # Install Android Build Tools
-      - name: Install Android Build Tools
+      # Install required SDK components
+      - name: Install required SDK components
         run: |
-          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${{ matrix.build-tools }}"
+          sdkmanager --install "platform-tools" "platforms;${{ matrix.target }}" "build-tools;${{ matrix.build-tools }}"
+
+      # Set Android SDK Root
+      - name: Set Android SDK Root
+        run: echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+
+      # Verify Build Tools Path
+      - name: Verify Build Tools Path
+        run: |
+          echo "Build tools path: $(ls $ANDROID_HOME/build-tools/)"
+          echo "Available platforms: $(ls $ANDROID_HOME/platforms/)"
 
       # Set up Gradle
       - name: Set up Gradle
@@ -59,7 +69,7 @@ jobs:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
         run: echo $GOOGLE_SERVICES | base64 -di > app/google-services.json
 
-      # Create google-services.json
+      # Create codemonk_service_key.json
       - name: Create codemonk_service_key.json
         env:
           SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
