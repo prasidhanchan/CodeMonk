@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 34 ]
-        target: [ android-34 ]
+        api-level: [ 35 ]
+        target: [ android-35 ]
         java-version: [ '21' ]
         build-tools: [ '31.0.0' ]
 
@@ -30,6 +30,11 @@ jobs:
       # Set up Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
+      # Install Android Build Tools
+      - name: Install Android Build Tools
+        run: |
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${{ matrix.build-tools }}"
 
       # Set up Gradle
       - name: Set up Gradle
