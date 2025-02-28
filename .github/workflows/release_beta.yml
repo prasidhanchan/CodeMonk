@@ -71,16 +71,16 @@ jobs:
         run: ./gradlew assembleRelease
 
       # Sign APK
-      - name: Sign APK
-        uses: ilharp/sign-android-release@nightly
+      - name: Sign Android release
+        uses: r0adkll/sign-android-release@v1
         with:
-          releaseDir: app/build/outputs/apk/release
-          signingKey: ${{ secrets.KEY_STORE }}
-          keyAlias: ${{ secrets.KEY_STORE_ALIAS }}
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEY_STORE }}
+          alias: ${{ secrets.KEY_STORE_ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
-      # Run tests
+        # Run tests
       - name: Run tests
         run: ./gradlew testReleaseUnitTest
 
