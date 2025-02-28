@@ -33,7 +33,13 @@ jobs:
 
       # Ensure required build tools are installed
       - name: Install Android Build Tools
-        run: sdkmanager "build-tools;35.0.0"
+        run: |
+          sdkmanager "build-tools;35.0.0"
+          ls -al $ANDROID_HOME/build-tools/
+
+      # Verify Build Tools installation
+      - name: Verify Build Tools
+        run: ls -al $ANDROID_HOME/build-tools/35.0.0
 
       # Set up Gradle
       - name: Set up Gradle
@@ -71,7 +77,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       # Sign APK
-      - name: Sign Android release
+      - name: Sign APK
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: app/build/outputs/apk/release
