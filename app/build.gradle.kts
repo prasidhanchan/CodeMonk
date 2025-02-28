@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Prasidh Gopal Anchan
+ * Copyright © 2025 Prasidh Gopal Anchan
  *
  * Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * You may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ android {
         applicationId = "com.mca.codemonk"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = 14
-        versionName = "1.0.1"
+        versionCode = 15
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "com.mca.codemonk.HiltRunner"
         vectorDrawables {
@@ -76,6 +76,7 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/INDEX.LIST"
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Prasidh Gopal Anchan
+ * Copyright © 2025 Prasidh Gopal Anchan
  *
  * Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * You may not use this file except in compliance with the License.
@@ -62,7 +62,25 @@ enum class PostType {
 data class ImageData(
     val image: ByteArray?,
     val mimeType: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ImageData
+
+        if (image != null) {
+            if (other.image == null) return false
+            if (!image.contentEquals(other.image)) return false
+        } else if (other.image != null) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return image?.contentHashCode() ?: 0
+    }
+}
 
 /**
  * Function to converts a list of likes to a string of liked by.
@@ -224,7 +242,7 @@ fun Post.convertToMap(): HashMap<String, Any> {
 /**
  * Function to get the current version of the app.
  */
-fun Context.getCurrentVersion(): String {
+fun Context.getCurrentVersion(): String? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         packageManager.getPackageInfo(
             packageName,
