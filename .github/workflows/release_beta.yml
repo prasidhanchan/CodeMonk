@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 34 ]
-        target: [ android-34 ]
+        api-level: [ 35 ]
+        target: [ android-35 ]
         java-version: [ '21' ]
-        build-tools: [ '31.0.0' ]
+        build-tools: [ '29.0.3' ]
 
     steps:
       # Checkout code
@@ -30,6 +30,11 @@ jobs:
       # Set up Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
+      # Ensure required build tools are installed
+      - name: Install Android Build Tools
+        run: |
+          sdkmanager "build-tools;29.0.3"
 
       # Set up Gradle
       - name: Set up Gradle
@@ -54,7 +59,7 @@ jobs:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
         run: echo $GOOGLE_SERVICES | base64 -di > app/google-services.json
 
-      # Create google-services.json
+      # Create codemonk_service_key.json
       - name: Create codemonk_service_key.json
         env:
           SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
@@ -68,15 +73,15 @@ jobs:
 
       # Sign APK
       - name: Sign APK
-        uses: ilharp/sign-android-release@nightly
+        uses: r0adkll/sign-android-release@v1
         with:
-          releaseDir: app/build/outputs/apk/release
-          signingKey: ${{ secrets.KEY_STORE }}
-          keyAlias: ${{ secrets.KEY_STORE_ALIAS }}
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEY_STORE }}
+          alias: ${{ secrets.KEY_STORE_ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
-      # Run tests
+        # Run tests
       - name: Run tests
         run: ./gradlew testReleaseUnitTest
 
@@ -107,7 +112,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       # Increment rc version
-      - name: Bump  version
+      - name: Bump version
         uses: action-pack/increment@v2
         id: increment
         with:

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 Prasidh Gopal Anchan
+ * Copyright © 2026 Prasidh Gopal Anchan
  *
  * Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * You may not use this file except in compliance with the License.
@@ -77,9 +77,7 @@ internal fun TopMemberCard(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = String.format(
-                Locale("en", "IN"), "%02d", position
-            ),
+            text = String.format(Locale.ENGLISH, "%02d", position),
             style = TextStyle(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.ExtraBold,

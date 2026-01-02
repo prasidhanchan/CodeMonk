@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 Prasidh Gopal Anchan
+ * Copyright © 2026 Prasidh Gopal Anchan
  *
  * Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * You may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 
 import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
-import AndroidConfig.JVM_TARGET
 import AndroidConfig.MIN_SDK
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -44,8 +44,10 @@ android {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
     }
-    kotlinOptions {
-        jvmTarget = JVM_TARGET
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
     buildFeatures {
         buildConfig = true
@@ -76,7 +78,9 @@ dependencies {
     implementation(libs.retrofit)
 
     // OAuth
-    implementation(libs.google.oauth)
+    implementation(libs.google.oauth) {
+        exclude(group = "io.grpc")
+    }
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

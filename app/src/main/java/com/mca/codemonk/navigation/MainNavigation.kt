@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 Prasidh Gopal Anchan
+ * Copyright © 2026 Prasidh Gopal Anchan
  *
  * Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
