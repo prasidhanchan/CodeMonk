@@ -77,9 +77,7 @@ internal fun TopMemberCard(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = String.format(
-                Locale("en", "IN"), "%02d", position
-            ),
+            text = String.format(Locale.ENGLISH, "%02d", position),
             style = TextStyle(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.ExtraBold,

@@ -12,6 +12,11 @@
 -keep class com.mca.util.model.* { *; }
 -keep class * extends com.google.firebase.database.GenericTypeIndicator { *; }
 
+# Suppress SLF4J missing class warnings used by Google Auth/gRPC
+-dontwarn org.slf4j.**
+-dontwarn com.google.auth.oauth2.Slf4jUtils
+-dontwarn com.google.auth.oauth2.Slf4jLoggingHelpers
+
 # Keep Google API classes
 -keep class com.google.** { *; }
 

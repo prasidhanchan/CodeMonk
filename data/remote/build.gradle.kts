@@ -13,8 +13,8 @@
 
 import AndroidConfig.COMPILE_SDK
 import AndroidConfig.JAVA_VERSION
-import AndroidConfig.JVM_TARGET
 import AndroidConfig.MIN_SDK
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -39,8 +39,10 @@ android {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
     }
-    kotlinOptions {
-        jvmTarget = JVM_TARGET
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
     buildFeatures {
         buildConfig = true
